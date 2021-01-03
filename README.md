@@ -1,7 +1,7 @@
 # dflat
-dflat is a BASIC-like language for 8-bit micros and retro computers running on 6502 and 65c02
+dflat is a BASIC-like language for 8-bit micros and retro computers running on 6502 and 65c02.
 
-The base version here is targeted for the Oric-1 and Atmos computers from the early 80s.
+The base version here is targeted for the Oric-1 and Atmos computers from the early 80s and due to being integer only and tokenisation, is much faster than Oric BASIC.
 
 Right now I am in documentation mode - please see the wiki pages for details of the language.
 When I upload the source it will require;
