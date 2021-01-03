@@ -7,3 +7,5 @@ Right now I am in documentation mode before I upload the source which will requi
 - The as65 assembler (freely distributable so I will add here)
 - Running a windows command shell for the build script (which was needed for multi-bank ROM build, but is just 1 bank here)
 
+I also have a hackaday page for this where I have already put up binaries and example programs for download
+https://hackaday.io/project/175585-oric-1-dflat-system
