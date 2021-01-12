@@ -2,6 +2,13 @@
 
 All the files needed to assemble dflat are here.
 
+For Quick Start
+---------------
+1) Go to the emulators folder
+2) Run oricutron.exe
+3) The emulator will start with Oric dflat as the default
+See the emulator section for more information.
+
 
 File structure
 --------------
@@ -91,7 +98,7 @@ vdp\
 Emulator
 --------
 The emulator\ folder hosts the Oricutron emulator.  All folders and files are
-standard save the following.
+standard emulator files except the following.
 
 emulator\
 oricutron.cfg	: updated configuration file which starts dflat by default
