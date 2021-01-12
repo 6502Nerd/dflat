@@ -7,6 +7,17 @@ For Quick Start
 1) Go to the emulators folder
 2) Run oricutron.exe
 3) The emulator will start with Oric dflat as the default
+4) Try a game
+4.1) type : load "tet.tap"
+4.2) Oric will load the program of 41 blocks
+4.3) type : _start()
+4.4) Turn off music by pressing left cursor!
+     Press space to play
+	 Left and Right cursor move left and right
+	 Down cursor rapidly drops the shape
+	 Space rotates the shape clockwise
+	 On highscore table, Up/Down changes the initial, right moves to next, space is done
+     
 See the emulator section for more information.
 
 
