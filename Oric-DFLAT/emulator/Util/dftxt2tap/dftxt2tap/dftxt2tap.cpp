@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <assert.h>
 #include <errno.h>
 #define strcpy_s strcpy
