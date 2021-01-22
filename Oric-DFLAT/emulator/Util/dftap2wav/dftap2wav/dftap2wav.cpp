@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#ifdef __linux__
+#if defined(__linux__) || defined(__APPLE__)
 #include <stdint.h>
 #include <assert.h>
 #include <errno.h>
