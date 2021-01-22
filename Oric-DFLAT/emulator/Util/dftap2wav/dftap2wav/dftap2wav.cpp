@@ -5,13 +5,36 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#ifdef __linux__
+#include <stdint.h>
+#include <assert.h>
+#include <errno.h>
+#define strcpy_s strcpy
+#define errno_t int
+errno_t fopen_s(FILE **f, const char *name, const char *mode) {
+	errno_t ret = 0;
+	assert(f);
+	*f = fopen(name, mode);
+	/* Can't be sure about 1-to-1 mapping of errno and MS' errno_t */
+	if (!*f)
+		ret = errno;
+	return ret;
+}
+typedef uint32_t U32;
+#else
+/* use windows custom types */
+typedef unsigned __int32 U32;
+#endif
+
+#define FCC(a, b, c, d) ((U32)(a)|((U32)(b)<<8)|((U32)(c)<<16)|((U32)(d)<<24))
+
 FILE *in, *out;
 int file_size;
 int speed = 11025;					/* Default speed is 11KHz */
 int silence = 0;
 int gap = 3600;						/* Default block gap is 3600 bits of 0 ~ 1.0seconds */
 
-/* wav file header format */ 
+/* wav file header format */
 struct {
 	int sig;
 	int riff_size;
@@ -26,7 +49,12 @@ struct {
 	short bits_per_sample;
 	int samplesig;
 	int datalength;
-} sample_riff = { 'FFIR',0,'EVAW',' tmf',16,1,1,0,0,1,8,'atad',0 }; /* provide reversed signatures to deal with little-endianness */
+} sample_riff = {
+	FCC('R','I','F','F'),0,
+	FCC('W','A','V','E'),
+	FCC('F','M','T',' '),16,1,1,0,0,1,8,
+	FCC('D','A','T','A'),0
+};
 
 /* emit required wave form */
 void emit_level(int size)
@@ -218,7 +246,7 @@ int main(int argc, char *argv[])
 				}
 
 				for (i = 0; i < gap; i++) emit_bit(0);	/* Block dependent on binary or normal format */
-			}			
+			}
 		}
 	}
 	fclose(in);

@@ -19,19 +19,19 @@
 ;**********************************************************
 
 	; ROM code
-	code  
+	code
 
 mod_sz_rtsubs_s
 
-	include "dflat\numop.s"
+	include "dflat/numop.s"
 
 df_rt_monitor
 	jsr command_line
 	rts
-	
+
 df_rt_new
 	jmp df_clear
-	
+
 df_rt_while
 	; push statement address
 	jsr df_rt_push_stat
@@ -95,7 +95,7 @@ df_rt_while_cmd
 	; need to update nxtstidx to transfer control
 	stx df_nextlin
 	sta df_nextlin+1
-	sty df_nxtstidx	
+	sty df_nxtstidx
 	rts
 df_rt_check_while
 	; check for while
@@ -138,7 +138,7 @@ df_rt_if_stat
 ; program ended with no match
 df_rt_if_stat_err
 	SWBRK DFERR_UNCLOSEDIF
-	
+
 ; find matching else/elseif/endif
 ; C = 0 match else/elseif/endif
 ; C = 1 match endif only
@@ -150,7 +150,7 @@ df_rt_if_match
 	pha
 	; local if nest level is zero to start with
 	lda #0
-	sta df_ifnest	
+	sta df_ifnest
 	; save match pref
 	php
 	; find the matching else/elseif/endif
@@ -168,7 +168,7 @@ df_rt_ifcmd
 
 	plp
 	php
-	
+
 	bcs df_rt_ifskipelseif
 	cmp #DFRT_ELSE
 	beq df_rt_ifelse
@@ -182,7 +182,7 @@ df_rt_ifskipelseif
 df_rt_skipnestif
 	; no tokens of interest found, so next statement
 	jmp df_rt_findelseendif
-	
+
 	; found else/elseif/endif
 	; but check if this is nested
 df_rt_ifelse
@@ -193,7 +193,7 @@ df_rt_ifelse
 	cmp #DFRT_ENDIF
 	bne df_rt_skipnestendif
 	dec df_ifnest
-df_rt_skipnestendif	
+df_rt_skipnestendif
 	; continue to search for else/endif
 	jmp df_rt_findelseendif
 	; ok got a match
@@ -217,7 +217,7 @@ df_rt_endif
 	bmi df_rt_noif_err
 ;	clc
 	rts
-	
+
 	; else and ifelse encountered in a normal sequence
 	; only happens when the clause has been executed
 	; so we only now need to find the endif
@@ -232,10 +232,10 @@ df_rt_else
 	sec
 	jmp df_rt_if_match
 
-; endif/else/elseif encountered outside of an if	
+; endif/else/elseif encountered outside of an if
 df_rt_noif_err
 	SWBRK DFERR_NOIF
-	
+
 	; when if is encountered, the job of this routine is
 	; to determine which clause to execute, then transfer
 	; program control to that point.  in normal program
@@ -256,7 +256,7 @@ df_rt_ifeval
 	; match with else/elseif/endif
 	; df_nextlin is used to find the clause to execute
 	_cpyZPWord df_currlin,df_nextlin
-	clc						
+	clc
 	jsr df_rt_if_match
 	; A contains the token found, Y is index of this token
 
@@ -289,14 +289,14 @@ df_rt_ifeval
 	sta df_nextlin+1
 	; now everyting is set up to evaluate the elif condition
 	jmp df_rt_ifeval
-	
+
 df_rt_do_else
 	; we need to point to the next statement not this one
 	jsr df_rt_if_stat
 df_rt_if_done
 ;	clc
 	rts
-	
+
 df_rt_for
 	; push statement address to rt stack
 	jsr df_rt_push_stat
@@ -306,7 +306,7 @@ df_rt_for
 	pha
 	txa
 	pha
-	
+
 
 	; find starting value
 	; evaluate the starting value
@@ -377,7 +377,7 @@ df_rt_next
 	iny
 	lda (df_tmpptrd),y
 	sta df_tmpptra+1
-	
+
 	; get step value, save in ptrb
 	jsr df_rst_popWord
 	stx df_tmpptrb
@@ -392,7 +392,7 @@ df_rt_next
 	lda df_tmpptra+1
 	iny
 	sta (df_tmpptrd),y
-	
+
 	; get end value, save in ptrb
 	jsr df_rst_popWord
 	stx df_tmpptrb
@@ -406,7 +406,7 @@ df_rt_next
 df_rt_check_pos
 	; call lte operation but no need to get ints
 	; as already in ptra and ptrb
-	jsr df_rt_lte_calc	
+	jsr df_rt_lte_calc
 df_rt_next_check
 	; check if true or false
 	jsr df_ost_popInt
@@ -418,11 +418,11 @@ df_rt_next_check
 	; if done, then continue with next statement
 df_next_done
 	jmp df_rt_untilnext_done
-	
+
 df_rt_next_err
 	SWBRK DFERR_NEXTFOR
 
-	
+
 df_rt_repeat
 	; push statement address
 	jsr df_rt_push_stat
@@ -430,7 +430,7 @@ df_rt_repeat
 	lda #DFRT_REPEAT
 	jmp df_rst_pushByte
 ;	rts
-	
+
 df_rt_until
 	; remember stack position
 	ldy df_rtstop
@@ -460,17 +460,17 @@ df_rt_untilnext_done
 
 df_rt_until_err
 	SWBRK DFERR_UNTIL
-	
+
 df_rt_sadd
 ;	clc
 	rts
-	
+
 df_rt_print_num
 	jsr df_ost_popInt
 	clc
 	jmp print_a_to_d
 ;	rts
-	
+
 df_rt_print_str
 	jsr df_ost_popStr
 	stx df_tmpptra
@@ -490,7 +490,7 @@ df_rt_print_str_done
 df_rt_nextdatum
 	ldx #0
 	; load data line offset
-	ldy df_datoff 
+	ldy df_datoff
 	; if data pointer unitialised (because high byte == 0)
 	lda df_currdat+1
 	bne df_rt_skipinitdataptr
@@ -526,9 +526,9 @@ df_rt_getdatatk
 	bpl df_rt_datastatement
 	; found data statement?
 	cmp #DFRT_DATA
-	; if not then go to next line	
+	; if not then go to next line
 	bne df_rt_datnextlin
-	sty df_datoff	
+	sty df_datoff
 df_rt_skipinitdataptr
 	tya
 	; end of line reached?
@@ -559,7 +559,7 @@ df_rt_readdatum
 	; save lvar in tmpb, vvt ptr in tmpa
 	stx df_tmpptrb
 	sta df_tmpptrb+1
-		
+
 	; first save save current prgoram line and offset
 	lda df_currlin
 	pha
@@ -585,14 +585,14 @@ df_rt_readdatum
 	sta df_nxtstidx
 	lda #3
 	sta df_curstidx
-	
+
 	; get type from vvt ptr in tmpa
 	lda (df_tmpptra,x)
 	tay
 	; get lvar point from tmpb
 	ldx df_tmpptrb
 	lda df_tmpptrb+1
-	
+
 	; X,A and Y set up, now evaluate and perform assignment
 	jsr df_rt_doassign
 
@@ -686,7 +686,7 @@ df_rt_input_num
 	rts
 df_rt_input_err
 	SWBRK DFERR_TYPEMISM
-	
+
 df_rt_local
 	; get current local count off rt stack
 	jsr df_rst_popByte
@@ -729,7 +729,7 @@ df_rt_local_done
 	jmp df_rst_pushByte
 ;	clc
 ;	rts
-	
+
 df_rt_dim
 	ldy df_exeoff
 	dey
@@ -750,7 +750,7 @@ df_rt_dim_findesc
 	lda (df_currlin),y
 	sta df_tmpptra
 	iny
-	lda (df_currlin),y	
+	lda (df_currlin),y
 	sta df_tmpptra+1
 	; move to open bracket
 	iny
@@ -781,7 +781,7 @@ df_rt_dim_findesc
 	sta (df_tmpptra),y
 	iny
 	pla
-	sta (df_tmpptra),y	
+	sta (df_tmpptra),y
 df_rt_dim_alloc
 	; ok we have up to 2 dimensions
 	; mult dim 1 and 2 if dim 2 <> 0
@@ -806,7 +806,7 @@ df_rt_dim2_nz
 	beq df_rt_dim2_mul2
 	asl num_a
 	rol num_a+1
-df_rt_dim2_mul2	
+df_rt_dim2_mul2
 	; finally, we have a size of array
 	ldx num_a
 	lda num_a+1
@@ -825,7 +825,7 @@ df_rt_dim2_mul2
 	ora #DFVVT_ARRY
 	sta (df_tmpptra,x)
 	; don't increment byte again - go check for more vars
-	jmp df_rt_dim	
+	jmp df_rt_dim
 df_rt_dim_next_byte
 	inc df_exeoff
 	jmp df_rt_dim
@@ -839,7 +839,7 @@ df_rt_cls
 	jmp gr_cls
 ;	clc
 ;	rts
-	
+
 df_rt_plot
 	; evaluate the expression
 	jsr df_rt_getnval
@@ -927,7 +927,7 @@ df_rt_plot_h_str
 	bne df_rt_plotstrch		; Always - assume adding 8 is never 0!
 df_rt_plotstrdone
 	rts
-	
+
 df_rt_cursor
 	; evaluate the expression
 	jsr df_rt_getnval
@@ -936,7 +936,7 @@ df_rt_cursor
 	stx vdp_curoff
 ;	clc
 	rts
-		
+
 df_rt_himem
 	; evaluate the expression
 	jsr df_rt_getnval
@@ -956,7 +956,7 @@ df_rt_hires
 	jmp gr_init_hires
 ;	clc
 ;	rts
-	
+
 df_rt_pixmode
 	; evaluate the expression X = mode
 	jsr df_rt_getnval
@@ -1019,7 +1019,7 @@ df_rt_wait
 	tay
 df_rt_wait_counter
 	; get vdp low byte timer val in A
-	lda vdp_cnt	
+	lda vdp_cnt
 df_rt_wait_tick
 	; check if a tick has occurred (i.e. val <> A)
 	cmp vdp_cnt
@@ -1035,7 +1035,7 @@ df_rt_wait_skiphi
 	cpy #0
 	bne df_rt_wait_counter
 	rts
-	
+
 df_rt_printat
 	; Get x,y
 	jsr df_rt_parm_2ints
@@ -1062,7 +1062,7 @@ df_rt_print_ws
 	beq df_rt_print_ws
 	; save index
 	sty df_exeoff
-	
+
 	; if starts with string literal then process seval
 	cmp #DFTK_STRLIT
 	beq df_rt_print_string
@@ -1082,7 +1082,7 @@ df_rt_print_string
 df_rt_print_done
 	sty df_exeoff
 	rts
-	
+
 df_rt_println
 	jsr df_rt_print
 	lda #UTF_CR
@@ -1114,7 +1114,7 @@ df_rt_nassign
 	txa
 	dey
 	sta (df_tmpptra),y
-	
+
 	rts
 
 ; assign to a string variable
@@ -1126,7 +1126,7 @@ df_rt_sassign
 
 	; get string pointer from top of runtime stack
 	jmp df_ost_popStr
-	
+
 ;	clc
 ;	rts
 
@@ -1142,7 +1142,7 @@ df_rt_generate_lvar
 	lda (df_currlin),y
 	sty df_exeoff
 	sta df_tmpptra+1
-	
+
 	; get the type and save
 	ldx #0
 	lda (df_tmpptra,x)
@@ -1152,7 +1152,7 @@ df_rt_generate_lvar
 	sec
 	jsr df_rt_eval_var
 	jsr df_ost_popPtr
-	
+
 	; pull the type previously saved into Y
 	sta tmp_d		; Save A
 	pla
@@ -1184,13 +1184,13 @@ df_rt_assign_str
 	; remember to restore A
 	pla
 	jmp df_rt_sassign
-	
+
 ; comment or data token is ignored by runtime
 df_rt_comment
 df_rt_data
 	rts
 
-	
+
 ; run token - future expansion
 df_rt_run
 	rts
@@ -1387,11 +1387,11 @@ df_rt_listp_done
 	txa
 	pha
 	lda df_lineptr+1
-	jmp df_rt_list_line 
+	jmp df_rt_list_line
 df_rt_listp_notfound
 	; Fatal error if proc not found
 	SWBRK DFERR_NOPROC
-	
+
 ; list token
 df_rt_list
 	lda #0
@@ -1402,7 +1402,7 @@ df_rt_list
 	jsr df_rt_eos
 	; so list whole program
 	bcs df_rt_listprg
-	
+
 	;if '_' then use procnames
 	cmp #'_'
 	bne df_rt_list_all
@@ -1480,7 +1480,7 @@ df_rt_list_next_line
 	txa
 	pha
 	bcs df_rt_list_line
-df_rt_list_line_fin	
+df_rt_list_line_fin
 	; if got here then reached tmpb
 	pla
 	pla
@@ -1511,7 +1511,7 @@ df_rt_list_escval
 	jmp df_rt_list_nexttok
 df_rt_list_token
 	jsr df_rt_list_decode_token
-df_rt_list_nexttok	
+df_rt_list_nexttok
 	; advance the line offset
 	inc df_exeoff
 	lda df_exeoff
@@ -1531,8 +1531,8 @@ df_rt_list_nexttok
 	jmp df_rt_list_decode
 df_rt_list_line_only_fin
 	rts
-	
-	
+
+
 ; decode escape sequences
 ; Input: A contains the esc val and Y is char line index
 df_rt_list_decode_esc
@@ -1547,7 +1547,7 @@ df_rt_list_decode_esc
 	lda (df_tmpptra),y
 	sta df_tmpptrb+1
 	dey				; Y is on byte after esc byte
-	pla				
+	pla
 	; x2 to get jmp offset
 	asl a
 	tax
@@ -1582,7 +1582,7 @@ df_rt_lst_hex_pre
 	jmp io_put_ch
 ;	rts
 
-; Decode a byte hex	
+; Decode a byte hex
 df_rt_lst_bythex
 	jsr df_rt_lst_hex_pre
 df_rt_lst_lo_hex
@@ -1639,9 +1639,9 @@ df_rt_lst_bit_skip0
 	sty df_exeoff
 ;	clc
 	rts
-	
+
 ; Decode a decimal integer
-df_rt_lst_intdec	
+df_rt_lst_intdec
 	ldx df_tmpptrb
 	lda df_tmpptrb+1
 	iny
@@ -1651,13 +1651,13 @@ df_rt_lst_intdec
 ;	rts
 
 ; decode a variable or procedure
-; Slot address to decode in ptrb 
+; Slot address to decode in ptrb
 df_rt_lst_var
 df_rt_lst_proc
 	; jump over the address bytes
 	iny
 	sty df_exeoff
-	
+
 	; ptrc starts at VNT start
 	_cpyZPWord df_vntstrt,df_tmpptrc
 
@@ -1733,7 +1733,7 @@ df_rt_list_decode_token_normal
 	and #0x7f
 	; token 0 and 1 don't get decoded they are implicit
 	cmp #2
-	bcs df_rt_list_do_decode_tkn	
+	bcs df_rt_list_do_decode_tkn
 	rts
 df_rt_list_do_decode_tkn
 	tax
@@ -1764,7 +1764,7 @@ df_rt_list_got_sym
 	_incZPWord df_tmpptrb
 	plp
 	bpl df_rt_list_got_sym
-	rts 
+	rts
 
 ;** Decode assembler token in A **
 df_rt_asm_decode_token
@@ -1817,7 +1817,7 @@ df_rt_list_got_asm_sym
 	_incZPWord df_tmpptrb
 	jmp df_rt_list_got_asm_sym
 df_rt_asm_decode_token_done
-	rts 
+	rts
 
 
 df_rt_doke
@@ -1831,7 +1831,7 @@ df_rt_doke
 	; poke hi byte
 	sta (df_tmpptra),y
 	rts
-	
+
 df_rt_poke
 	jsr df_rt_parm_2ints
 	lda df_tmpptrb
@@ -1876,7 +1876,7 @@ df_rt_sound_env_skip
 	jmp snd_set
 ;	rts
 
-; sound chan,period,volume	
+; sound chan,period,volume
 df_rt_sound
 	jsr df_rt_parm_3ints
 df_rt_dosound
@@ -1910,8 +1910,8 @@ df_rt_music
 	sta df_tmpptrc
 	; tmpa,b,c contain chan,per,vol
 	jmp df_rt_dosound
-	
-	
+
+
 ; play tonemask,noisemask,envelope,period
 df_rt_play
 	jsr df_rt_parm_4ints
@@ -1953,7 +1953,7 @@ df_rt_play
 ;	rts
 
 ;* common filename procesing routine
-;* 
+;*
 df_rt_init_filename
 	; evaluate string
 	jsr df_rt_neval
@@ -1962,18 +1962,18 @@ df_rt_init_filename
 	; save string address
 	stx df_tmpptrc
 	sta df_tmpptrc+1
-	
+
 	; copy string to fhandle
 	ldy #0
 df_rt_copy_fn
 	lda (df_tmpptrc),y
-df_rt_fname_case	
+df_rt_fname_case
 	sta df_linbuff,y				; Put filename in line buffer
 	iny
 	cmp #0
 	bne df_rt_copy_fn
 	rts
-	
+
 ;* common file parsing routine
 df_rt_parse_file
 	; now process filename
@@ -2029,7 +2029,7 @@ df_rt_loadline
 	sta df_nxtstidx			; Clear next statement
 	lda #1					; Set immediate mode
 	sta df_immed
-	jmp df_rt_file_cleanup	; Ok now can close and done	
+	jmp df_rt_file_cleanup	; Ok now can close and done
 df_rt_ldtokenise
 	jsr df_pg_tokenise		; Tokenise loaded string
 	jmp df_rt_loadline		; Continue with next until blank
@@ -2049,7 +2049,7 @@ df_rt_openforbinload
 	jsr io_open_ext1		; Ext1 is binary file read
 	bcs df_rt_file_errc
 	rts
-	
+
 ; bload addr,"file"
 df_rt_bload
 	; Get address but keep on stack
@@ -2064,13 +2064,13 @@ df_rt_bload
 	jsr df_ost_popInt
 	stx df_tmpptra
 	sta df_tmpptra+1
-	
+
 	; Get file address to X,Y
 	jsr io_get_ch
 	tax
 	jsr io_get_ch
 	tay
-	
+
 	; Check if user address is zero
 	lda df_tmpptra
 	ora df_tmpptra+1
@@ -2084,7 +2084,7 @@ df_rt_bload_addr
 	sta df_tmpptrb
 	jsr io_get_ch
 	sta df_tmpptrb+1
-	
+
 	; Go and load the bytes
 	jsr df_rt_loadbin
 	; Close the file
@@ -2100,7 +2100,7 @@ df_rt_bsave
 	inc df_exeoff
 	; evaluate the 2nd parm
 	jsr df_rt_neval
-	
+
 	; Process file and open for binary save
 	inc df_exeoff
 	jsr df_rt_openforbinsave
@@ -2120,7 +2120,7 @@ df_rt_bsave
 	; Close the file
 	jmp df_rt_file_cleanup
 
-	
+
 ; save dflat tokenised program as binary
 df_rt_save
 	; Process file and open for binary save
@@ -2176,7 +2176,7 @@ df_rt_save
 	sta df_tmpptrb+1
 	; now save bytes
 	jsr df_rt_savebin
-	
+
 	; close the file
 	jsr io_close
 	clc
@@ -2192,17 +2192,17 @@ df_rt_load
 	jsr df_rt_getbin_parms
 	; and get bytes
 	jsr df_rt_loadbin
-	
+
 	; Get program header
 	jsr df_rt_getbin_parms
 	; and get bytes
 	jsr df_rt_loadbin
-	
+
 	; Get variables header
 	jsr df_rt_getbin_parms
 	; and get bytes
 	jsr df_rt_loadbin
-	
+
 	; close the file
 	jsr io_close
 	clc
@@ -2279,7 +2279,7 @@ df_rt_dec_binlen
 	lda df_tmpptrb
 	bne df_rt_binlen_skip
 	dec df_tmpptrb+1
-df_rt_binlen_skip	
+df_rt_binlen_skip
 	dec df_tmpptrb
 	; Reached zero?
 	lda df_tmpptrb
@@ -2422,7 +2422,7 @@ df_rt_get_pushp
 	plp
 df_rt_get_push
 	jmp df_ost_pushIntA
-	
+
 ; s = scrn(x,y)
 df_rt_scrn
 	inc df_exeoff
@@ -2473,7 +2473,7 @@ df_rt_call
 	ldx	df_tmpptrc				; load X
 	ldy df_tmpptrd				; load Y
 	jsr df_rt_calljsr
-	jmp df_ost_pushInt			; A,X pair is return value	
+	jmp df_ost_pushInt			; A,X pair is return value
 df_rt_calljsr
 	jmp (df_tmpptra)			; tmpptra is address, return with RTS
 
@@ -2490,13 +2490,13 @@ df_rt_strlen_count
 	bne df_rt_strlen_count
 	tya
 	rts
-	
-	
+
+
 ; common routine to extract a string
 ; tmpa = source string
 ; tmpb = dest string
 ; tmpc = start pos
-; tmpd = endpos	
+; tmpd = endpos
 df_rt_str_extract
 	; source string
 	jsr df_ost_popStr
@@ -2588,7 +2588,7 @@ df_rt_hex
 ; $l = left($s, x)
 df_rt_left
 	inc df_exeoff
-	
+
 	; first get the string to act on
 	; point to string accumulator
 	jsr df_rt_seval
@@ -2731,6 +2731,6 @@ df_rt_sprhit_inactive
 	txa
 	jmp df_ost_pushInt
 
-	
+
 mod_sz_rtsubs_e
 

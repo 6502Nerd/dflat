@@ -19,7 +19,7 @@
 ;**********************************************************
 
 	; ROM code
-	code  
+	code
 
 mod_sz_runtime_s
 
@@ -31,14 +31,14 @@ df_initrun
 	; Set the key mask to check every 32 instructions
 	lda #0x20
 	sta df_checkmsk
-	
+
 	; String and array heap initialisation
 	; Grows up from end of prog space PLUS 1
 	; Initially empty (dim will allocate)
 	_cpyZPWord df_prgend,df_starstrt
 	_incZPWord df_starstrt
 	_cpyZPWord df_starstrt,df_starend
-	
+
 	ldx #0xff
 	; Reset runtime stack (grows down)
 	stx df_rtstop
@@ -50,7 +50,7 @@ df_initrun
 	stx df_currdat+1
 	; if nest counter zeroed
 	stx df_ifnest
-	
+
 	; clear proc addresses
 	jsr df_rt_init_vvt
 
@@ -95,7 +95,7 @@ df_rt_init_vvt_slot_undim
 	bne df_rt_init_vvt_skip
 	; if not proc then zero dim2
 	lda #0
-	sta (df_tmpptra),y	
+	sta (df_tmpptra),y
 df_rt_init_vvt_skip
 	; increment pointer to next slot
 	_adcZPWord df_tmpptra,8
@@ -165,7 +165,7 @@ df_rt_neval_tk
 	and #0x7f
 	; check if op (look up type using X as index)
 	; X contains the current operator index
-	
+
 	tax
 	lda df_tk_tokentype,x
 	; A contains token type
@@ -180,7 +180,7 @@ df_rt_neval_tk
 	; If got here then something wrong
 	SWBRK DFERR_OK
 
-df_rt_neval_process	
+df_rt_neval_process
 	; pop operator off stack and execute
 	; keep popping until reached the terminator
 	pla
@@ -262,7 +262,7 @@ df_rt_neval_nextbyte
 	; keep going until non-ws char found or end of line / statement
 
 
-	
+
 ; jump to escape evaluation routine
 df_rt_eval_esc
 	asl a
@@ -272,24 +272,24 @@ df_rt_eval_esc
 	lda df_rt_eval_esc_tab+1,x
 	sta df_tmpptra+1
 	jmp (df_tmpptra)
-	
+
 df_rt_eval_esc_tab
 	dw df_rt_eval_chr
 	dw df_rt_eval_reserved
 	dw df_rt_eval_reserved
 	dw df_rt_eval_reserved
-	dw df_rt_eval_reserved	
+	dw df_rt_eval_reserved
 	dw df_rt_eval_reserved	; no such thing as bytdec
 	dw df_rt_eval_bythex
 	dw df_rt_eval_bytbin
-	dw df_rt_eval_reserved	
+	dw df_rt_eval_reserved
 	dw df_rt_eval_intdec
 	dw df_rt_eval_inthex
 	dw df_rt_eval_intbin
 	dw df_rt_eval_reserved
 	dw df_rt_eval_reserved
 	dw df_rt_eval_reserved
-	dw df_rt_eval_reserved	
+	dw df_rt_eval_reserved
 	dw df_rt_eval_strlit
 	dw df_rt_eval_var
 	dw df_rt_eval_proc
@@ -314,7 +314,7 @@ df_rt_sval
 	pha
 	lda tmp_d
 	; push original destination
-	jsr df_ost_pushStr	
+	jsr df_ost_pushStr
 	; Push the destination to the 6502 stack
 	; hi byte first then lo
 	; push string idx so we know our starting position
@@ -372,8 +372,8 @@ df_rt_seval_tk
 	; check if fn
 	lda df_tk_tokentype,x
 	and #DFTK_FN
-	bne df_rt_seval_tk_fn	
-	
+	bne df_rt_seval_tk_fn
+
 	; token type mismatch if got here
 	SWBRK DFERR_TYPEMISM
 
@@ -410,27 +410,27 @@ df_rt_seval_copy
 	pha
 	lda df_tmpptra
 	pha
-	
+
 	jmp df_rt_seval_nextbyte
-	
+
 df_rt_seval_esc_strlit
 	; evaluate string literal
 	jsr df_rt_eval_strlit
 	jmp df_rt_seval_copy
-	
+
 df_rt_seval_esc_proc
 	; not yet suported *******
 	SWBRK DFERR_OK
-	
+
 df_rt_seval_nextbyte
 	inc df_exeoff
 	jmp df_rt_seval_optk
 	; keep going until non-ws char found or end of line / statement
 df_rt_seval_done
-	; 
+	;
 	pla
 	pla
-	
+
 	clc
 	rts
 
@@ -454,7 +454,7 @@ df_rt_copyStr_done
 	sta df_tmpptra+1
 	clc
 	rts
-	
+
 ;****************************************
 ;* Evaluate and push numeric value
 ;****************************************
@@ -496,7 +496,7 @@ df_rt_eval_strlit
 	lda df_currlin+1
 	adc #0
 	sta df_tmpptra+1
-	
+
 	; push string on to stack
 	jsr df_ost_pushStr
 	; now proceed until end of string found
@@ -522,7 +522,7 @@ df_rt_arry_parm
 	txa
 ;	clc
 	rts
-	
+
 ;****************************************
 ;* Return double array parameter
 ;* X = dim1, Y = dim2
@@ -557,7 +557,7 @@ df_rt_arry_parm2_skiparry2
 ;	clc
 	rts
 
-	
+
 ;****************************************
 ;* Evaluate and push variable
 ;* The actual value is pushed if numeric
@@ -629,7 +629,7 @@ df_rt_eval_lvar
 
 	; push pointer to lo,hi
 	jmp df_ost_pushPtr
-	
+
 df_rt_eval_var_simple
 	; clean up stack
 	pla
@@ -641,14 +641,14 @@ df_rt_eval_var_simple
 	ldy #DFVVT_HI
 	lda (df_tmpptra),y
 	jmp df_ost_pushPtr
-	
+
 df_rt_eval_var_do_arry
 	; move past var index
 	inc df_exeoff
 	; zero out x,y as they have dimension info
 	ldx #0
 	ldy #0
-	
+
 	; ** Array handling routine **
 	; A on stack = type
 	; save vvt address
@@ -656,7 +656,7 @@ df_rt_eval_var_do_arry
 	pha
 	lda df_tmpptra
 	pha
-	
+
 	; get array parms in X,Y
 	jsr df_rt_arry_parm2
 	; restore vvt address
@@ -690,7 +690,7 @@ df_rt_eval_var_do_arry
 	pha
 	txa
 	pha
-	
+
 df_rt_eval_var_dim2adj
 	; don't let y=0
 	cpy #0
@@ -759,7 +759,7 @@ df_rt_eval_var_push
 	SWBRK DFERR_DIM
 df_rt_array_exists
 	adc num_a+1
-	sta num_a+1	
+	sta num_a+1
 	; get the type
 	pla
 	; if not int or byte then push string
@@ -793,7 +793,7 @@ df_rt_eval_ptr
 	ldx num_a
 	lda num_a+1
 	jmp df_ost_pushPtr
-	
+
 df_rt_eval_proc
 	lda df_parmtop				; Save current position of parameter stack
 	pha
@@ -980,7 +980,7 @@ df_rt_init_stat_ptr
 	lda (df_currlin),y
 	sta df_nxtstidx
 	rts
-	
+
 ;****************************************
 ;* Execute from a statement pointed to
 ;* by currlin and exeoff
@@ -1015,7 +1015,7 @@ df_rt_exec_found_tok
 	beq df_rt_exec_end
 	cmp #DFRT_RETURN
 	beq df_rt_exec_end
-	
+
 	; check for break, asynch get
 	inc df_checkkey					; Don't check every time else slooow
 	lda df_checkmsk					; Check the mask (normally 0x20)
@@ -1046,7 +1046,7 @@ df_rt_exec_no_key
 	lda df_currlin+1
 	adc #0
 	sta df_currlin+1
-	
+
 	; start from first statement in new line
 	ldy #3
 	sty df_exeoff
@@ -1082,7 +1082,7 @@ df_rt_exec_jump
 	ldy df_nxtstidx
 	jmp df_rt_exec_init_ptr
 
-	
+
 ;****************************************
 ;* Run statement in A
 ;****************************************
@@ -1210,7 +1210,7 @@ df_rt_findproc_cmd
 	lda (df_lineptr),y
 	cmp df_procptr+1
 	bne df_rt_findproc_nextstat
-	
+
 	; found it, return AXY with line details
 	ldx df_lineptr
 	lda df_lineptr+1
@@ -1231,7 +1231,7 @@ df_rt_findproc_nextstat
 	; error
 df_rt_findproc_err
 	SWBRK DFERR_NOPROC
-	
+
 ;****************************************
 ;* Find an escape value
 ;* Does not check for end of line or statement
@@ -1279,8 +1279,8 @@ df_rt_getlvar
 	sta df_tmpptra
 	iny
 	lda (df_currlin),y
-	sta df_tmpptra+1	
-	
+	sta df_tmpptra+1
+
 	sty df_exeoff
 	; get the type
 	ldy #0
@@ -1305,10 +1305,10 @@ df_rt_pop_stat_go
 	clc
 	rts
 
-	include "dflat\rtjmptab.s"
-	include "dflat\rtsubs.s"
-	include "dflat\proc.s"
-	
+	include "dflat/rtjmptab.s"
+	include "dflat/rtsubs.s"
+	include "dflat/proc.s"
+
 mod_sz_runtime_e
 
 

@@ -5,6 +5,22 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __linux__
+#include <assert.h>
+#include <errno.h>
+#define strcpy_s strcpy
+#define errno_t int
+errno_t fopen_s(FILE **f, const char *name, const char *mode) {
+	errno_t ret = 0;
+	assert(f);
+	*f = fopen(name, mode);
+	/* Can't be sure about 1-to-1 mapping of errno and MS' errno_t */
+	if (!*f)
+		ret = errno;
+	return ret;
+}
+#endif
+
 FILE *in, *out;
 char fname[100];
 int block = 0;								/* Count in to the block */

@@ -24,7 +24,7 @@
 mod_sz_graph_s
 
 
-	include "vdp\font.s"
+	include "vdp/font.s"
 
 ;****************************************
 ;* vdp_init_font
@@ -48,13 +48,13 @@ gr_init_font
 	ldx #3					; Copy 3 pages
 	jmp gr_copy_mem
 
-	
+
 ;****************************************
 ;* vdp_copy_mem
 ;* Copy memory pages at a time
 ;* Input :	clo/hi	=	source
 ;*			blo/hi	=	dest
-;*			X		=	pages to copy 
+;*			X		=	pages to copy
 ;* Output : None
 ;* Regs affected : All
 ;****************************************
@@ -70,7 +70,7 @@ gr_copy_byte
 	sta (tmp_blo),y			; Put it to the memory
 	iny
 	bne gr_copy_byte		; keep going for 1 page
-	inc tmp_ahi				; only need to increment high byte of 
+	inc tmp_ahi				; only need to increment high byte of
 	inc tmp_bhi				; source and destination ptr
 	dex						; page counter
 	bne gr_copy_byte		; keep going for X pages
@@ -87,20 +87,20 @@ gr_init
 	stx vdp_curcnt
 	ldx #0
 	stx vdp_curstat
-	
+
 	; Hard reset initial geom values (X=0)
 	jsr gr_init_geom
 
 	; Copy font from ROM to char base
 	jsr gr_init_font
-	
+
 	; Go in to hires mode to generate tables
 	jsr gr_init_hires
 	jsr gr_init_hires_tables
 
-	; But start in text mode 
+	; But start in text mode
 	jmp gr_init_screen_txt
-	
+
 
 ;****************************************
 ;* gr_check_font_copy
@@ -142,14 +142,14 @@ gr_init_geom
 	ldy gr_scrngeom_base,x
 	bmi gr_init_geom_done
 	; skip to data and put in A
-	inx 
+	inx
 	lda gr_scrngeom_base,x
 	; save it in Y
 	sta gr_scrngeom,y
 	; next entry
 	inx
 	bne gr_init_geom	; Always
-gr_init_geom_done	
+gr_init_geom_done
 	rts
 
 ; Geometry initialisation tables
@@ -177,7 +177,7 @@ gr_scrngeom_text
 	db gr_text_w, 40
 	db gr_text_h, 28
 	db -1
-;* Geometry for hires	
+;* Geometry for hires
 gr_scrngeom_hires
 	db gr_mode, 1
 
@@ -271,7 +271,7 @@ vdp_fill_vram_noinc
 
 	dec vdp_curoff
 	rts
-	
+
 ;****************************************
 ;* gr_init_hires_tables
 ;* Generate the hires tables
@@ -329,7 +329,7 @@ gr_init_tab_col_skip
 	rts
 
 
-	
+
 ;****************************************
 ;* gr_cls
 ;* Clear the text screen
@@ -355,7 +355,7 @@ gr_cls_row
 	lda gr_scrngeom+gr_ink			; Set Ink
 	sta (gr_scrngeom+gr_geom_tmp),y
 	iny
-gr_cls_skip_marg	
+gr_cls_skip_marg
 	lda vdp_blank
 	sta vdp_curval					; Under cursor is also blank
 gr_cls_col
@@ -386,7 +386,7 @@ gr_cls_col
 	dec vdp_curoff
 
 	rts
-	
+
 ;****************************************
 ;* gr_getXY_base
 ;* Get base screen address using Y coord only
@@ -406,7 +406,7 @@ gr_getXY_base
 
 	; A = high byte of base address
 	rts
-	
+
 ;****************************************
 ;* gr_plot
 ;* Write a byte in the screen pos
@@ -438,8 +438,8 @@ gr_put
 	sta (gr_scrngeom+gr_cur_ptr),y
 	dec vdp_curoff		; Allow cursor flashing
 	rts
-	
-	
+
+
 ;****************************************
 ;* gr_get
 ;* Get the byte in the screen pos
@@ -463,7 +463,7 @@ gr_set_cur
 	clc
 gr_set_cur_init
 	inc vdp_curoff				; Disable cursor
-	
+
 	bcs gr_set_cur_skip			; Skip restore if C=1
 	stx tmp_alo
 	sty tmp_ahi
@@ -499,7 +499,7 @@ gr_set_cur_skip
 	dec vdp_curoff
 
 	rts
-	
+
 
 
 ;****************************************
@@ -508,7 +508,7 @@ gr_set_cur_skip
 ;****************************************
 gr_scroll_up
 	inc vdp_curoff
-	
+
 	; Set source in a and dest in b
 	; b is first line, source is second
 	clc
@@ -520,7 +520,7 @@ gr_scroll_up
 	sta tmp_bhi
 	adc #0
 	sta tmp_ahi
-	
+
 	; Restore what was underneath cursor
 	lda vdp_curval
 	ldy gr_scrngeom+gr_cur_x
@@ -572,13 +572,13 @@ gr_scroll_char
 	iny
 	lda gr_scrngeom+gr_ink			; Set Ink
 	sta (gr_scrngeom+gr_geom_tmp),y
-	iny	
+	iny
 gr_scroll_marg
 	; Needs to be filled with blank
 	lda vdp_blank
 	sta vdp_curval			; Also this is the cursor value
 gr_scroll_erase_ln
-	sta (tmp_blo),y	
+	sta (tmp_blo),y
 	iny
 	cpy gr_scrngeom+gr_text_w
 	bne gr_scroll_erase_ln
@@ -619,7 +619,7 @@ gr_nl_skip_nl
 	jsr gr_set_cur
 ;	_pullAXY
 	rts
-	
+
 
 ;****************************************
 ;* gr_cur_right
@@ -658,7 +658,7 @@ gr_cur_left
 	; Load cursor x,y position, load X last to check for 0
 	ldy gr_scrngeom+gr_cur_y
 	ldx gr_scrngeom+gr_cur_x
-	
+
 	; Decrement screen pointer
 	; Move cursor left
 	cpx gr_scrngeom+gr_margin	; Already at left margin?
@@ -671,7 +671,7 @@ gr_cur_skip_at_left
 	dex
 	jsr gr_set_cur
 
-gr_cur_skip_at_tl	
+gr_cur_skip_at_tl
 ;	_pullAXY
 	rts
 
@@ -687,12 +687,12 @@ gr_cur_up
 	; Load cursor x,y position, load Y last to check for zero
 	ldx gr_scrngeom+gr_cur_x
 	ldy gr_scrngeom+gr_cur_y
-	
+
 	beq gr_cur_skip_at_top	; If already at the top, don't do anything
 	dey
 	jsr gr_set_cur
-	
-gr_cur_skip_at_top	
+
+gr_cur_skip_at_top
 ;	_pullAXY
 	rts
 
@@ -782,8 +782,8 @@ gr_key_tidy_up
 gr_key_no_key
 	plp
 	sec									; Ensure C=1 for invalid key
-	bcs gr_key_tidy_up					; Always branches	
-	
+	bcs gr_key_tidy_up					; Always branches
+
 ;****************************************
 ;* gr_put_byte
 ;* Put a byte out
@@ -796,7 +796,7 @@ gr_put_byte
 	jsr gr_put_byte_low
 	_pullAXY
 	rts
-	
+
 gr_put_byte_low
 	cmp #UTF_DEL			; Del key
 	beq gr_process_special
@@ -884,9 +884,9 @@ gr_hchar
 	; and add to char font base
 	; tmp_clo contains base address
 	asl a
-	rol tmp_chi	
+	rol tmp_chi
 	asl a
-	rol tmp_chi	
+	rol tmp_chi
 	asl a
 	rol tmp_chi
 	clc
@@ -907,7 +907,7 @@ gr_hchar
 	lda tmp_ahi
 	adc #0
 	sta tmp_ahi
-	
+
 	lda tmp_blo					; Get the mask
 	ldx #7
 gr_hchar_mask					; Calculate how many shifts to tmp_blo
@@ -924,7 +924,7 @@ gr_hchar_getfont
 	sta ztmp_24
 	lda #0
 	sta ztmp_24+1
-	
+
 	; shift right number of times
 	ldx tmp_blo
 gr_hchar_rot1bit
@@ -964,7 +964,7 @@ gr_hchar_copyline
 	ora (tmp_alo),y
 	sta (tmp_alo),y
 	jmp gr_hchar_copyline_nx
-gr_hchar_copyline_2	
+gr_hchar_copyline_2
 	; Mode = 2 : EOR
 	ldy #0						; Get lh side source
 	pla
@@ -1027,13 +1027,13 @@ gr_point_setup
 	ldy hires_col,x
 	rts
 
-;* Get pixel value at X,Y in to A	
+;* Get pixel value at X,Y in to A
 gr_pixel
 	jsr gr_point_setup				; Set up mask and addresses, Y=column, X=rem
 	lda (tmp_alo),y					; Get screen byte
 	and tmp_blo						; Check if pixel coincides with mask
 	rts
-	
+
 ;* Plot a point based on X,Y coordinates
 gr_point
 	jsr gr_point_setup				; Set up mask and addresses, Y=column, X=rem
@@ -1052,7 +1052,7 @@ gr_point_write
 	sta (tmp_alo),y
 	rts
 
-	
+
 ;****************************************
 ;* gr_circle
 ;* Draw a circle centre x0,y0, radius r
@@ -1107,7 +1107,7 @@ gr_circle_plot
 	adc #1
 	adc grc_d
 	sta grc_d
-	jmp gr_circle_plot	
+	jmp gr_circle_plot
 gr_circle_d_lte0
 	;decision += 2 * y + 1
 	lda grc_y
@@ -1116,7 +1116,7 @@ gr_circle_d_lte0
 	adc #1
 	adc grc_d
 	sta grc_d
-	jmp gr_circle_plot	
+	jmp gr_circle_plot
 gr_circle_done
 	rts
 gr_circle_points
@@ -1204,8 +1204,8 @@ gr_circle_points
 	jsr gr_point
 	rts
 
-	
-	
+
+
 ;****************************************
 ;* gr_line
 ;* Draw a line from x0,y0 -> x1,y1
@@ -1236,7 +1236,7 @@ grl_siny= (ztmp_24+16)
 
 	lda #0
 	sta grl_xyyx				; Assume normal xy axis
-	
+
 	; check if abs(dy)>abs(dx) if so need to swap xy
 	; num_b = abs(x), num_b+1 = abs(dy)
 	sec
@@ -1278,7 +1278,7 @@ gr_line_skip_xy_swap
 	ldy #255					; -1
 	sta grl_sinx
 	sta grl_siny
-	
+
 	; check going right to left
 	lda grl_x0
 	cmp grl_x1
@@ -1305,7 +1305,7 @@ gr_line_skip_y_up
 	lda #0
 	sta grl_2dy+1
 	rol grl_2dy+1
-	
+
 ;    p=2*dy-dx;					; p (word)
 	sec
 	lda grl_2dy
@@ -1314,7 +1314,7 @@ gr_line_skip_y_up
 	lda grl_2dy+1
 	sbc #0
 	sta grl_p+1
-	
+
 ;   2*(dy-dx)					; num_tmp+2 = 2*(dy-dx)
 	sec
 	lda grl_2dy
@@ -1333,7 +1333,7 @@ gr_line_pixel
 	ldy grl_x0
 gr_line_yx_skip
 	jsr gr_point				; Plot point x,y
-	
+
 	lda grl_x0					; Check if done
 	cmp grl_x1
 	beq gr_line_done
@@ -1349,13 +1349,13 @@ gr_line_yx_skip
 	bmi gr_line_neg_p
 
 	; if p >=0
-	
+
 	; y=y+increment
 	clc
 	lda grl_y0
 	adc grl_siny
 	sta grl_y0
-	
+
 	; p=p+2*dy-2*dx
 	_addZPWord grl_p,grl_2dxy
 	jmp gr_line_pixel
@@ -1364,7 +1364,7 @@ gr_line_neg_p
 	; if p < 0
 	; p=p+2*dy
 	_addZPWord grl_p,grl_2dy
-	
+
 	jmp gr_line_pixel
 gr_line_done
 	rts
@@ -1387,7 +1387,7 @@ gr_line_done
 ;    }
 
 
-;* These tables are to speed up calculating the 
+;* These tables are to speed up calculating the
 ;* offset for plot commands
 gr_offset_40lo
 	db lo(000*40), lo(001*40), lo(002*40), lo(003*40), lo(004*40)
@@ -1418,13 +1418,13 @@ gr_spr_init_loop
 	bpl gr_spr_init_loop			; Until all 32 sprites initialised
 	rts
 
-	
+
 ;* Erase all active sprites
 gr_spr_erase
 	; First restore background from sprites
 	; that are active and new pos is different from current
 	ldx #31							; Start at last sprite
-gr_spr_erase_loop	
+gr_spr_erase_loop
 	lda spr_curX,x					; Is sprite active?
 	bmi gr_spr_erase_next
 	sta tmp_alo						; x pos saved for later
@@ -1473,7 +1473,7 @@ gr_spr_new_next
 ; Active sprites are always drawn - 0 = lowest priority
 gr_spr_draw
 	ldx #31							; Start at last sprite
-gr_spr_draw_loop	
+gr_spr_draw_loop
 	lda spr_newX,x					; Is sprite active?
 	sta tmp_alo
 	bmi gr_spr_draw_next
@@ -1494,8 +1494,8 @@ gr_spr_put
 	lda spr_baseadrh,x
 	sta gr_scrngeom+gr_geom_tmp+1
 	ldy tmp_alo						; Y reg is in tmp_alo
-	pla								; Get back the char to 
-	sta (gr_scrngeom+gr_geom_tmp),y	; put on to screen	
+	pla								; Get back the char to
+	sta (gr_scrngeom+gr_geom_tmp),y	; put on to screen
 	rts
 
 
@@ -1514,7 +1514,7 @@ gr_spr_hit
 	cmp #0x80						; If A>=0x80 then C=1
 	lda spr_bgnd,x
 	rts
-	
+
 ;* Update spr A with coords X,Y
 gr_spr_pos
 	sty tmp_alo
@@ -1546,7 +1546,7 @@ mod_sz_graph_e
 ;	; Calculate destination address
 ;	lda #0
 ;	sta tmp_ahi
-;	
+;
 ;	tya				; Row number in A
 ;	; Multiply 8
 ;	asl a
@@ -1556,7 +1556,7 @@ mod_sz_graph_e
 ;	asl a
 ;	rol tmp_ahi
 ;	sta tmp_alo
-;	
+;
 ;	; Multiply 32
 ;	; Use partial result from m8
 ;	lda tmp_ahi
@@ -1579,7 +1579,7 @@ mod_sz_graph_e
 ;	adc gr_scrngeom+vdp_scrn+1
 ;	sta tmp_ahi
 ;	; Dest offset in tmp_alo
-;	
+;
 ;	; pixel x coord in to A
 ;	; We dvide by 48 doing trial subtracts
 ;	; This leaves Y with a number 0..5

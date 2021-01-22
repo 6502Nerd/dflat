@@ -5,6 +5,50 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef __linux__
+#include <assert.h>
+#include <errno.h>
+#define strcpy_s strcpy
+#define strcat_s strcat
+#define errno_t int
+errno_t fopen_s(FILE **f, const char *name, const char *mode) {
+	errno_t ret = 0;
+	assert(f);
+	*f = fopen(name, mode);
+	/* Can't be sure about 1-to-1 mapping of errno and MS' errno_t */
+	if (!*f)
+		ret = errno;
+	return ret;
+}
+/* The _itoa_s code found in the public domain */
+char* _itoa_s(int value, char* str, int radix) {
+	static char dig[] =
+	"0123456789"
+	"abcdefghijklmnopqrstuvwxyz";
+	int n = 0, neg = 0;
+	unsigned int v;
+	char* p, *q;
+	char c;
+
+	if (radix == 10 && value < 0) {
+		value = -value;
+		neg = 1;
+	}
+	v = value;
+	do {
+		str[n++] = dig[v%radix];
+		v /= radix;
+	} while (v);
+	if (neg)
+		str[n++] = '-';
+	str[n] = '\0';
+
+	for (p = str, q = p + (n-1); p < q; ++p, --q)
+		c = *p, *p = *q, *q = c;
+	return str;
+}
+#endif
+
 FILE *in, *out;
 char fname[100], line[200];
 int lineNo=0, blockCount=0, blockNum=0;

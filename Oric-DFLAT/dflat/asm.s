@@ -14,16 +14,16 @@
 ;**********************************************************
 
 	; ROM code
-	code  
+	code
 
 mod_sz_asm_s
 
 	;	dflat.s is already included, so just the additionals
-	include "dflat\asm.i"
-	include "dflat\tkasm.s"
-	include "dflat\rtasm.s"
-	include "dflat\asmsymtab.s"
-	include	"dflat\asmjmptab.s"
+	include "dflat/asm.i"
+	include "dflat/tkasm.s"
+	include "dflat/rtasm.s"
+	include "dflat/asmsymtab.s"
+	include	"dflat/asmjmptab.s"
 
 ;****************************************
 ;* as_init
@@ -37,5 +37,5 @@ asm_init
 	; Zero the option
 	sta df_asmopt
 	rts
-	
+
 mod_sz_asm_e

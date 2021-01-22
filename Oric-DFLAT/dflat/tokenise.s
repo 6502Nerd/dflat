@@ -28,7 +28,7 @@
 ;**********************************************************
 
 	; ROM code
-	code  
+	code
 
 mod_sz_tokenise_s
 
@@ -66,7 +66,7 @@ df_tk_put_tok
 	iny
 	sty df_tokoff
 	rts
-	
+
 ;****************************************
 ;* df_tk_isdigit
 ;* Check char in A for number 0-9
@@ -81,7 +81,7 @@ df_tk_isdigit
 df_tk_isdigit_false
 	clc
 	rts
-	
+
 ;****************************************
 ;* df_tk_isbin
 ;* Check char in A for binary digit
@@ -118,7 +118,7 @@ df_tk_ishex_false
 	clc
 	pla
 	rts
-	
+
 ;****************************************
 ;* df_tk_isalpha
 ;* Check next char in A alpha a-z, A-Z
@@ -151,7 +151,7 @@ df_tk_isalphanum
 df_tk_try_digit
 	jsr df_tk_isdigit
 	rts
-	
+
 ;****************************************
 ;* df_tk_isproc
 ;* Check next char A for _
@@ -206,7 +206,7 @@ df_tk_isws
 	bne df_tk_isws_false
 	; C must be 1 here
 	rts
-df_tk_isws_false	
+df_tk_isws_false
 	clc
 	rts
 
@@ -366,7 +366,7 @@ df_tk_str_don
 	rts
 df_tk_str_err
 	SWBRK DFERR_SYNTAX
-	
+
 ;****************************************
 ;* Tokenise a constant (num, string, char)
 ;****************************************
@@ -393,7 +393,7 @@ df_tk_const_try_char
 	jmp df_tk_char
 df_tk_const_err
 	SWBRK DFERR_SYNTAX
-	
+
 ;****************************************
 ;* Tokenise a variable - A = mask
 ;* Return : A = variable index
@@ -409,7 +409,7 @@ df_tk_var_cont
 	txa
 	pha
 	; Put VAR escape in token buffer
-	lda #DFTK_VAR					
+	lda #DFTK_VAR
 	jsr df_tk_put_tok
 	; Get variable address and put in token buffer
 	pla
@@ -439,13 +439,13 @@ df_tk_parm
 	bne df_tk_parm_skip_var
 	; get the qualifier and put in token buffer
 	jsr df_tk_get_buf
-	jsr df_tk_put_tok	
+	jsr df_tk_put_tok
 df_tk_parm_skip_var
 	; don't have a certain type of var
 	lda #0
 	jmp df_tk_var
-	
-	
+
+
 ;****************************************
 ;* Tokenise a variable to localise
 ;* Return : A,X = variable index
@@ -461,7 +461,7 @@ df_tk_localvar_cont
 	txa
 	pha
 	; Put VAR escape in token buffer
-	lda #DFTK_VAR					
+	lda #DFTK_VAR
 	jsr df_tk_put_tok
 	; Get variable index and put in token buffer
 	pla
@@ -488,7 +488,7 @@ df_tk_proc
 	sta df_procptr+1
 
 	; Put PROC escape in token buffer
-	lda #DFTK_PROC					
+	lda #DFTK_PROC
 	jsr df_tk_put_tok
 	; Get variable address and put in token buffer
 	lda df_procptr
@@ -499,7 +499,7 @@ df_tk_proc
 	; initially assume no args
 	lda #0
 	sta df_procargs
-	
+
 	; Must have an open bracket
 	lda #'('
 	jsr df_tk_expect_tok_err
@@ -532,7 +532,7 @@ df_tk_proc_skip_call
 	jsr df_tk_skip_ws
 	cmp #','
 	beq df_tk_proc_comma
-	cmp #')' 
+	cmp #')'
 	bne df_tk_proc_errp
 	beq df_tk_proc_noparm
 	; comma found, more parms to process
@@ -544,7 +544,7 @@ df_tk_proc_noparm
 	; consume the close bracket
 	jsr df_tk_get_buf
 	jsr df_tk_put_tok
-	
+
 	; update arg count if def mode
 	ldx df_procmode
 	bne df_tk_proc_skip_args
@@ -553,7 +553,7 @@ df_tk_proc_noparm
 	ldy #DFVVT_DIM2
 	lda df_procargs
 	sta (df_procptr),y
-df_tk_proc_skip_args	
+df_tk_proc_skip_args
 	clc
 	rts
 df_tk_proc_errp
@@ -589,7 +589,7 @@ df_tk_nbrkt
 	lda #')'
 	jsr df_tk_expect_tok_err
 	rts
-	
+
 ;****************************************
 ;* Parse call to numeric proc
 ;****************************************
@@ -633,7 +633,7 @@ df_tk_nterm_tryfn
 	txa
 	ora #0x80
 	jsr df_tk_put_tok
-	jsr df_tk_exec_parser 
+	jsr df_tk_exec_parser
 	bcs df_tk_nterm_err
 	rts
 df_tk_nterm_try_proc
@@ -719,8 +719,8 @@ df_tk_eos
 	sta df_tokbuff,y
 	sec
 	rts
-	
-	
+
+
 ;****************************************
 ;* Parse user defined proc
 ;****************************************
@@ -777,7 +777,7 @@ df_lexer_line
 	; Set the line length to 0
 	lda #0
 	jsr df_tk_put_tok
-	
+
 	; any leading white space, ignore and discard
 	jsr df_tk_strip_ws
 
@@ -859,7 +859,7 @@ df_tk_exec_parser
 	lda df_tk_tokenjmp+1,x
 	sta df_tmpptra+1
 	jmp (df_tmpptra)
-	
+
 
 ;****************************************
 ;* df_tk_linenum
@@ -926,7 +926,7 @@ df_tk_checknexttok
 	pha
 	and #DFTK_OP
 	and df_tk_tokentype,x
-	beq df_tk_symnomatch	
+	beq df_tk_symnomatch
 df_tk_matchtok_skip_op
 	; From the line buffer current pointer
 	; Check for a token match
@@ -945,7 +945,7 @@ df_tk_checktokch
 	bne df_tk_symnomatchp
 	; If match and symbol has MSB then
 	; all of the symbol matched
-	pla 
+	pla
 	bmi df_tk_symfound
 	; else more chars to match
 	; so increment line buffer pointers
@@ -979,7 +979,7 @@ df_tk_foundsymend
 	; else symbol table exhausted
 	; so no match found
 	; pop mask off stack
-	pla	
+	pla
 	; Zero symbol counter
 	lda #0
 	sta df_symoff
@@ -1016,10 +1016,10 @@ df_tk_symfound_final
 	clc
 	rts
 
-	include "dflat\tksymtab.s"
-	include "dflat\tkjmptab.s"
-	include "dflat\tktyptab.s"
-	include "dflat\toksubs.s"
+	include "dflat/tksymtab.s"
+	include "dflat/tkjmptab.s"
+	include "dflat/tktyptab.s"
+	include "dflat/toksubs.s"
 
 mod_sz_tokenise_e
 

@@ -22,16 +22,16 @@
 ;**********************************************************
 
 	; ROM code
-	code  
+	code
 
 mod_sz_dflat_s
-	
-;	include "dflat\error.s"  ** included in the main bank
-	include "dflat\var.s"
-	include "dflat\tokenise.s"
-	include "dflat\progedit.s"
-	include "dflat\runtime.s"
-	include "dflat\stack.s"
+
+;	include "dflat/error.s"  ** included in the main bank
+	include "dflat/var.s"
+	include "dflat/tokenise.s"
+	include "dflat/progedit.s"
+	include "dflat/runtime.s"
+	include "dflat/stack.s"
 
 ;****************************************
 ;* df_init
@@ -44,16 +44,16 @@ df_init
 	sta df_memtop
 	lda #hi(DF_MEMTOP)
 	sta df_memtop+1
-	
+
 	; Init program space
 	jsr df_clear
-	
+
 	; Initialise assembler
 ;	jsr asm_init
 
 	rts
-	
-	
+
+
 ;****************************************
 ;* df_clear
 ;* Initialise program space
@@ -72,7 +72,7 @@ df_clear
 	sta (df_prgstrt),y
 	; No variables - zero the count
 	sta df_varcnt
-	
+
 	; Variable value table
 	; Grows down from mem top
 	lda df_memtop
@@ -81,7 +81,7 @@ df_clear
 	lda df_memtop+1
 	sta df_vvtstrt+1
 	sta df_vvtend+1
-	
+
 	; Variable name table
 	; Grows down from mem top
 	lda df_vvtstrt
@@ -98,5 +98,5 @@ df_clear
 	sta df_sevalptr+1
 
 	rts
-	
+
 mod_sz_dflat_e

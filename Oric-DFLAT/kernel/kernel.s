@@ -17,13 +17,13 @@
 ;**********************************************************
 
 ;* Include all definition and code files in the right order
-	include "inc\includes.i"
-	include "inc\graph.i"
-	include "io\io.i"
-	include "dflat\dflat.i"
-	include "kernel\zeropage.i"
-	include "dflat\dflat.i"
-	include "dflat\error.i"
+	include "inc/includes.i"
+	include "inc/graph.i"
+	include "io/io.i"
+	include "dflat/dflat.i"
+	include "kernel/zeropage.i"
+	include "dflat/dflat.i"
+	include "dflat/error.i"
 
 
 ;****************************************
@@ -34,9 +34,9 @@
 	fcw nmi				; 0xfffa : NMI Vector
 	fcw init			; 0xfffc : Reset Vector
 	fcw call_irq_master	; 0xfffe : IRQ Vector
-	
+
 	; ROM code
-	code				;  
+	code				;
 	org 0xc000			; Start of ROM
 
 _code_start
@@ -44,11 +44,11 @@ _code_start
 mod_sz_kernel_s
 
 ;* Include all core code in the right order
-	include "kernel\snd-low.s"
-	include "kernel\main.s"
-	include "kernel\irq.s"
-	include "utils\utils.s"
-	include "io\io.s"
+	include "kernel/snd-low.s"
+	include "kernel/main.s"
+	include "kernel/irq.s"
+	include "utils/utils.s"
+	include "io/io.s"
 
 ;* Reset vector points here - 6502 starts here
 init
@@ -60,14 +60,14 @@ init
 init_2					; init_ram will jump back to here
 	ldx #0xff			; Initialise stack pointer
 	txs
-	
+
 	jsr kernel_init
 
 	jmp main
 
 kernel_init
 	jsr init_irq		; Initialise IRQ handling
-	
+
 	jsr init_via0		; initialise cia 0 - tape inactive
 	jsr tp_init			; Initialise tape handling
 
@@ -75,7 +75,7 @@ kernel_test
 	jsr init_snd		; initialise the sound chip
 
 	jsr gr_init			; Initialise graphics, default is text mode
-	
+
 	jsr init_keyboard	; initialise keyboard timer settings
 	jsr io_init			; Set default input/output device
 
@@ -88,7 +88,7 @@ kernel_test
 
 	rts
 
-	
+
 ;* Initialises RAM, skipping page 3 which is for IO
 ;* Zeroes all addressable RAM in the default bank i.e. up to 0xc000
 init_ram
@@ -109,7 +109,7 @@ init_ram_skip
 	inx					; Reduce page count
 	cpx #0xc0			; Do all pages until page until we get to page C0
 	bne init_ram_1
-	
+
 	jmp init_2			; Carry on initialisation
 
 ; 6502 Non-maskable interrupt come here

@@ -19,10 +19,10 @@
 ;**********************************************************
 
 	; ROM code
-	code  
-	include "dflat\error.i"
-	
-	
+	code
+	include "dflat/error.i"
+
+
 ; Error message table, each msg null terminated
 df_tk_errortab
 	db	"Ok", 0
@@ -71,7 +71,7 @@ df_trap_error
 	jsr init_via0
 	jsr io_set_default
 	cli
-	
+
 	lda #lo(df_tk_errortab)
 	sta df_tmpptra
 	lda #hi(df_tk_errortab)
@@ -128,7 +128,7 @@ df_show_err_fin
 	tax
 	lda #0
 	clc
-	jsr print_a_to_d	
+	jsr print_a_to_d
 df_show_err_done
 	lda #UTF_CR
 	jsr io_put_ch
@@ -164,7 +164,7 @@ df_trap_monitor
 	lda num_a+2
 	jsr utilPrintA
 	jsr utilPrintCRLF
-	
+
 	jsr df_rt_monitor
 	; back to editor
 	jmp df_pg_dflat

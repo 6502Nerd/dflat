@@ -15,12 +15,12 @@
 ;**********************************************************
 
 	; ROM code
-	code  
+	code
 
 main
 	_println msg_hello_world
 
-	
+
 infinity
 	jsr df_pg_dflat
 	jmp infinity
@@ -29,4 +29,4 @@ msg_hello_world
 	;* build.s is generate by the assemble.bat file
 	;* all it does is echo an assembler line to
 	;* including the build date in the message.
-	include "kernel\build.s"
+	include "kernel/build.s"
