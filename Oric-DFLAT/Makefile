@@ -1,14 +1,14 @@
 # commmnd line tools
-# dftap2txt := ./emulator/Util/build/dftap2txt/dftap2txt/dftap2txt
-# dftap2wav := ./emulator/Util/build/dftap2wav/dftap2wav/dftap2wav
-# dftxt2tap := ./emulator/Util/build/dftxt2tap/dftxt2tap/dftxt2tap
+# dftap2txt := ./emulator/util/build/dftap2txt/dftap2txt/dftap2txt
+# dftap2wav := ./emulator/util/build/dftap2wav/dftap2wav/dftap2wav
+# dftxt2tap := ./emulator/util/build/dftxt2tap/dftxt2tap/dftxt2tap
 
 all: tools rom
 
 .PHONY: clean rom tools
 
 clean:
-	@rm -rf emulator/Util/build/*
+	@rm -rf emulator/util/build/*
 
 
 rom:
@@ -25,6 +25,5 @@ rom:
 # 	@ cat bank/bank0.lst > emulator/roms/dflat.sym
 
 tools: clean
-	@mkdir -p emulator/Util/build
-	@cd emulator/Util/build/ && cmake .. && make
-
+	@mkdir -p emulator/util/build
+	@cd emulator/util/build/ && cmake .. && make

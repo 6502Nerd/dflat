@@ -17,7 +17,7 @@ For Quick Start
 	 Down cursor rapidly drops the shape
 	 Space rotates the shape clockwise
 	 On highscore table, Up/Down changes the initial, right moves to next, space is done
-     
+
 See the emulator section for more information.
 
 
@@ -144,7 +144,7 @@ util\dftap2txt	: Takes a TAP file format as input and extracts the body as text
 				  Where	: <source> is the file to be read in TAP format
 						  <destination> is the file to be written in text format
 				  Build in VS 2017 Community Edition as a CMake project
-				  
+
 util\dftap2wav	: Takes a TAP file format as input and creates a WAV file that can
 				  be loaded on a real Oric.
 				  Usage : dftap2wav [-b] [-dX] [-8|-11] [-a] <source> <destination>
@@ -154,7 +154,7 @@ util\dftap2wav	: Takes a TAP file format as input and creates a WAV file that ca
 						  -11 select 11KHz sample rate (default)
 						  -a finishes the file with some silence
 
-utils\dftxt2tap	: Takes a text file format as input and generates a TAP file to
+util\dftxt2tap	: Takes a text file format as input and generates a TAP file to
 				  allow dflat programs to be edited in a PC text editor and then
 				  loaded in to oricutron (then use dftap2wav to use on real Oric)
 				  Usage : dftxt2tap [-l] <source> <destination>
@@ -162,9 +162,3 @@ utils\dftxt2tap	: Takes a text file format as input and generates a TAP file to
 						  at N and incrementing by 10
 						  <source> is the file to be read in TAP format
 						  <destination> is the text file to be written
-						  
-				  
-
-				  
-
-
