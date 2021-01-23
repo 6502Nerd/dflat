@@ -8,6 +8,7 @@
 #if defined(__linux__) || defined(__APPLE__)
 #include <assert.h>
 #include <errno.h>
+#define pathchr '/'
 #define strcpy_s strcpy
 #define strcat_s strcat
 #define errno_t int
@@ -47,6 +48,8 @@ char* _itoa_s(int value, char* str, int radix) {
 		c = *p, *p = *q, *q = c;
 	return str;
 }
+#else
+#define pathchr '\\'
 #endif
 
 FILE *in, *out;
@@ -74,8 +77,8 @@ int init(int argc, char *argv[])
 	}
 
 	/* Get filename portion of destination, must be <16 chars */
-	for (i = strlen(argv[argc-1]); (i > 1) && (argv[argc-1][i] != '\\'); i--);
-	if (argv[argc-1][i] == '\\') i++;
+	for (i = strlen(argv[argc-1]); (i > 1) && (argv[argc-1][i] != pathchr); i--);
+	if (argv[argc-1][i] == pathchr) i++;
 	strcpy_s(fname, &argv[argc-1][i]);
 	if (strlen(fname) > 15) {
 		printf("Destination filename too long.\n");
@@ -99,11 +102,16 @@ void gettxtline()
 	char lineStr[10];
 	char temp[250];
 
-	do {
+	while (i<sizeof(line)-2) {
 		valin = fgetc(in);
-		if (valin == 0xff) valin = 0x0d;
-		if (valin != 0x0a) line[i++] = valin;
-	} while (valin != 0x0d);
+		if (feof(in)) break;
+		if (valin == 0x0a || valin == 0x0d) {
+			if (i == 0) continue;
+			else break;
+		}
+		line[i++] = valin;
+	}
+	if (i > 0) line[i++] = 0x0d;
 	line[i] = 0;
 	if ((i > 1) && (lineNo!=0)) {
 		if (atoi(line) == 0) {
