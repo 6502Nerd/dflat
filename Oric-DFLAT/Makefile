@@ -27,3 +27,6 @@ rom:
 tools: clean
 	@mkdir -p emulator/util/build
 	@cd emulator/util/build/ && cmake .. && make
+	@cp -f emulator/util/build/dftap2txt/dftap2txt/dftap2txt emulator/dftap2txt
+	@cp -f emulator/util/build/dftap2wav/dftap2wav/dftap2wav emulator/dftap2wav
+	@cp -f emulator/util/build/dftxt2tap/dftxt2tap/dftxt2tap emulator/dftxt2tap
