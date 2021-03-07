@@ -69,7 +69,7 @@ init_snd_regs
 	; Register array initialisation values
 	; Assuming 1.34Mhz input clock
 snd_init_tab
-	db 0x50				; R0 = Channel A Tone Low
+	db 0x40				; R0 = Channel A Tone Low
 	db 0x00				; R1 = Channel A Tone High
 	db 0x00				; R2 = Channel B Tone Low
 	db 0x01				; R3 = Channel B Tone High
@@ -81,7 +81,7 @@ snd_init_tab
 	db 0x1f				; R9 = Channel B Vol
 	db 0x1f				; R10 = Channel C Vol
 	db 0x00				; R11 = Envelope Period Low
-	db 0x05				; R12 = Envelope Period High
+	db 0x03				; R12 = Envelope Period High
 	db 0b00000000		; R13 = Envelope Shape : 0000
 	db 0xff				; R14 = IO Port A - KB lines disabled
 	db 0x00				; R15 = IO Port B ; Initialise to 0 (doesn't exist)

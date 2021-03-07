@@ -92,6 +92,7 @@ kb_any_key_none
 	clc						; C=0 means not pressed
 	rts
 kb_any_key_pressed
+kb_read_got
 	sec						; C=1 means pressed
 	rts
 
@@ -105,45 +106,55 @@ kb_read_raw
 	jsr kb_any_key			; Quick check is anything down?
 	bcc kb_read_nothing		; Don't bother if not
 kb_read_raw_force
-	ldy #0					; Start at column 0, row 0
-kb_check_matrix
-	tya
-	and #0b00000111
-	sta IO_0+PRB			; Select row from bits 210
-
-	tya
-	lsr a					; Get bits 543 for column
-	lsr a
-	lsr a
-
-	cmp #4					; If col 4 then skip over (checked later)
-	beq kb_skip_col4
-
-	tax						; Index to the col mask
+	ldx #0					; Start at column 0	
+	stx zp_tmp1
+kb_check_matrix_col
+	; else set the col in the AY port A
 	lda kb_col_mask,x
 	ldx #SND_REG_IOA		; Select Port A of AY
 	jsr snd_set				; Set Port A to column mask
-	nop
-	nop
+	ldy #0
+kb_check_matrix_row
+	sty IO_0+PRB			; Select row from Y
+	
+	ldx #2
+kb_hw_delay
+	dex
+	bne kb_hw_delay
+
 	lda IO_0+PRB			; Read Port B
 	and #KB_SENSE			; Bit 3 is the sense
-	bne kb_read_got
+	bne kb_read_raw_got
+	; No key for this row/col, next
 	iny
-	cpy #64					; only 64 combinations
-	bne kb_check_matrix
+	cpy #8					; Done 8 rows?
+	bne kb_check_matrix_row
+	; ok check next row
+	ldx zp_tmp1
+kb_check_skip4
+	inx
+	cpx #4					; Skip 4?
+	beq kb_check_skip4
+	stx zp_tmp1
+	cpx #8					; Done 8 cols?
+	bne kb_check_matrix_col
 	; No key was sensed
-
 kb_read_nothing
 	ldy #0					; Raw key codes
 	clc						; No key sensed flag
 	rts
-kb_read_got
-	sec						; Key sensed flag
+kb_read_raw_got
+	;Y=row, zp_temp1=col
+	lda zp_tmp1				; Get the column num
+	asl a					; Shift in to bits 5,4,3
+	asl a
+	asl a
+	sta zp_tmp1
+	tya						; Now or with row number
+	ora zp_tmp1
+	tay						; Put in to Y
+	sec
 	rts
-kb_skip_col4
-	ldy #40					; 40=5*8 skips col 4
-	bne kb_check_matrix		; Continue	
-
 	
 ;****************************************
 ;* kb_scan_key
@@ -155,20 +166,25 @@ kb_scan_key
 	jsr kb_read_raw			; Check if a key is sensed
 	bcs kb_scan_decode		; go ahead and decode
 	; If pressed nothing then reset timers
-	lda kb_rdel_tim			; Reset repeat timer to initial delay
-	sta kb_rep
-	lda #0
+	lda #255
 	sta kb_raw				; Reset raw key settings
 	sta kb_last				; And last key
+	lda kb_rdel_tim			; Reset repeat timer to initial delay
+	sta kb_rep
 kb_scan_wait
 	sec						; Code not valid
 	rts						; And done (A=0)	
 kb_scan_decode
 	; If got here then raw key is good
-	sty kb_raw
-
+	lda kb_last				; Preload A with last decoded key value
+	cpy kb_raw				; Same as last raw key?
+	sty kb_raw				; Already save new raw key
+	bne kb_process_new		; If is new raw key, look at shift/ctrl/caps
+	beq kb_do_repeat		; Else go handle repeating with A containing last
+kb_process_new
+	lda kb_rdel_tim			; Reset repeat timer to initial delay
+	sta kb_rep
 	; Now to get a proper key code translated from raw
-
 	; Check for shift and ctrl (not debounced!)
 	lda #0b11101111			; Select column 4
 	ldx #SND_REG_IOA		; On AY port A
@@ -207,31 +223,25 @@ kb_read_noshift
 	and #0x1f				; Ctrl will result in codes 0 to 31
 	sta kb_code				; Override the keycode
 	beq kb_brk
-	bpl	kb_do_repeat		; Check repeat (bpl is always true)
+	bpl	kb_store_last		; Check repeat (bpl is always true)
 kb_skip_ctrl
 	lda kb_stat				; Check caps lock
 	and #KB_CAPSLK
-	beq kb_do_repeat
+	beq kb_store_last
 	lda kb_code
 	cmp #'a'				; If < 'a' then skip
-	bcc kb_do_repeat
+	bcc kb_store_last
 	cmp #'z'+1				; If > 'z' then skip
-	bcs kb_do_repeat
+	bcs kb_store_last
 	lda kb_code				; Get the actual code	
 	eor #0x20				; Switch off bit 0x20
-	sta kb_code
+	bne kb_store_last
 kb_do_repeat
-	lda kb_code
-	cmp kb_last				; Same key as last time?
-	beq kb_handle_repeat	; If so, need to check repeat delays
-	sta kb_last				; Make last code same as this
-	clc						; Code valid
-	rts
-kb_handle_repeat
 	ldx kb_rep				; Has repeat expired?
 	bne	kb_in_repeat		; If not then still in repeat
 	ldx kb_rep_tim			; Set repeat speed
 	stx kb_rep
+kb_store_last
 	sta kb_last				; Make last code same as this
 	clc						; Code valid
 	rts	

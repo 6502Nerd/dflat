@@ -196,15 +196,17 @@ con_hex_skip_x_f_1
 	cmp #0x10					; Nibble should be <= 0x0f
 	bcs	con_hex_done			; Potentially done if not
 	pha
+	lda num_a
 	; make room for lo nibble
-	asl num_a
+	asl a
 	rol num_a+1
-	asl num_a
+	asl a
 	rol num_a+1
-	asl num_a
+	asl a
 	rol num_a+1
-	asl num_a
+	asl a
 	rol num_a+1
+	sta num_a
 	; save in low nibble
 	pla
 	ora num_a
@@ -268,6 +270,7 @@ con_bin_done
 	clc
 	rts
 con_bin_err
+str_d_error
 	sec
 	rts
 
@@ -354,9 +357,6 @@ str_d_skip_neg
 	lda #NUM_DEC
 	clc
 	rts
-str_d_error
-	sec
-	rts
 
 str_d_powers
 	dw	0, 1, 2, 3, 4, 5, 6, 7, 8, 9
@@ -386,7 +386,7 @@ twos_complement
 	adc #0
 twos_complement_skip_X
 	rts
-
+	
 
 ;****************************************
 ;* hex_to_bcd

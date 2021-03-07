@@ -27,8 +27,6 @@ cmd_hi					= (df_currdat+1)
 _mod_sz_cmd_s
 
 command_line
-	ldy #160					; Maximum line length
-	sty buf_sz
 
 cmd_ready
 	_println_low msg_ready

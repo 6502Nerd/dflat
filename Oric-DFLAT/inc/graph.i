@@ -37,6 +37,8 @@ HITEXT		=	0xbf68
 	dw gr_cur_ptr				; VDP address of cursor
 	db gr_pixmode				; Pixel plot mode (0=Erase, 1=Plot, 2=XOR)
 	db gr_pitch					; Pixel pitch for char plotting
+	db gr_hires_x				; X pos of hires cursor
+	db gr_hires_y				; Y pos of hires cursor
 	db gr_ink					; Ink colour
 	db gr_paper					; Paper colour
 	db gr_margin				; Left margin

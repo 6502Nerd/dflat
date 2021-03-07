@@ -1,0 +1,17 @@
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/CMakeFiles/edit_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/CMakeFiles/rebuild_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2txt/CMakeFiles/edit_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2txt/CMakeFiles/rebuild_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2txt/dftap2txt/CMakeFiles/dftap2txt.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2txt/dftap2txt/CMakeFiles/edit_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2txt/dftap2txt/CMakeFiles/rebuild_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2wav/CMakeFiles/edit_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2wav/CMakeFiles/rebuild_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2wav/dftap2wav/CMakeFiles/edit_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2wav/dftap2wav/CMakeFiles/dftap2wav.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftap2wav/dftap2wav/CMakeFiles/rebuild_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftxt2tap/CMakeFiles/edit_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftxt2tap/CMakeFiles/rebuild_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftxt2tap/dftxt2tap/CMakeFiles/dftxt2tap.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftxt2tap/dftxt2tap/CMakeFiles/edit_cache.dir
+C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Release/dftxt2tap/dftxt2tap/CMakeFiles/rebuild_cache.dir

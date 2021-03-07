@@ -62,8 +62,7 @@ df_tk_asm_mnemonic
 df_tk_asm_parse_command_symbol
 	; No mask
 	lda #0
-	jsr df_tk_var
-	rts
+	jmp df_tk_var
 
 
 ;****************************************
@@ -151,6 +150,7 @@ df_tk_asm_symfound
 	sty df_linoff
 	lda df_symoff
 	; df_symtab points to the offset
+df_tk_asm_addr_mode_ok
 	clc
 	rts
 
@@ -205,18 +205,13 @@ df_tk_asm_addr_mode_2
 	bcc df_tk_asm_addr_mode_ok
 	; got to here, must be y
 	lda #'y'
-	jsr df_tk_expect_tok_err
-df_tk_asm_addr_mode_ok
-	clc
-	rts
+	jmp df_tk_expect_tok_err
 	
 	
-;* Toeknise immediate addressing mode	
+;* Tokenise immediate addressing mode	
 df_tk_imm
 	; Just one expression expected
-	jsr df_tk_expression
-	clc
-	rts
+	jmp df_tk_expression
 	
 ;* Tokenise indirect
 df_tk_indirect
@@ -231,9 +226,7 @@ df_tk_indirect
 	lda #'x'
 	jsr df_tk_expect_tok_err
 	lda #')'
-	jsr df_tk_expect_tok_err
-	clc
-	rts
+	jmp df_tk_expect_tok_err
 	
 df_tk_indirect_y
 	; Definitely has a close bracket
@@ -245,9 +238,7 @@ df_tk_indirect_y
 	bcs df_tk_indirect_done
 	; if comma then must be indirect y
 	lda #'y'
-	jsr df_tk_expect_tok_err
-	clc
-	rts
+	jmp df_tk_expect_tok_err
 
 df_tk_indirect_done
 	clc

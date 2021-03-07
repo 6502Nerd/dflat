@@ -129,6 +129,7 @@ gr_check_font_copy
 	ldx #8
 	jsr gr_copy_mem
 gr_check_font_copy_done
+gr_init_geom_done
 	rts
 
 
@@ -140,7 +141,7 @@ gr_check_font_copy_done
 gr_init_geom
 	; Which geom entry to init = Y
 	ldy gr_scrngeom_base,x
-	bmi gr_init_geom_done
+	bmi gr_init_geom_done		; Just somewhere with an rts!
 	; skip to data and put in A
 	inx
 	lda gr_scrngeom_base,x
@@ -149,8 +150,7 @@ gr_init_geom
 	; next entry
 	inx
 	bne gr_init_geom	; Always
-gr_init_geom_done
-	rts
+	; Hope we don't get here - will crash!
 
 ; Geometry initialisation tables
 gr_scrngeom_base
@@ -192,7 +192,10 @@ gr_scrngeom_hires
 	db gr_text_size,   lo(40*3)
 	db gr_text_size+1, hi(40*3)
 
-	; Only need to initialise height, width is same as before
+	db gr_hires_x, 0
+	db gr_hires_y, 0
+
+	; Only need to initialise text height, width is same as before
 	db gr_text_h, 3
 
 	db gr_pixmode, 1
@@ -342,7 +345,7 @@ gr_cls
 	lda gr_scrngeom+gr_text_start+1
 	sta gr_scrngeom+gr_geom_tmp+1
 
-	ldx gr_scrngeom+gr_text_h		; Count of rows
+	ldx gr_scrngeom+gr_text_h		; Count of rows to clear
 
 	; X and Y count bytes to fill
 gr_cls_row
@@ -364,7 +367,6 @@ gr_cls_col
 	cpy gr_scrngeom+gr_text_w		; Done all columns?
 	bne gr_cls_col
 	; Update pointer
-	inx
 	clc
 	lda gr_scrngeom+gr_geom_tmp
 	adc gr_scrngeom+gr_text_w
@@ -372,8 +374,8 @@ gr_cls_col
 	lda gr_scrngeom+gr_geom_tmp+1
 	adc #0
 	sta gr_scrngeom+gr_geom_tmp+1
-	cpx gr_scrngeom+gr_text_h		; Done all rows?
-	bne gr_cls_row
+	dex								; 1 row done
+	bne gr_cls_row					; Done all rows?
 
 	; set cursror position to top left
 	lda vdp_blank
@@ -595,7 +597,6 @@ gr_scroll_erase_ln
 ;* Regs affected : None
 ;****************************************
 gr_new_ln
-;	_pushAXY
 	; X pos is zero, Y needs to increment
 	ldx gr_scrngeom+gr_margin
 	ldy gr_scrngeom+gr_cur_y
@@ -616,9 +617,7 @@ gr_scroll_routine
 	pla
 	tax
 gr_nl_skip_nl
-	jsr gr_set_cur
-;	_pullAXY
-	rts
+	jmp gr_set_cur
 
 
 ;****************************************
@@ -629,7 +628,6 @@ gr_nl_skip_nl
 ;* Regs affected : None
 ;****************************************
 gr_cur_right
-;	_pushAXY
 	; Load cursor x,y position
 	ldx gr_scrngeom+gr_cur_x
 	ldy gr_scrngeom+gr_cur_y
@@ -654,7 +652,6 @@ gr_cur_right
 ;* Regs affected : None
 ;****************************************
 gr_cur_left
-;	_pushAXY
 	; Load cursor x,y position, load X last to check for 0
 	ldy gr_scrngeom+gr_cur_y
 	ldx gr_scrngeom+gr_cur_x
@@ -669,10 +666,9 @@ gr_cur_left
 	ldx gr_scrngeom+gr_text_w
 gr_cur_skip_at_left
 	dex
-	jsr gr_set_cur
+	jmp gr_set_cur
 
 gr_cur_skip_at_tl
-;	_pullAXY
 	rts
 
 ;****************************************
@@ -683,18 +679,13 @@ gr_cur_skip_at_tl
 ;* Regs affected : None
 ;****************************************
 gr_cur_up
-;	_pushAXY
 	; Load cursor x,y position, load Y last to check for zero
 	ldx gr_scrngeom+gr_cur_x
 	ldy gr_scrngeom+gr_cur_y
-
-	beq gr_cur_skip_at_top	; If already at the top, don't do anything
+	; if y==0 then don't do anything
+	beq gr_cur_skip_at_tl	; Just somewhere with an rts!
 	dey
-	jsr gr_set_cur
-
-gr_cur_skip_at_top
-;	_pullAXY
-	rts
+	jmp gr_set_cur
 
 ;****************************************
 ;* gr_cur_down
@@ -704,17 +695,16 @@ gr_cur_skip_at_top
 ;* Regs affected : None
 ;****************************************
 gr_cur_down
-;	_pushAXY
 	; Load cursor x,y position
 	ldx gr_scrngeom+gr_cur_x
 	ldy gr_scrngeom+gr_cur_y
 	iny
-	cpy gr_scrngeom+gr_text_h			; If already at  bottom
-	beq gr_cur_skip_at_bot				; then don't do anything
+	; If already at  bottom then don't do anything
+	cpy gr_scrngeom+gr_text_h			
+	beq gr_cur_skip_at_tl				; Just somewhere with an rts!
 	jsr gr_set_cur
 
 gr_cur_skip_at_bot
-;	_pullAXY
 	rts
 
 
@@ -726,13 +716,9 @@ gr_cur_skip_at_bot
 ;* Regs affected : None
 ;****************************************
 gr_del
-;	_pushAXY
 	jsr gr_cur_left
 	lda #' '							; Put a space
-	jsr gr_put
-;	_pullAXY
-	rts
-
+	jmp gr_put
 
 ;****************************************
 ;* gr_get_key
@@ -795,6 +781,7 @@ gr_put_byte
 	_pushAXY
 	jsr gr_put_byte_low
 	_pullAXY
+gr_no_special
 	rts
 
 gr_put_byte_low
@@ -809,7 +796,7 @@ gr_process_special
 gr_special_loop
 	inx
 	lda gr_special_ch,x
-	beq gr_no_special
+	beq gr_no_special		; Somewhere with an rts!
 	cmp tmp_alo
 	bne gr_special_loop
 	lda gr_special_fn_lo,x
@@ -817,14 +804,12 @@ gr_special_loop
 	lda gr_special_fn_hi,x
 	sta tmp_ahi
 	jmp (tmp_alo)
-gr_no_special
-	rts
+
 	;	Normal caracter processing here.
 gr_printable
 	; Place in current position and move right
 	jsr gr_put
-	jsr gr_cur_right
-	rts
+	jmp gr_cur_right
 
 gr_special_ch
 	db UTF_CR
@@ -834,6 +819,7 @@ gr_special_ch
 	db CRSR_UP
 	db CRSR_DOWN
 	db UTF_FF
+	db UTF_BEL
 	db 0
 
 gr_special_fn_lo
@@ -844,6 +830,7 @@ gr_special_fn_lo
 	db lo(gr_cur_up)
 	db lo(gr_cur_down)
 	db lo(gr_cls)
+	db lo(init_snd)
 
 gr_special_fn_hi
 	db hi(gr_new_ln)
@@ -853,6 +840,7 @@ gr_special_fn_hi
 	db hi(gr_cur_up)
 	db hi(gr_cur_down)
 	db hi(gr_cls)
+	db hi(init_snd)
 
 ; Special command to print to the screen
 ; Y,A=Message, zero terminated
@@ -872,6 +860,15 @@ gr_print_msg_done
 	rts
 
 ;******* HIRES STUFF *****
+
+;****************************************
+;* gr_fill
+;* Fill bytes X,Y coordinates with char code A
+;* Input : X,Y = coord, A = Char code
+;* Output : None
+;* Regs affected : None
+;****************************************
+
 ;****************************************
 ;* gr_hchar
 ;* Plot character to hires X,Y coordinates with char code A
@@ -1027,6 +1024,11 @@ gr_point_setup
 	ldy hires_col,x
 	rts
 
+gr_set_hires_cur
+	stx gr_scrngeom+gr_hires_x
+	sty gr_scrngeom+gr_hires_y
+	rts
+
 ;* Get pixel value at X,Y in to A
 gr_pixel
 	jsr gr_point_setup				; Set up mask and addresses, Y=column, X=rem
@@ -1036,9 +1038,25 @@ gr_pixel
 
 ;* Plot a point based on X,Y coordinates
 gr_point
-	jsr gr_point_setup				; Set up mask and addresses, Y=column, X=rem
+	cpx #240						; Check bounds
+	bcs gr_point_done
+	cpy #200
+	bcs gr_point_done
+
+	;** FOR SPEED COPYING THE POINT SETUP ROUTINE
+	; Get row address
+	lda hires_row_low,y
+	sta tmp_alo
+	lda hires_row_hi,y
+	sta tmp_ahi
+	; Get the pixel mask
+	lda hires_mask,x
+	sta tmp_blo
+	; Get the column offset to Y
+	ldy hires_col,x
+
+;	jsr gr_point_setup				; Set up mask and addresses, Y=column, X=rem
 ;* Plot a point based on tmp_alo base, Y offset and X index mask
-gr_point_plot
 	lda (tmp_alo),y					; Get screen byte
 	ldx gr_scrngeom+gr_pixmode		; Look at the mode
 	cpx #2							; If eor mode then go and write
@@ -1050,6 +1068,7 @@ gr_point_eor
 	eor tmp_blo						; EOR with MASK
 gr_point_write
 	sta (tmp_alo),y
+gr_point_done
 	rts
 
 
@@ -1201,8 +1220,7 @@ gr_circle_points
 	sec
 	sbc grc_x
 	tay
-	jsr gr_point
-	rts
+	jmp gr_point
 
 
 
@@ -1234,6 +1252,16 @@ grl_sinx= (ztmp_24+13)
 grl_p	= (ztmp_24+14)			; Word
 grl_siny= (ztmp_24+16)
 
+	; Start from hires cursor position
+	; New cursor pos = end of line pos
+	lda gr_scrngeom+gr_hires_x
+	sta grl_x0
+	lda gr_scrngeom+gr_hires_y
+	sta grl_y0
+	ldx grl_x1
+	ldy grl_y1
+	jsr gr_set_hires_cur
+	
 	lda #0
 	sta grl_xyyx				; Assume normal xy axis
 
@@ -1543,6 +1571,7 @@ gr_spr_multi_loop
 mod_sz_sprite_e
 mod_sz_graph_e
 
+; Old version of point calculator - in case I need it again!
 ;	; Calculate destination address
 ;	lda #0
 ;	sta tmp_ahi

@@ -59,13 +59,20 @@ df_tk_get_buf_null
 ;****************************************
 ;* df_tk_put_tok
 ;* Put A in token buffer and inc pointer
+;* C=Clear on exit
 ;****************************************
 df_tk_put_tok
 	ldy df_tokoff
 	sta df_tokbuff,y
 	iny
+	bmi df_tk_put_overflow
 	sty df_tokoff
+	clc
 	rts
+df_tk_put_overflow
+	lda #'X'
+	sta 48000
+	SWBRK DFERR_STRLONG
 
 ;****************************************
 ;* df_tk_isdigit
@@ -115,6 +122,7 @@ df_tk_ishex_truep
 	pla
 	rts
 df_tk_ishex_false
+df_tk_isalpha_false
 	clc
 	pla
 	rts
@@ -134,10 +142,6 @@ df_tk_isalpha
 	; C must be 1 here
 	pla
 	rts
-df_tk_isalpha_false
-	pla
-	clc
-	rts
 
 ;****************************************
 ;* df_tk_isalphanum
@@ -146,10 +150,7 @@ df_tk_isalpha_false
 ;****************************************
 df_tk_isalphanum
 	jsr df_tk_isalpha
-	bcc df_tk_try_digit
-	rts
-df_tk_try_digit
-	jsr df_tk_isdigit
+	bcc df_tk_isdigit
 	rts
 
 ;****************************************
@@ -161,7 +162,6 @@ df_tk_isproc
 	cmp #'_'
 	beq df_tk_isproc_true	; C=1
 	clc
-	rts
 df_tk_isproc_true
 	rts
 
@@ -177,7 +177,7 @@ df_tk_ws_loop1
 	bcc df_tk_ws_done
 	inc df_linoff
 	jsr df_tk_put_tok
-	jmp df_tk_ws_loop1
+	bcc df_tk_ws_loop1		; Always as put_tok clears C
 df_tk_ws_done
 	rts
 
@@ -207,6 +207,7 @@ df_tk_isws
 	; C must be 1 here
 	rts
 df_tk_isws_false
+df_tk_expectok
 	clc
 	rts
 
@@ -223,11 +224,11 @@ df_tk_expect
 	pla
 	ldy df_linoff
 	cmp df_linbuff,y
-	; if not expected char then error
-	bne df_tk_expecterr
-	clc
-	rts
-df_tk_expecterr
+	; if expected char then ok
+	beq df_tk_expectok
+	; else error
+df_tk_num_err
+df_tk_char_err
 	sec
 	rts
 
@@ -241,8 +242,7 @@ df_tk_expect_tok
 	jsr df_tk_expect
 	bcs df_tk_expecttokret
 	jsr df_tk_get_buf
-	jsr df_tk_put_tok
-	clc
+	jmp df_tk_put_tok
 df_tk_expecttokret
 	rts
 
@@ -307,12 +307,7 @@ df_tk_num_put
 	lda num_a
 	jsr df_tk_put_tok
 	lda num_a+1
-	jsr df_tk_put_tok
-	clc
-	rts
-df_tk_num_err
-	sec
-	rts
+	jmp df_tk_put_tok
 
 ;****************************************
 ;* Tokenise a constant char
@@ -334,9 +329,6 @@ df_tk_char
 	cmp #0x27
 	bne df_tk_char_err
 	clc
-	rts
-df_tk_char_err
-	sec
 	rts
 
 ;****************************************
@@ -361,7 +353,8 @@ df_tk_str_ch
 df_tk_str_don
 	; zero terminated strings
 	lda #0
-	jsr df_tk_put_tok
+	jmp df_tk_put_tok
+df_tk_var_noarry
 	clc
 	rts
 df_tk_str_err
@@ -423,10 +416,7 @@ df_tk_var_ck
 	jsr df_tk_expect_tok
 	bcs df_tk_var_noarry
 	; process numeric expression in bracket
-	jsr df_tk_narry
-df_tk_var_noarry
-	clc
-	rts
+	jmp df_tk_narry
 
 ;****************************************
 ;* Tokenise a parameter in proc definition
@@ -467,9 +457,7 @@ df_tk_localvar_cont
 	pla
 	jsr df_tk_put_tok
 	pla
-	jsr df_tk_put_tok
-	clc
-	rts
+	jmp df_tk_put_tok
 
 ;****************************************
 ;* Tokenise call or def of proc
@@ -576,8 +564,7 @@ df_tk_narry
 df_tk_narry_end
 	; after the second dimension, must be close sq brak
 	lda #']'
-	jsr df_tk_expect_tok_err
-	rts
+	jmp df_tk_expect_tok_err
 
 ;****************************************
 ;* Parse bracket
@@ -587,8 +574,7 @@ df_tk_nbrkt
 	; then tokenise a numeric expression
 	jsr df_tk_expression
 	lda #')'
-	jsr df_tk_expect_tok_err
-	rts
+	jmp df_tk_expect_tok_err
 
 ;****************************************
 ;* Parse call to numeric proc
@@ -596,8 +582,7 @@ df_tk_nbrkt
 df_tk_nterm_proc
 	; call mode
 	lda #1
-	jsr df_tk_proc
-	rts
+	jmp df_tk_proc
 
 ;****************************************
 ;* Parse numeric term
@@ -607,7 +592,11 @@ df_tk_nterm
 	; A containts the non-ws char
 	jsr df_tk_skip_ws
 	cmp #0
+	beq df_tk_nterm_done
+	cmp #':'
 	bne df_tk_nterm_cont
+df_tk_nterm_done
+df_tk_nop_false
 	sec
 	rts
 df_tk_nterm_cont
@@ -618,8 +607,7 @@ df_tk_nterm_cont
 	jsr df_tk_get_buf
 	jsr df_tk_put_tok
 	; go process the open bracket
-	jsr df_tk_nbrkt
-	rts
+	jmp df_tk_nbrkt
 df_tk_nterm_tryfn
 	pha
 	; try decoding a built-in function
@@ -674,16 +662,15 @@ df_tk_nop
 	jsr df_tk_put_tok
 	clc
 	rts
-df_tk_nop_false
-	sec
-	rts
 
+	
 ;****************************************
 ;* Parse numeric expression
 ;****************************************
 df_tk_expression
 	; Tokenise a numeric term
 	jsr df_tk_nterm
+	bcs df_tk_expre_err
 	; Try and tokenise a numeric operator
 	jsr df_tk_nop
 	; If an operator was tokenised
@@ -691,7 +678,9 @@ df_tk_expression
 	bcc df_tk_expression
 	; If no operator was found then
 	; expression is done
+df_tk_not_eos
 	clc
+df_tk_expre_err
 	rts
 
 ;****************************************
@@ -708,10 +697,7 @@ df_tk_tok_expression
 df_tk_isEOS
 	lda #':'
 	jsr df_tk_expect_tok
-	bcc df_tk_eos
-	clc
-	rts
-df_tk_eos
+	bcs df_tk_not_eos
 	; this is the position of the next statement
 	lda df_tokoff
 	; put it in the last statement offset slot
@@ -729,8 +715,7 @@ df_tk_parse_user_proc
 	lda #0x81
 	jsr df_tk_put_tok
 	lda #1
-	jsr df_tk_proc
-	rts
+	jmp df_tk_proc
 
 
 ;****************************************
@@ -885,8 +870,7 @@ df_tk_linenum
 	lda num_a
 	jsr df_tk_put_tok
 	lda num_a+1
-	jsr df_tk_put_tok
-	rts
+	jmp df_tk_put_tok
 
 ;****************************************
 ;* df_tk_matchtok

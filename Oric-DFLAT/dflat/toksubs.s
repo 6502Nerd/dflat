@@ -44,15 +44,8 @@ df_tk_preassign
 	jsr df_tk_var
 	; next char should be '='
 	lda #'='
-	jsr df_tk_expect_tok_err
-	; skip more ws
-	jsr df_tk_skip_ws
-	; should not be at end of line
-	jsr df_tk_peek_buf
-	beq df_tk_parse_ass_err
-	clc
-	rts
-df_tk_parse_ass_err
+	jmp df_tk_expect_tok_err
+
 df_tk_error
 	SWBRK DFERR_SYNTAX
 
@@ -63,7 +56,7 @@ df_tk_assign
 	jsr df_tk_preassign
 	; tokenise an expression (int or byte)
 	jsr df_tk_expression
-	clc
+	bcs df_tk_error
 	rts
 
 
@@ -101,60 +94,58 @@ df_tk_listp_procname_err
 	sec
 	rts
 
+; list		: list whole program
+; list n	: list line n to end
+; list *	: list all procedures
+; list _proc: list _proc lines
 df_tk_list
 	jsr df_tk_listp_procname
+	bcc df_tk_list_done
 	; if not found try '*' or normal list
-	bcs df_tk_list_procs
-	; the '-' allows to list to end
-	lda #'-'
-	; find and add if it exists
-	jsr df_tk_expect_tok
-	jmp df_tk_list_done
-	; '*' means list procs
 df_tk_list_procs
-	; try and find the first proc
+	; first try for list symbol
 	lda #'*'
 	jsr df_tk_expect_tok
 	bcc df_tk_list_done
-	; else normal line number
+	; else normal line number or nothing
 df_tk_list_line
 	; tokenise an expression
 	jsr df_tk_expression
-	; if not at the end then keep going
-	lda #','
-	jsr df_tk_expect_tok
-	bcs df_tk_list_done
-	; else get the next expression
-	jsr df_tk_expression	
 df_tk_list_done
 	clc
 	rts
 
+; printat,print,println can have 0,1 or many expressions
 df_tk_printat
 	; Must get 2 parms for x,y
 	jsr df_tk_2parms
-	; if not at the end then keep going
-	lda #','
-	jsr df_tk_expect_tok
-	bcc df_tk_print
-	; else done
-	clc
-	rts
-df_tk_data
+	; try getting more parms
+	jmp df_tk_expr_more
 df_tk_println
 df_tk_print
+	; tokenise an expression ok if null
+	jsr df_tk_expression
+	bcc df_tk_expr_more
+df_tk_print_done
+df_tk_data_done
+	clc
+	rts
+
+; these must have 1 or more expressions
+df_tk_data
 df_tk_asm_db
 df_tk_asm_dw
+df_tk_next_expr
 	; tokenise an expression
 	jsr df_tk_expression
+	bcs df_tk_error2
+; this loop keeps processing comma seprated exoressions
+df_tk_expr_more
 	; is there more to come?
 	lda #','
 	jsr df_tk_expect_tok
-	bcs df_tk_print_done
-	bcc df_tk_print
-df_tk_print_done
-	clc
-	rts
+	bcs df_tk_data_done
+	bcc df_tk_next_expr
 
 df_tk_input
 	jsr df_tk_skip_ws
@@ -238,6 +229,9 @@ df_tk_reset
 	jsr df_tk_var
 	rts
 
+df_tk_error2
+	SWBRK DFERR_SYNTAX
+
 ; These functions expect 1 parmeter
 df_tk_len
 df_tk_chr
@@ -252,6 +246,7 @@ df_tk_asc
 df_tk_val
 df_tk_sprhit
 	jsr df_tk_expression
+	bcs df_tk_error2
 df_tk_closebrkt
 df_tk_stick				; This function needs no parms
 	lda #')'
@@ -325,6 +320,12 @@ df_tk_hires
 	clc
 	rts
 
+; 0 or 1 parameter special!
+df_tk_return
+	jsr df_tk_expression
+	rts
+
+
 ; These commands expect 1 parameter	
 df_tk_while
 df_tk_until
@@ -334,7 +335,6 @@ df_tk_wait
 df_tk_cursor
 df_tk_del
 df_tk_chdir
-df_tk_return
 df_tk_load
 df_tk_save
 df_tk_tload
@@ -350,23 +350,24 @@ df_tk_asm_ds
 
 	; first parm
 	jsr df_tk_expression
+	bcs df_tk_error2
 	rts
 
 ; These commands expect 2 numeric parameters
-df_tk_setvdp
 df_tk_poke
 df_tk_doke
 df_tk_point
 df_tk_sprchar
 df_tk_sprmulti
 df_tk_bload
+df_tk_lineto
 df_tk_2parms
 	; first parm
 	jsr df_tk_expression
+	bcs df_tk_error2
 	; tokenise second parm
 	lda #','
-	jsr df_tk_tok_expression
-	rts
+	jmp df_tk_tok_expression
 
 ; these commands expect 3 numeric parameters
 df_tk_hchar

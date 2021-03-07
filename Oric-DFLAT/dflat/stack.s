@@ -122,7 +122,7 @@ df_ost_pushParmX
 ;****************************************
 df_ost_pushInt
 	ldy #DFST_INT
-	jmp df_ost_pushParmX
+	bne df_ost_pushParmX		; ALWAYS!
 
 ;****************************************
 ;* Push A on to parm stack
@@ -132,7 +132,7 @@ df_ost_pushIntA
 	ldy #DFST_INT
 	tax
 	lda #0
-	jmp df_ost_pushParmX
+	beq df_ost_pushParmX		; ALWAYS!
 
 ;****************************************
 ;* Push a string pointer on to parm stack
@@ -140,7 +140,7 @@ df_ost_pushIntA
 ;****************************************
 df_ost_pushStr
 	ldy #DFST_STR
-	jmp df_ost_pushParmX
+	bne df_ost_pushParmX		; ALWAYS!
 
 ;****************************************
 ;* Push a general pointer on to parm stack
@@ -148,7 +148,7 @@ df_ost_pushStr
 ;****************************************
 df_ost_pushPtr
 	ldy #0xff
-	jmp df_ost_pushParmX
+	bne df_ost_pushParmX		; ALWAYS!
 	
 ;****************************************
 ;* Pop parameter from the stack
@@ -193,7 +193,7 @@ df_ost_peekType
 ;****************************************
 df_ost_popInt
 	ldy #DFST_INT
-	jmp df_ost_popParmX
+	bne df_ost_popParmX			; ALWAYS!
 
 ;****************************************
 ;* Pop a string pointer off parm stack
@@ -201,7 +201,7 @@ df_ost_popInt
 ;****************************************
 df_ost_popStr
 	ldy #DFST_STR
-	jmp df_ost_popParmX
+	bne df_ost_popParmX			; ALWAYS!
 	
 ;****************************************
 ;* Pop a general pointer off parm stack
@@ -209,7 +209,7 @@ df_ost_popStr
 ;****************************************
 df_ost_popPtr
 	ldy #0xff
-	jmp df_ost_popParmX
+	bne df_ost_popParmX			; ALWAYS!
 	
 	
 ;****************************************

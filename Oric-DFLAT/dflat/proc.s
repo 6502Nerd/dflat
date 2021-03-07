@@ -20,6 +20,91 @@
 
 mod_sz_proc_s
 
+df_rt_proc_parmerr
+	SWBRK DFERR_PROCPARM
+
+; call procedure
+df_rt_proc
+	; move past escape token
+	ldy df_exeoff
+	iny
+	; Get VVT address X,A and procptr
+	lda (df_currlin),y
+	tax
+	iny
+	lda (df_currlin),y
+	iny
+	sty df_exeoff
+	stx df_procptr
+	sta df_procptr+1
+	
+	; is index 0 (held in dim1)
+	; then need to find the procedure
+	ldy #DFVVT_DIM1
+	lda (df_procptr),y
+	bne df_rt_proc_addr
+	; find proc
+	jsr df_rt_findproc
+	; save y (line index)
+	sty tmp_d
+	; now go and update the proc vvt address
+	ldy #DFVVT_HI
+	sta (df_procptr),y
+	ldy #DFVVT_LO
+	txa
+	sta (df_procptr),y
+	ldy #DFVVT_DIM1
+	; get back line index in to A
+	lda tmp_d
+	sta (df_procptr),y
+df_rt_proc_addr
+	; move past first open bracket
+	inc df_exeoff
+	
+	; get parm count
+	ldy #DFVVT_DIM2
+	lda (df_procptr),y	
+	beq df_rt_proc_parm_none
+	; push the right number of parms on
+	pha
+
+	dec df_exeoff		; Pre-adjust
+df_rt_proc_push_parm
+	; move past comma or opening bracket
+	inc df_exeoff
+	; if at end then error!
+	ldy df_exeoff
+	lda (df_currlin),y
+	cmp #')'
+	beq df_rt_proc_parmerr
+	; else try and evaluate
+	jsr df_rt_neval
+	; get parm count off stack
+	pla
+	; decrement
+	sec
+	sbc #1
+	; and put back on stack
+	pha
+	; go back and do all required parms
+	bne df_rt_proc_push_parm
+	; remove parm counter from stack
+df_rt_proc_parm_done
+	pla
+df_rt_proc_parm_none
+	; should be at close bracket
+	ldy df_exeoff
+	lda (df_currlin),y
+	cmp #')'
+	bne df_rt_proc_parmerr
+	; should be no more parms
+	; ok, finally we have all parms on rt stack
+	; now execute the procedure
+	; get back the proc address
+	ldx df_procptr
+	lda df_procptr+1
+	bne df_rt_exec_proc		; ALWAYS as procptr+1 !=0
+	
 ; executing a procedure in VVT slot A,X
 df_rt_exec_proc
 	; save slot address
@@ -76,89 +161,6 @@ df_rt_exec_proc
 	sta df_currlin
 	; should be all restored, so return
 	rts
-
-; call procedure
-df_rt_proc
-	; move past escape token
-	ldy df_exeoff
-	iny
-	; Get VVT address X,A and procptr
-	lda (df_currlin),y
-	tax
-	iny
-	lda (df_currlin),y
-	iny
-	sty df_exeoff
-	stx df_procptr
-	sta df_procptr+1
-	
-	; is index 0 (held in dim1)
-	; then need to find the procedure
-	ldy #DFVVT_DIM1
-	lda (df_procptr),y
-	bne df_rt_proc_addr
-	; find proc
-	jsr df_rt_findproc
-	; save y (line index)
-	sty tmp_d
-	; now go and update the proc vvt address
-	ldy #DFVVT_HI
-	sta (df_procptr),y
-	ldy #DFVVT_LO
-	txa
-	sta (df_procptr),y
-	ldy #DFVVT_DIM1
-	; get back line index in to A
-	lda tmp_d
-	sta (df_procptr),y
-df_rt_proc_addr
-	; move past first open bracket
-	inc df_exeoff
-	
-	; get parm count
-	ldy #DFVVT_DIM2
-	lda (df_procptr),y
-	beq df_rt_proc_parm_none
-	; push the right number of parms on
-	pha
-
-df_rt_proc_push_parm
-	jsr df_rt_neval
-;	bcs df_rt_proc_parmother
-	ldy df_exeoff
-	lda (df_currlin),y
-	cmp #')'
-	beq df_rt_proc_parm_done
-	; move past comma
-	inc df_exeoff
-	; get parm count off stack
-	pla
-	; decrement
-	sec
-	sbc #1
-	; and put back on stack
-	pha
-	; go back and do all required parms
-	bne df_rt_proc_push_parm
-	; remove parm counter from stack
-df_rt_proc_parm_done
-	pla
-df_rt_proc_parm_none
-	; should be at close bracket
-	ldy df_exeoff
-	lda (df_currlin),y
-	cmp #')'
-	bne df_rt_proc_parmerr
-	; should be no more parms
-	; ok, finally we have all parms on rt stack
-	; now execute the procedure
-	; get back the proc address
-	ldx df_procptr
-	lda df_procptr+1
-	jmp df_rt_exec_proc
-	
-df_rt_proc_parmerr
-	SWBRK DFERR_PROCPARM
 
 
 df_rt_def

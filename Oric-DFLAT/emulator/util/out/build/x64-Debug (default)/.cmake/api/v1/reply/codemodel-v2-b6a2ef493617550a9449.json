@@ -1,0 +1,200 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3,
+						5
+					],
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "dftap2txt",
+					"childIndexes" : 
+					[
+						2
+					],
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "dftap2txt"
+				},
+				{
+					"build" : "dftap2txt/dftap2txt",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "dftap2txt/dftap2txt",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "dftap2wav",
+					"childIndexes" : 
+					[
+						4
+					],
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "dftap2wav"
+				},
+				{
+					"build" : "dftap2wav/dftap2wav",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "dftap2wav/dftap2wav",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "dftxt2tap",
+					"childIndexes" : 
+					[
+						6
+					],
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap"
+				},
+				{
+					"build" : "dftxt2tap/dftxt2tap",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap/dftxt2tap",
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "dflat-utils"
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "dftap2txt",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "dftap2wav",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5,
+						6
+					],
+					"name" : "dftxt2tap",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "dftap2txt::@8246f2f8758d5d58250f",
+					"jsonFile" : "target-dftap2txt-Debug-e75e26057a0b093baf12.json",
+					"name" : "dftap2txt",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "dftap2wav::@2393bd824f4f28ca69c0",
+					"jsonFile" : "target-dftap2wav-Debug-4d98a2e4a758fb76dd85.json",
+					"name" : "dftap2wav",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "dftxt2tap::@7bcbd2476a60cb636fef",
+					"jsonFile" : "target-dftxt2tap-Debug-bf97b197679635ddd8b0.json",
+					"name" : "dftxt2tap",
+					"projectIndex" : 3
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util/out/build/x64-Debug (default)",
+		"source" : "C:/Users/Dolo/Documents/Home Brew Computer/Oric-DFLAT/emulator/util"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 1
+	}
+}

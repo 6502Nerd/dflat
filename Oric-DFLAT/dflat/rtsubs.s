@@ -26,8 +26,7 @@ mod_sz_rtsubs_s
 	include "dflat/numop.s"
 
 df_rt_monitor
-	jsr command_line
-	rts
+	jmp command_line
 
 df_rt_new
 	jmp df_clear
@@ -215,7 +214,7 @@ df_rt_endif
 	; decrement if next level
 	dec df_ifnest
 	bmi df_rt_noif_err
-;	clc
+df_rt_if_done
 	rts
 
 	; else and ifelse encountered in a normal sequence
@@ -292,10 +291,7 @@ df_rt_ifeval
 
 df_rt_do_else
 	; we need to point to the next statement not this one
-	jsr df_rt_if_stat
-df_rt_if_done
-;	clc
-	rts
+	jmp df_rt_if_stat
 
 df_rt_for
 	; push statement address to rt stack
@@ -306,7 +302,6 @@ df_rt_for
 	pha
 	txa
 	pha
-
 
 	; find starting value
 	; evaluate the starting value
@@ -356,7 +351,6 @@ df_rt_for
 	; now push for token
 	lda #DFRT_FOR
 	jmp df_rst_pushByte
-;	rts
 
 df_rt_next
 	; remember stack position
@@ -429,7 +423,6 @@ df_rt_repeat
 	; DFRT_REPEAT token
 	lda #DFRT_REPEAT
 	jmp df_rst_pushByte
-;	rts
 
 df_rt_until
 	; remember stack position
@@ -452,24 +445,20 @@ df_rt_untilnext_done
 	pla
 	tay
 	; pop 2 items off stack (line address, index)
+	; and continue
 	jsr df_rst_popWord
 	jmp df_rst_popByte
-	; and continue
-;	clc
-;	rts
 
 df_rt_until_err
 	SWBRK DFERR_UNTIL
 
 df_rt_sadd
-;	clc
 	rts
 
 df_rt_print_num
 	jsr df_ost_popInt
 	clc
 	jmp print_a_to_d
-;	rts
 
 df_rt_print_str
 	jsr df_ost_popStr
@@ -481,9 +470,8 @@ df_rt_print_str_ch
 	beq df_rt_print_str_done
 	jsr io_put_ch
 	iny
-	jmp df_rt_print_str_ch
+	bne df_rt_print_str_ch		; Rely on y not wrapping!
 df_rt_print_str_done
-;	clc
 	rts
 
 ; * Find the position of the next data item to read
@@ -544,7 +532,6 @@ df_rt_skipinitdataptr
 	; save position and return
 	dey
 	sty df_datoff
-;	clc
 	rts
 df_rt_datumerr
 	SWBRK DFERR_NODATA
@@ -666,7 +653,6 @@ df_rt_input_str
 	sta (df_tmpptrb),y
 	dey
 	bpl df_rt_input_str
-;	clc
 	rts
 
 df_rt_input_num
@@ -682,7 +668,6 @@ df_rt_input_num
 	iny
 	lda num_a+1
 	sta (df_tmpptrb),y
-;	clc
 	rts
 df_rt_input_err
 	SWBRK DFERR_TYPEMISM
@@ -727,8 +712,7 @@ df_rt_local_done
 	; put on to rt stack
 	pla
 	jmp df_rst_pushByte
-;	clc
-;	rts
+
 
 df_rt_dim
 	ldy df_exeoff
@@ -830,15 +814,14 @@ df_rt_dim_next_byte
 	inc df_exeoff
 	jmp df_rt_dim
 df_rt_dim_done
-;	clc
 	rts
 df_rt_dim_err
 	SWBRK DFERR_DIM
 
+
 df_rt_cls
 	jmp gr_cls
-;	clc
-;	rts
+
 
 df_rt_plot
 	; evaluate the expression
@@ -924,7 +907,7 @@ df_rt_plot_h_str
 	lda df_tmpptrb
 	adc gr_scrngeom+gr_pitch
 	sta df_tmpptrb
-	bne df_rt_plotstrch		; Always - assume adding 8 is never 0!
+	bne df_rt_plotstrch		; Always - assume adding pitch is never 0!
 df_rt_plotstrdone
 	rts
 
@@ -934,7 +917,6 @@ df_rt_cursor
 	; write low byte of vdp_curoff
 	; by writing a zero then cursor on else not
 	stx vdp_curoff
-;	clc
 	rts
 
 df_rt_himem
@@ -945,30 +927,23 @@ df_rt_himem
 	sta df_memtop+1
 	; now clear everything down
 	jmp df_clear
-	rts
 
 df_rt_text
 	jmp gr_init_screen_txt
-;	clc
-;	rts
 
 df_rt_hires
 	jmp gr_init_hires
-;	clc
-;	rts
 
 df_rt_pixmode
 	; evaluate the expression X = mode
 	jsr df_rt_getnval
 	stx gr_scrngeom+gr_pixmode
-;	clc
 	rts
 
 df_rt_ink
 	; evaluate the expression X = col
 	jsr df_rt_getnval
 	stx gr_scrngeom+gr_ink
-;	clc
 	rts
 
 df_rt_paper
@@ -979,7 +954,6 @@ df_rt_paper
 	clc
 	adc #16
 	sta gr_scrngeom+gr_paper
-;	clc
 	rts
 
 df_rt_point
@@ -987,8 +961,6 @@ df_rt_point
 	ldx df_tmpptra
 	ldy df_tmpptrb
 	jmp gr_point
-;	clc
-;	rts
 
 df_rt_circle
 	jsr df_rt_parm_3ints
@@ -1000,17 +972,22 @@ df_rt_circle
 	sta num_a+2
 	jmp gr_circle
 
+df_rt_lineto
+	jsr df_rt_parm_2ints
+	ldx df_tmpptra				; load x1
+	ldy df_tmpptrb				; load y1
+df_rt_doline
+	stx num_a+2
+	sty num_a+3
+	jmp gr_line
 df_rt_line
 	jsr df_rt_parm_4ints
-	lda df_tmpptra				; load x0
-	sta num_a
-	lda	df_tmpptrb				; load y0
-	sta num_a+1
-	lda df_tmpptrc				; load x1
-	sta num_a+2
-	lda df_tmpptrd				; load y1
-	sta num_a+3
-	jmp gr_line
+	ldx df_tmpptra				; load x0
+	ldy	df_tmpptrb				; load y0
+	jsr gr_set_hires_cur		; Start from x,y
+	ldx df_tmpptrc				; load x1
+	ldy df_tmpptrd				; load y1
+	jmp df_rt_doline
 
 df_rt_wait
 	; evaluate the expression
@@ -1056,6 +1033,8 @@ df_rt_print_ws
 	cpy df_nxtstidx
 	beq df_rt_print_done
 	lda (df_currlin),y
+	cmp #':'
+	beq df_rt_print_done
 	cmp #' '
 	beq df_rt_print_ws
 	cmp #','
@@ -1127,8 +1106,6 @@ df_rt_sassign
 	; get string pointer from top of runtime stack
 	jmp df_ost_popStr
 
-;	clc
-;	rts
 
 ; generate lvar from a var token ready for assignment
 df_rt_generate_lvar
@@ -1160,7 +1137,6 @@ df_rt_generate_lvar
 	lda tmp_d
 	; move past the lvar variable index
 	inc df_exeoff
-;	clc
 	rts
 
 ; general assignment execution
@@ -1484,6 +1460,7 @@ df_rt_list_line_fin
 	; if got here then reached tmpb
 	pla
 	pla
+df_rt_list_line_only_fin
 	rts
 
 ;Using df_tmpptra as line pointer
@@ -1529,8 +1506,6 @@ df_rt_list_nexttok
 	iny
 	sty df_exeoff
 	jmp df_rt_list_decode
-df_rt_list_line_only_fin
-	rts
 
 
 ; decode escape sequences
@@ -1580,7 +1555,7 @@ df_rt_lst_hex_pre
 	jsr io_put_ch
 	lda #'x'
 	jmp io_put_ch
-;	rts
+
 
 ; Decode a byte hex
 df_rt_lst_bythex
@@ -1613,7 +1588,6 @@ df_rt_lst_bytbin
 	jmp df_rt_lst_bin
 
 ; Decode a int binary
-
 df_rt_lst_intbin
 	ldx #16
 	iny
@@ -1637,7 +1611,6 @@ df_rt_lst_bit_skip0
 	bne df_rt_lst_bit
 	iny
 	sty df_exeoff
-;	clc
 	rts
 
 ; Decode a decimal integer
@@ -1648,7 +1621,7 @@ df_rt_lst_intdec
 	sty df_exeoff
 	clc
 	jmp print_a_to_d
-;	rts
+
 
 ; decode a variable or procedure
 ; Slot address to decode in ptrb
@@ -1695,8 +1668,6 @@ df_rt_list_gotvvt
 	jsr io_put_ch
 	_incZPWord df_tmpptrc
 	jmp df_rt_list_gotvvt
-df_rt_list_donvvt
-	rts
 
 df_rt_lst_strlit
 	lda #0x22
@@ -1712,6 +1683,7 @@ df_rt_lst_strlitdon
 	lda #0x22
 	jsr io_put_ch
 	sty df_exeoff
+df_rt_list_donvvt
 	rts
 
 df_rt_list_linnum
@@ -1874,7 +1846,6 @@ df_rt_snd_common
 	ora #0x10
 df_rt_sound_env_skip
 	jmp snd_set
-;	rts
 
 ; sound chan,period,volume
 df_rt_sound
@@ -1890,8 +1861,6 @@ df_rt_sound_noise
 	lda df_tmpptrb
 	and #0x1f
 	jmp snd_set
-;	clc
-;	rts
 
 ; music chan,octave,note,volume
 df_rt_music
@@ -1949,8 +1918,6 @@ df_rt_play
 	inx
 	lda df_tmpptrd+1
 	jmp snd_set
-;	clc
-;	rts
 
 ;* common filename procesing routine
 ;*
@@ -1979,8 +1946,7 @@ df_rt_parse_file
 	; now process filename
 	jsr df_rt_init_filename
 	lda #0						; Initialise tape system
-	jsr io_active_device
-	rts
+	jmp io_active_device
 df_rt_file_errc
 	SWBRK DFERR_FNAME
 
@@ -2000,11 +1966,9 @@ df_rt_tsave
 df_rt_file_cleanup
 	; close the file
 	jsr io_close
-	clc
 	; restore to default device io
 	jmp io_set_default
-;	clc
-;	rts
+
 
 ; load "file" from text
 df_rt_tload
@@ -2015,7 +1979,7 @@ df_rt_tload
 	; else might try and write to a device
 	; only open for reading (i.e. SD CARD)
 df_rt_loadline
-	clc
+	clc					; NO ECHO!
 	jsr df_pg_inputline
 	; if C clear then tokenise line
 	bcc df_rt_ldtokenise

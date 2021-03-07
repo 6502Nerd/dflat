@@ -73,6 +73,7 @@ df_rt_tokenjmp
 	dw	df_rt_hires
 	dw	df_rt_point
 	dw	df_rt_line
+	dw	df_rt_lineto
 	dw	df_rt_pixmode
 	dw	df_rt_ink
 	dw	df_rt_paper

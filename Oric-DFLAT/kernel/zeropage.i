@@ -156,6 +156,10 @@ df_tmpptre	ds	2		; Temp pointer e
 
 dflat_zp_e
 
+zp_tmp1		ds	1		; General zero page temporary
+zp_tmp2		ds	1		; General zero page temporary
+zp_tmp3		ds	1		; General zero page temporary
+zp_tmp4		ds	1		; General zero page temporary
 
 ;***** END OF ZERO PAGE *****
 _end_zero_page

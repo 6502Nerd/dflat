@@ -28,8 +28,8 @@ mod_sz_runtime_s
 ;* Initialise program space for runtime
 ;****************************************
 df_initrun
-	; Set the key mask to check every 32 instructions
-	lda #0x20
+	; Set the key mask to check every 128 instructions
+	lda #0x80
 	sta df_checkmsk
 
 	; String and array heap initialisation
@@ -192,6 +192,16 @@ df_rt_neval_process
 df_rt_neval_done
 	rts
 
+df_rt_neval_tk_fn
+	clc
+	txa
+	; run a fn token - returns a value on stack
+	jsr df_rt_run_token
+	; move to next byte
+df_rt_neval_nextbyte
+	inc df_exeoff
+	bne df_rt_neval_optk		; ALWAYS as exeoff != 0
+
 df_rt_neval_tk_opp
 	pla				; Get A off stack which is the type
 df_rt_neval_tk_op
@@ -203,7 +213,7 @@ df_rt_neval_tk_op
 	; save current op token value
 	; C=0 means process the op now, else don't
 	; save current operator index
-	stx df_tmpptra
+	stx df_tmpptra				; Index in to token table not zero
 	; mask off to keep priority
 	and #DFTK_OPMSK
 	sta df_tmpptrb
@@ -243,23 +253,13 @@ df_rt_neval_donow
 	; get the token type in to A
 	lda df_tk_tokentype,x
 	; now go back around again to check whether to push the op or exec it
-	jmp df_rt_neval_tk_op
+	bne df_rt_neval_tk_op		; ALWAYS as type never zero
 df_rt_neval_pushOp
 	; push the operator
 	lda df_tmpptra
 	pha
-	jmp df_rt_neval_nextbyte
+	bne df_rt_neval_nextbyte	; ALWAYS as token index != 0
 
-df_rt_neval_tk_fn
-	clc
-	txa
-	; run a fn token - returns a value on stack
-	jsr df_rt_run_token
-	; move to next byte
-df_rt_neval_nextbyte
-	inc df_exeoff
-	jmp df_rt_neval_optk
-	; keep going until non-ws char found or end of line / statement
 
 
 
@@ -411,7 +411,10 @@ df_rt_seval_copy
 	lda df_tmpptra
 	pha
 
-	jmp df_rt_seval_nextbyte
+;	jmp df_rt_seval_nextbyte
+df_rt_seval_nextbyte
+	inc df_exeoff
+	jmp df_rt_seval_optk
 
 df_rt_seval_esc_strlit
 	; evaluate string literal
@@ -422,9 +425,6 @@ df_rt_seval_esc_proc
 	; not yet suported *******
 	SWBRK DFERR_OK
 
-df_rt_seval_nextbyte
-	inc df_exeoff
-	jmp df_rt_seval_optk
 	; keep going until non-ws char found or end of line / statement
 df_rt_seval_done
 	;
@@ -1018,9 +1018,11 @@ df_rt_exec_found_tok
 
 	; check for break, asynch get
 	inc df_checkkey					; Don't check every time else slooow
-	lda df_checkmsk					; Check the mask (normally 0x20)
-	and df_checkkey
+	lda df_checkkey					; Check the mask (normally 0x20)
+	and df_checkmsk
 	beq df_rt_exec_no_key
+	lda #0
+	sta df_checkkey
 	clc
 	jsr io_get_ch
 	bcs df_rt_exec_no_key

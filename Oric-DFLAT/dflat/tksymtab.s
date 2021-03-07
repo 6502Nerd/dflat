@@ -73,6 +73,7 @@ df_tokensyms
 	db	"hire",'s'+0x80				; hires col
 	db	"poin",'t'+0x80				; point x,y
 	db	"lin",'e'+0x80				; line x0,y0,x1,y1
+	db	"linet",'o'+0x80			; lineto x1,y1
 	db	"pixmod",'e'+0x80			; pixmode n
 	db	"in",'k'+0x80				; ink n
 	db	"pape",'r'+0x80				; paper n

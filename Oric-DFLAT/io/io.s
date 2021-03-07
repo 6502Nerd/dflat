@@ -49,11 +49,14 @@ io_init
 io_set_default			; Entry point for default
 	lda io_default
 io_active_device		; Entry point for A set
+	tax					; X=buf size index
 	asl	a				; x16 the Block number
 	asl a
 	asl a
 	asl a
-	tay
+	tay					; Y=index in to device table
+	lda io_buf_sz,x
+	sta buf_sz
 	ldx #0
 	; Copy device settings to io block
 io_copy_data
@@ -68,8 +71,6 @@ io_copy_data
 	sta buf_lo
 	lda #hi(scratch)
 	sta buf_hi
-	lda #255
-	sta buf_sz
 	lda #UTF_CR			; Line terminator is CR
 	sta buf_ef
 	rts
@@ -234,6 +235,11 @@ io_null_op
 	clc
 	rts
 	
+;* IO buffer sizes
+io_buf_sz
+	db 255					; Device 0 = Tape
+	db 127					; Device 1 = keyboard/screen
+
 ;* IO devices defined here
 io_devices
 ;* Device zero is the tape system

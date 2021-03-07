@@ -73,6 +73,7 @@ df_tk_tokenjmp
 	dw	df_tk_hires
 	dw	df_tk_point
 	dw	df_tk_line
+	dw	df_tk_lineto
 	dw	df_tk_pixmode
 	dw	df_tk_ink
 	dw	df_tk_paper

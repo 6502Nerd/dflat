@@ -8,13 +8,6 @@ setlocal EnableDelayedExpansion
 color 81
 echo Assembly started   : %date% %time%
 
-REM The build.s file is created here
-echo  db "Oric dflat custom ROM\r" > kernel\build.s
-echo  db "By @6502Nerd (Dolo Miah)\r" >> kernel\build.s
-echo  db "Build : 0.11 [BETA]\r" >> kernel\build.s
-echo  db "Copyright (c) 2020\r\r",0 >> kernel\build.s
-
-
 REM Final binary which include the real extern addresses and correct bank numbers
 echo Generating final symbol tables for externals
 
