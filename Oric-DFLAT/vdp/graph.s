@@ -195,7 +195,8 @@ gr_scrngeom_hires
 	db gr_hires_x, 0
 	db gr_hires_y, 0
 
-	; Only need to initialise text height, width is same as before
+	; Only need to initialise text height, width is same as before (iss: really? ;)
+	db gr_text_w, 40
 	db gr_text_h, 3
 
 	db gr_pixmode, 1
@@ -700,7 +701,7 @@ gr_cur_down
 	ldy gr_scrngeom+gr_cur_y
 	iny
 	; If already at  bottom then don't do anything
-	cpy gr_scrngeom+gr_text_h			
+	cpy gr_scrngeom+gr_text_h
 	beq gr_cur_skip_at_tl				; Just somewhere with an rts!
 	jsr gr_set_cur
 
@@ -1261,7 +1262,7 @@ grl_siny= (ztmp_24+16)
 	ldx grl_x1
 	ldy grl_y1
 	jsr gr_set_hires_cur
-	
+
 	lda #0
 	sta grl_xyyx				; Assume normal xy axis
 
