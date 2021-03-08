@@ -29,7 +29,7 @@ HITEXT		=	0xbf68
 	dw gr_hi_start				; Address fo hires screen
 	dw gr_char					; Start address of charset
 	dw gr_text_start			; Start of text memory
-	dw gr_text_size				; Number of bytes screen occupies
+	dw gr_geom_tmp2				; (Not used, maintained for alignment)
 	db gr_text_w				; Number of columns
 	db gr_text_h				; Number of rows
 	db gr_cur_x					; Current X position of cursor

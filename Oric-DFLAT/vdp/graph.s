@@ -154,13 +154,10 @@ gr_init_geom
 
 ; Geometry initialisation tables
 gr_scrngeom_base
-	db gr_mode, 0
-	db gr_char,   lo(TEXTCHAR)
-	db gr_char+1, hi(TEXTCHAR)
 	db gr_ink, 0
 	db gr_paper, 16+6
 	db gr_margin, 2
-	db -1
+	; Not terminated by -1 : continues in to _txt values
 ;* Geometry for text/lores
 gr_scrngeom_text
 	db gr_mode, 0
@@ -170,9 +167,6 @@ gr_scrngeom_text
 
 	db gr_text_start,   lo(TEXTSCRN)
 	db gr_text_start+1, hi(TEXTSCRN)
-
-	db gr_text_size,   lo(40*28)
-	db gr_text_size+1, hi(40*28)
 
 	db gr_text_w, 40
 	db gr_text_h, 28
@@ -188,9 +182,6 @@ gr_scrngeom_hires
 
 	db gr_text_start,   lo(HITEXT)
 	db gr_text_start+1, hi(HITEXT)
-
-	db gr_text_size,   lo(40*3)
-	db gr_text_size+1, hi(40*3)
 
 	db gr_hires_x, 0
 	db gr_hires_y, 0
