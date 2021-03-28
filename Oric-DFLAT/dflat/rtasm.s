@@ -119,12 +119,11 @@ df_rt_asm_opt
 ; string expansion also handled
 df_rt_asm_db
 	lda #2
-	sta df_asmlen
-	bne df_rt_asm_db_start	; Relies on A<>0
+	db	0x2c			; BIT abs to ignore next 2 bytes
 df_rt_asm_dw
 	lda #3
-	sta df_asmlen
 df_rt_asm_db_start
+	sta df_asmlen
 	jsr df_rt_asm_printPC
 	jsr df_rt_asm_printSPC
 df_rt_asm_data

@@ -169,7 +169,7 @@ con_n_to_a_detect		; Y is zero on entry
 	beq con_hex_jmp
 	cmp #'b'
 	beq con_bin_jmp
-	jmp con_dec_jmp
+	bne con_dec_jmp		; Always branches
 
 ;****************************************
 ;* con_hex_to_a

@@ -1566,6 +1566,7 @@ df_rt_lst_lo_hex
 	jsr io_put_ch
 	txa
 	jsr io_put_ch
+df_rt_lst_const_done
 	iny
 	sty df_exeoff
 	rts
@@ -1590,9 +1591,7 @@ df_rt_lst_bytbin
 ; Decode a int binary
 df_rt_lst_intbin
 	ldx #16
-	iny
-	sty df_exeoff
-
+	; FALL THROUGH
 ; Main 01 decoding of binary
 df_rt_lst_bin
 	lda #'0'
@@ -1603,15 +1602,12 @@ df_rt_lst_bit
 	lda #'0'
 	asl df_tmpptrb
 	rol df_tmpptrb+1
-	bcc df_rt_lst_bit_skip0
-	lda #'1'
+	adc #0				; If C=1 then '0' becomes '1'
 df_rt_lst_bit_skip0
 	jsr io_put_ch
 	dex
 	bne df_rt_lst_bit
-	iny
-	sty df_exeoff
-	rts
+	beq df_rt_lst_const_done
 
 ; Decode a decimal integer
 df_rt_lst_intdec
@@ -2281,7 +2277,7 @@ df_rt_peek
 	clc
 df_rt_readbyte
 	php
-	inc df_exeoff
+;	inc df_exeoff
 	jsr df_rt_getnval
 	stx df_tmpptra
 	sta df_tmpptra+1
@@ -2300,7 +2296,7 @@ df_rt_readbyte_skip
 ; rnd(0) = get next number
 ; rnd(>0) = set seed
 df_rt_rnd
-	inc df_exeoff
+;	inc df_exeoff
 	jsr df_rt_getnval
 	; if input is 0 then generate next random number
 	cpx #0
@@ -2329,7 +2325,7 @@ df_rt_rnd_set
 ;* 1	Return program size (end of prg - start of prg)
 ;* 2	Return size of vars (end of vnt - start of vvt)
 df_rt_mem
-	inc df_exeoff
+;	inc df_exeoff
 	jsr df_rt_getnval
 	; only low byte is used
 	cpx #1
@@ -2364,13 +2360,13 @@ df_rt_mem_calc
 ;* Check for fire | down | up | right | left
 ;*        bit  4     3      2     1       0
 df_rt_stick
-	inc df_exeoff
+;	inc df_exeoff
 	jsr kb_stick				; Get pos in to A
 	jmp df_ost_pushIntA
 
 ; k=get(sync) sync>=1 means sync
 df_rt_get
-	inc df_exeoff
+;	inc df_exeoff
 	jsr df_rt_getnval
 	; only low byte is used, check for sync or async
 	; c=0 if x<1 else x>=1 makes c=1
@@ -2389,7 +2385,7 @@ df_rt_get_push
 
 ; s = scrn(x,y)
 df_rt_scrn
-	inc df_exeoff
+;	inc df_exeoff
 	jsr df_rt_parm_2ints
 	ldy df_tmpptra			; Y is the x coord!
 	ldx df_tmpptrb			; X is the y coord!
@@ -2398,7 +2394,7 @@ df_rt_scrn
 
 ; p = pixel(x,y)
 df_rt_pixel
-	inc df_exeoff
+;	inc df_exeoff
 	jsr df_rt_parm_2ints
 	ldx df_tmpptra
 	ldy df_tmpptrb
@@ -2406,7 +2402,7 @@ df_rt_pixel
 	jmp df_ost_pushIntA
 
 
-; %e=elapsed(%var)
+; e=elapsed(var)
 df_rt_elapsed
 	; now get lvar X,A from current statement
 	jsr df_rt_getlvar
@@ -2431,15 +2427,36 @@ df_rt_elapsed
 	jmp df_ost_pushInt
 
 df_rt_call
-	inc df_exeoff
+;	inc df_exeoff
 	jsr df_rt_parm_4ints
 	lda df_tmpptrb				; load A
 	ldx	df_tmpptrc				; load X
 	ldy df_tmpptrd				; load Y
 	jsr df_rt_calljsr
+df_rt_push_int1
 	jmp df_ost_pushInt			; A,X pair is return value
 df_rt_calljsr
 	jmp (df_tmpptra)			; tmpptra is address, return with RTS
+
+df_rt_sgn
+;	inc df_exeoff
+	jsr df_rt_getnval
+	stx df_tmpptra
+	ora df_tmpptra
+	beq df_rt_sgn_z
+	and #0x80
+	bne df_rt_sgn_n
+	ldx #1
+	lda #0
+	beq df_rt_push_int1			; Always
+df_rt_sgn_n
+	ldx #0xff
+	txa
+	bne df_rt_push_int1			; Always
+df_rt_sgn_z
+	ldx #0
+	txa
+	beq df_rt_push_int1			; Always
 
 ; string length calculator
 ; X,A = source
@@ -2493,7 +2510,7 @@ df_str_src_end
 
 ; $c = chr(x)
 df_rt_chr
-	inc df_exeoff
+;	inc df_exeoff
 	; get char in X
 	jsr df_rt_getnval
 	ldy #0
@@ -2511,7 +2528,7 @@ df_rt_chr
 
 ; $c = hex(x)
 df_rt_hex
-	inc df_exeoff
+;	inc df_exeoff
 	; create hex digits
 	jsr df_rt_getnval
 	sta df_tmpptra	; Save the high byte
@@ -2551,7 +2568,7 @@ df_rt_hex
 
 ; $l = left($s, x)
 df_rt_left
-	inc df_exeoff
+;	inc df_exeoff
 
 	; first get the string to act on
 	; point to string accumulator
@@ -2568,7 +2585,7 @@ df_rt_left
 
 ; $r = right($s, x)
 df_rt_right
-	inc df_exeoff
+;	inc df_exeoff
 	; first get the string to act on
 	; point to string accumulator
 	jsr df_rt_seval
@@ -2590,7 +2607,7 @@ df_rt_right
 
 ; $m = mid($s, x, y)
 df_rt_mid
-	inc df_exeoff
+;	inc df_exeoff
 	; first get the string to act on
 	; point to string accumulator
 	jsr df_rt_seval
@@ -2614,7 +2631,7 @@ df_rt_mid
 
 ; %l = len($s)
 df_rt_len
-	inc df_exeoff
+;	inc df_exeoff
 	; evaluate the string in the string accumulator
 	jsr df_rt_seval
 	jsr df_ost_popStr
@@ -2624,7 +2641,7 @@ df_rt_len
 
 ; %l = asc($s)
 df_rt_asc
-	inc df_exeoff
+;	inc df_exeoff
 	; Evaluate string in the string accumulator
 	jsr df_rt_seval
 	jsr df_ost_popStr
@@ -2638,7 +2655,7 @@ df_rt_asc
 
 ; %l = val($s)
 df_rt_val
-	inc df_exeoff
+;	inc df_exeoff
 	; evaluate the string
 	jsr df_rt_seval
 	jsr df_ost_popStr
@@ -2682,7 +2699,7 @@ df_rt_sprmulti
 	jmp gr_spr_multi_pos
 
 df_rt_sprhit
-	inc df_exeoff
+;	inc df_exeoff
 	jsr df_rt_getnval
 	txa
 	jsr gr_spr_hit

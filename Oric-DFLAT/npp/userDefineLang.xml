@@ -1,0 +1,126 @@
+<NotepadPlus>
+    <UserLang name="65c02" ext="" udlVersion="2.1">
+        <Settings>
+            <Global caseIgnored="yes" allowFoldOfComments="yes" foldCompact="no" forcePureLC="0" decimalSeparator="0" />
+            <Prefix Keywords1="no" Keywords2="no" Keywords3="yes" Keywords4="no" Keywords5="no" Keywords6="no" Keywords7="no" Keywords8="no" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Comments">00; 01 02 03 04</Keywords>
+            <Keywords name="Numbers, prefix1"></Keywords>
+            <Keywords name="Numbers, prefix2"></Keywords>
+            <Keywords name="Numbers, extras1"></Keywords>
+            <Keywords name="Numbers, extras2"></Keywords>
+            <Keywords name="Numbers, suffix1"></Keywords>
+            <Keywords name="Numbers, suffix2"></Keywords>
+            <Keywords name="Numbers, range"></Keywords>
+            <Keywords name="Operators1">| &gt;&gt; &lt;&lt; + - * ( ) #</Keywords>
+            <Keywords name="Operators2"></Keywords>
+            <Keywords name="Folders in code1, open"></Keywords>
+            <Keywords name="Folders in code1, middle"></Keywords>
+            <Keywords name="Folders in code1, close"></Keywords>
+            <Keywords name="Folders in code2, open"></Keywords>
+            <Keywords name="Folders in code2, middle"></Keywords>
+            <Keywords name="Folders in code2, close"></Keywords>
+            <Keywords name="Folders in comment, open"></Keywords>
+            <Keywords name="Folders in comment, middle"></Keywords>
+            <Keywords name="Folders in comment, close"></Keywords>
+            <Keywords name="Keywords1">adc and asl&#x000D;&#x000A;bcc bcs beq bit bmi bne bpl bra brk bvc bvs&#x000D;&#x000A;clc cld cli clv cmp cpx cpy&#x000D;&#x000A;dec dex dey&#x000D;&#x000A;eor&#x000D;&#x000A;inc inx iny&#x000D;&#x000A;jmp jsr&#x000D;&#x000D;&#x000A;lda ldx ldy lsr&#x000D;&#x000A;nop&#x000D;&#x000A;ora&#x000D;&#x000A;pha php phx phy pla plp plx ply&#x000D;&#x000A;rmb rol ror rti rts&#x000D;&#x000A;sbc sec sed sei sta stx sty stz&#x000D;&#x000A;tax tay trb tsb tsx txa txs tya</Keywords>
+            <Keywords name="Keywords2">align&#x000D;&#x000A;code&#x000D;&#x000A;data db dd disable ds dw&#x000D;&#x000A;else enable end endif endm equ&#x000D;&#x000A;fcb fcc fcw fdb&#x000D;&#x000A;hi&#x000D;&#x000A;if include&#x000D;&#x000D;&#x000A;list lo&#x000D;&#x000A;macro&#x000D;&#x000A;nolist noopt&#x000D;&#x000A;opt org&#x000D;&#x000A;page&#x000D;&#x000D;&#x000A;set struct&#x000D;&#x000A;title&#x000D;&#x000A;</Keywords>
+            <Keywords name="Keywords3">0b&#x000D;&#x000A;0x&#x000D;&#x000A;</Keywords>
+            <Keywords name="Keywords4"></Keywords>
+            <Keywords name="Keywords5"></Keywords>
+            <Keywords name="Keywords6"></Keywords>
+            <Keywords name="Keywords7"></Keywords>
+            <Keywords name="Keywords8"></Keywords>
+            <Keywords name="Delimiters">00&quot; 01 02&quot; 03&apos; 04 05&apos; 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23</Keywords>
+        </KeywordLists>
+        <Styles>
+            <WordsStyle name="DEFAULT" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="COMMENTS" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="LINE COMMENTS" fgColor="008000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="NUMBERS" fgColor="FF00FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS1" fgColor="0000FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS2" fgColor="800080" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS3" fgColor="FF00FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS4" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS5" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS6" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS7" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS8" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="OPERATORS" fgColor="FF0000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE1" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE2" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN COMMENT" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS1" fgColor="8000FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS2" fgColor="8000FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS3" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS4" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS5" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS6" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS7" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS8" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+        </Styles>
+    </UserLang>
+    <UserLang name="oric-dflat" ext="" udlVersion="2.1">
+        <Settings>
+            <Global caseIgnored="no" allowFoldOfComments="no" foldCompact="no" forcePureLC="0" decimalSeparator="0" />
+            <Prefix Keywords1="yes" Keywords2="no" Keywords3="no" Keywords4="yes" Keywords5="no" Keywords6="yes" Keywords7="no" Keywords8="no" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Comments">00; 01 02 03 04</Keywords>
+            <Keywords name="Numbers, prefix1"></Keywords>
+            <Keywords name="Numbers, prefix2"></Keywords>
+            <Keywords name="Numbers, extras1"></Keywords>
+            <Keywords name="Numbers, extras2"></Keywords>
+            <Keywords name="Numbers, suffix1"></Keywords>
+            <Keywords name="Numbers, suffix2"></Keywords>
+            <Keywords name="Numbers, range"></Keywords>
+            <Keywords name="Operators1">: * / \ &lt;&lt; &gt;&gt; + - &amp; | ^ &lt;= &gt;= &lt;&gt; &lt; &gt; == ( ) , = # [ ]</Keywords>
+            <Keywords name="Operators2"></Keywords>
+            <Keywords name="Folders in code1, open"></Keywords>
+            <Keywords name="Folders in code1, middle"></Keywords>
+            <Keywords name="Folders in code1, close"></Keywords>
+            <Keywords name="Folders in code2, open"></Keywords>
+            <Keywords name="Folders in code2, middle"></Keywords>
+            <Keywords name="Folders in code2, close"></Keywords>
+            <Keywords name="Folders in comment, open"></Keywords>
+            <Keywords name="Folders in comment, middle"></Keywords>
+            <Keywords name="Folders in comment, close"></Keywords>
+            <Keywords name="Keywords1">def</Keywords>
+            <Keywords name="Keywords2">println&#x000D;&#x000A;printat&#x000D;&#x000A;print&#x000D;&#x000A;return&#x000D;&#x000A;abort&#x000D;&#x000A;local&#x000D;&#x000A;dim&#x000D;&#x000A;repeat&#x000D;&#x000A;until&#x000D;&#x000A;for&#x000D;&#x000A;next&#x000D;&#x000A;while&#x000D;&#x000A;wend&#x000D;&#x000A;if&#x000D;&#x000A;else&#x000D;&#x000A;endif&#x000D;&#x000A;elif&#x000D;&#x000A;data&#x000D;&#x000A;run&#x000D;&#x000A;list&#x000D;&#x000A;input&#x000D;&#x000A;text&#x000D;&#x000A;plot&#x000D;&#x000A;cursor&#x000D;&#x000A;cls&#x000D;&#x000A;poke&#x000D;&#x000A;doke&#x000D;&#x000A;sound&#x000D;&#x000A;music&#x000D;&#x000A;play&#x000D;&#x000A;save&#x000D;&#x000A;load&#x000D;&#x000A;read&#x000D;&#x000A;new&#x000D;&#x000A;renum&#x000D;&#x000A;wait&#x000D;&#x000A;reset&#x000D;&#x000A;hires&#x000D;&#x000A;point&#x000D;&#x000A;line&#x000D;&#x000A;lineto&#x000D;&#x000A;pixmode&#x000D;&#x000A;ink&#x000D;&#x000A;paper&#x000D;&#x000A;circle&#x000D;&#x000A;himem&#x000D;&#x000A;monitor&#x000D;&#x000A;sprchar&#x000D;&#x000A;sprpos&#x000D;&#x000A;sprupd&#x000D;&#x000A;sprinit&#x000D;&#x000A;sprmulti&#x000D;&#x000A;bsave&#x000D;&#x000A;bload&#x000D;&#x000A;</Keywords>
+            <Keywords name="Keywords3">.org&#x000D;&#x000A;.opt&#x000D;&#x000A;.db&#x000D;&#x000A;.dw&#x000D;&#x000A;.ds&#x000D;&#x000A;.adc&#x000D;&#x000A;.and&#x000D;&#x000A;.cmp&#x000D;&#x000A;.eor&#x000D;&#x000A;.lda&#x000D;&#x000A;.ora&#x000D;&#x000A;.sbc&#x000D;&#x000A;.sta&#x000D;&#x000A;.asl&#x000D;&#x000A;.dec&#x000D;&#x000A;.inc&#x000D;&#x000A;.lsr&#x000D;&#x000A;.rol&#x000D;&#x000A;.ror&#x000D;&#x000A;.bit&#x000D;&#x000A;.brk&#x000D;&#x000A;.clc&#x000D;&#x000A;.cld&#x000D;&#x000A;.cli&#x000D;&#x000A;.clv&#x000D;&#x000A;.sec&#x000D;&#x000A;.sed&#x000D;&#x000A;.sei&#x000D;&#x000A;.cpx&#x000D;&#x000A;.cpy&#x000D;&#x000A;.dex&#x000D;&#x000A;.dey&#x000D;&#x000A;.inx&#x000D;&#x000A;.iny&#x000D;&#x000A;.ldx&#x000D;&#x000A;.ldy&#x000D;&#x000A;.stx&#x000D;&#x000A;.sty&#x000D;&#x000A;.bcc&#x000D;&#x000A;.bcs&#x000D;&#x000A;.beq&#x000D;&#x000A;.bmi&#x000D;&#x000A;.bne&#x000D;&#x000A;.bpl&#x000D;&#x000A;.bvc&#x000D;&#x000A;.bvs&#x000D;&#x000A;.jmp&#x000D;&#x000A;.jsr&#x000D;&#x000A;.nop&#x000D;&#x000A;.pha&#x000D;&#x000A;.php&#x000D;&#x000A;.pla&#x000D;&#x000A;.plp&#x000D;&#x000A;.rti&#x000D;&#x000A;.rts&#x000D;&#x000A;.tax&#x000D;&#x000A;.tay&#x000D;&#x000A;.tsx&#x000D;&#x000A;.txa&#x000D;&#x000A;.txs&#x000D;&#x000A;.tya&#x000D;&#x000A;</Keywords>
+            <Keywords name="Keywords4">peek&#x000D;&#x000A;deek&#x000D;&#x000A;stick&#x000D;&#x000A;get&#x000D;&#x000A;chr&#x000D;&#x000A;left&#x000D;&#x000A;right&#x000D;&#x000A;mid&#x000D;&#x000A;len&#x000D;&#x000A;mem&#x000D;&#x000A;scrn&#x000D;&#x000A;rnd&#x000D;&#x000A;elapsed&#x000D;&#x000A;call&#x000D;&#x000A;hex&#x000D;&#x000A;asc&#x000D;&#x000A;val&#x000D;&#x000A;pixel&#x000D;&#x000A;sprhit&#x000D;&#x000A;sgn</Keywords>
+            <Keywords name="Keywords5">enddef&#x000D;&#x000A;</Keywords>
+            <Keywords name="Keywords6">0x&#x000D;&#x000A;0b</Keywords>
+            <Keywords name="Keywords7"></Keywords>
+            <Keywords name="Keywords8"></Keywords>
+            <Keywords name="Delimiters">00&quot; 01 02&quot; 03 04 05 06_ 07 08( 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23</Keywords>
+        </KeywordLists>
+        <Styles>
+            <WordsStyle name="DEFAULT" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="COMMENTS" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="LINE COMMENTS" fgColor="008040" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="NUMBERS" fgColor="004040" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS1" fgColor="FF0000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS2" fgColor="0000FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS3" fgColor="8000FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS4" fgColor="0080FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS5" fgColor="FF0000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS6" fgColor="008080" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS7" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS8" fgColor="008040" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="OPERATORS" fgColor="FF00FF" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE1" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE2" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN COMMENT" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS1" fgColor="004040" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS2" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS3" fgColor="FF0000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS4" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS5" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS6" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS7" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS8" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" nesting="0" />
+        </Styles>
+    </UserLang>
+</NotepadPlus>

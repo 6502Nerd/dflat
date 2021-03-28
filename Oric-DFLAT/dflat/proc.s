@@ -21,7 +21,9 @@
 mod_sz_proc_s
 
 df_rt_proc_parmerr
+df_rt_deferr
 	SWBRK DFERR_PROCPARM
+
 
 ; call procedure
 df_rt_proc

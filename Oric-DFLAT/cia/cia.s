@@ -41,12 +41,9 @@ mod_sz_cia_s
 ;* Output : None
 ;* Regs affected : A
 ;****************************************
-;init_via0_ser					; initialisation bytes for serial
-;	ldy #init_ser_tab-init_via0_tab
-;	bne init_via0_loop			; always branch
 init_via0_tape					; initialisation bytes for tape
 	ldy #init_tape_tab-init_via0_tab
-	bne init_via0_loop			; always branch
+	db 0x2c						; Ignore next two bytes
 init_via0
 	ldy #0						; Standard initialisation of VIA
 init_via0_loop

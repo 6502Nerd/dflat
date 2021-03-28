@@ -42,6 +42,7 @@ reset
 hires
 point
 line
+lineto
 pixmode
 ink
 paper
@@ -75,6 +76,7 @@ asc
 val
 pixel
 sprhit
+sgn
 
 : * / \ << >> + - & | ^ <= >= <> < > == ( ) , = #
 

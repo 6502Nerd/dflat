@@ -245,6 +245,7 @@ df_tk_hex
 df_tk_asc
 df_tk_val
 df_tk_sprhit
+df_tk_sgn
 	jsr df_tk_expression
 	bcs df_tk_error2
 df_tk_closebrkt

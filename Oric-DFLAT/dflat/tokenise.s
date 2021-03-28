@@ -282,28 +282,27 @@ df_tk_num
 	txa
 	adc df_linoff
 	sta df_linoff
-	; Now tokenise an integer
+	; Now tokenise an integer (always 2 bytes, but type defines what is shown)
 	tya
 	cmp #NUM_DEC
 	bne df_tk_num_hexbin
 	lda #DFTK_INTDEC	; decimal always an int
 	bne df_tk_num_put
 df_tk_num_hexbin
-	clc
-	adc #4				; Default to BYT
-	cmp #NUM_BIN+4
-	beq df_tk_num_bin
-	cpx #4				; 4 chars processed = byte
-	beq df_tk_num_put
-df_tk_num_makeint
-	clc
-	adc #4				; now make INT
+	cmp #NUM_HEX
+	bne df_tk_num_bin
+	lda #DFTK_BYTHEX	; Assume BYT
+	cpx #5				; If >4 chars then INT
+	bcc df_tk_num_put
+	lda #DFTK_INTHEX
 	bne df_tk_num_put
 df_tk_num_bin
-	cpx #0x0a			; 10 chars processed = byte
-	bne df_tk_num_makeint
+	lda #DFTK_BYTBIN	; Assume BYT
+	cpx #11				; If >10 chars then INT
+	bcc df_tk_num_put
+	lda #DFTK_INTBIN
 df_tk_num_put
-	jsr df_tk_put_tok
+	jsr df_tk_put_tok	; Save number type (DEC,HEX,BIN)
 	lda num_a
 	jsr df_tk_put_tok
 	lda num_a+1

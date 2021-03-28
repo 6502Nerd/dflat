@@ -28,9 +28,10 @@ mod_sz_runtime_s
 ;* Initialise program space for runtime
 ;****************************************
 df_initrun
-	; Set the key mask to check every 128 instructions
-	lda #0x80
+	; Set the key mask to check every 16 instructions
+	lda #0x10
 	sta df_checkmsk
+	sta df_checkkey
 
 	; String and array heap initialisation
 	; Grows up from end of prog space PLUS 1
@@ -196,6 +197,7 @@ df_rt_neval_tk_fn
 	clc
 	txa
 	; run a fn token - returns a value on stack
+	inc df_exeoff
 	jsr df_rt_run_token
 	; move to next byte
 df_rt_neval_nextbyte
@@ -385,6 +387,7 @@ df_rt_seval_tk_op
 
 df_rt_seval_tk_fn
 	txa
+	inc df_exeoff
 	jsr df_rt_run_token
 	jmp df_rt_seval_copy
 
@@ -1017,11 +1020,9 @@ df_rt_exec_found_tok
 	beq df_rt_exec_end
 
 	; check for break, asynch get
-	inc df_checkkey					; Don't check every time else slooow
-	lda df_checkkey					; Check the mask (normally 0x20)
-	and df_checkmsk
-	beq df_rt_exec_no_key
-	lda #0
+	dec df_checkkey
+	bne df_rt_exec_no_key
+	lda df_checkmsk
 	sta df_checkkey
 	clc
 	jsr io_get_ch

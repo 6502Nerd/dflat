@@ -109,6 +109,7 @@ df_tk_tokentype
 	db 	DFTK_FN | DFTK_INT | DFTK_BYT
 	db 	DFTK_FN | DFTK_INT | DFTK_BYT
 	db 	DFTK_FN | DFTK_INT | DFTK_BYT
+	db 	DFTK_FN | DFTK_INT | DFTK_BYT
 	;* Operators add the order of precedence (0=high, 7=low)
 	db 	DFTK_OP | DFTK_INT | DFTK_BYT + 0
 	db 	DFTK_OP | DFTK_INT | DFTK_BYT + 0
