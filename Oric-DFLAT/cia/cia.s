@@ -61,7 +61,7 @@ init_via0_done
 	
 init_via0_tab
 	db IER, 	0x7f
-	db DDRA,	0xff
+	db DDRA,	0xff			; Port A output by default
 	db DDRB,	0xf7			; Tape motor + KB select
 	db PRB,		0xb7			; Port B default = cassette motor off
 	db PCR,		0xdd			; Ensure AY is not selected (CB1 active)

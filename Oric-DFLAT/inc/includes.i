@@ -17,13 +17,7 @@
 ;*
 ;**********************************************************
 
-;* The IO block is at 0x04000 and decodes up to
-;* eight IO addresses, at 0x0080 intervals
-;* All eight are not used at the present time:
-;* - 0 : VIA 1 (Keyboard)
-;* - 1 : VIA 2 (Sound and SD card interface)
-;* - 2 : VDP (Video)
-;* - 3 : ACIA (Serial)
+;* The IO block is at 0x0300
 IO_0		= 0x0300
 
 VDP_FLASH	= 16				;* 32/50 second flash
@@ -54,8 +48,8 @@ IFR_CA2		= 0x01
 IFR_CA1		= 0x02
 IFR_CB1		= 0x10
 
-;* AY-3-8910 definitions
-;* The sound chip is accessed through VIA 2
+;* AY-3-8912 definitions
+;* The sound chip is accessed through VIA Port A
 SND_ADBUS	= IO_0+PRAH
 SND_MODE	= IO_0+PCR
 

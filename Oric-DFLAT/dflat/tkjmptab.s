@@ -110,6 +110,7 @@ df_tk_tokenjmp
 	dw	df_tk_pixel
 	dw	df_tk_sprhit
 	dw	df_tk_sgn
+	dw	df_tk_addr
 	
 	dw	df_tk_mult
 	dw	df_tk_div

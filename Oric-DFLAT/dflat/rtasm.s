@@ -462,10 +462,10 @@ df_rt_asm_addrmode
 	lda #0
 	sta df_asmoprnd
 	sta df_asmoprnd+1
-	; jump over whitespace
-	jsr df_rt_skip_ws
 	jsr df_rt_eos			; End of statement?
 	bcs df_rt_asm_AM_IMP
+	; jump over whitespace
+	jsr df_rt_skip_ws
 	; Check what it is
 	cmp #'#'				; Immediate?
 	beq df_rt_asm_AM_IMM
@@ -482,6 +482,7 @@ df_rt_asm_AM_IMP
 df_rt_asm_ABSREL	
 	; Evaluate operand
 	jsr df_rt_asm_get_operand
+
 	jsr df_rt_eos			; End of statement?
 	bcs df_rt_asm_AM_ABS
 	iny						; Jump over ","

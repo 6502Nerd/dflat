@@ -2458,6 +2458,13 @@ df_rt_sgn_z
 	txa
 	beq df_rt_push_int1			; Always
 
+; addr(X)
+df_rt_addr
+	; get lvar X,A from current statement
+	jsr df_rt_getlvar
+	inc df_exeoff
+	jmp df_ost_pushInt
+
 ; string length calculator
 ; X,A = source
 ; A = length not including zero

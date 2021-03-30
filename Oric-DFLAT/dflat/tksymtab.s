@@ -110,6 +110,7 @@ df_tokensyms
 	db	"pixel",'('+0x80			; pixel(x,y)
 	db	"sprhit",'('+0x80			; sprhit(sp)
 	db	"sgn",'('+0x80				; sgn(x)
+	db	"addr",'('+0x80				; addr(var)
 ; Numeric operators, in priority
 	db	'*'+0x80					; Multiply
 	db 	'/'+0x80					; Divide

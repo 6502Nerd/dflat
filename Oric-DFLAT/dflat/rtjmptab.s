@@ -110,6 +110,7 @@ df_rt_tokenjmp
 	dw	df_rt_pixel
 	dw	df_rt_sprhit
 	dw	df_rt_sgn
+	dw	df_rt_addr
 	
 	dw	df_rt_mult
 	dw	df_rt_div

@@ -29,9 +29,6 @@
 snd_set
 	pha
 
-	lda #0xff				; Set Port A to output
-	sta IO_0+DDRA
-
 	stx SND_ADBUS			; Put reg # on Port A (sound bus)
 
 	lda #SND_SELSETADDR		; Get ready to select the reg
@@ -60,32 +57,35 @@ snd_set
 ;* Output : A = Value
 ;* Regs affected : None
 ;****************************************
-snd_get
-
-	lda #0xff				; Set Port A to output
-	sta IO_0+DDRA
-
-	stx SND_ADBUS			; Put X on the sound bus (X = reg address)
-
-	lda #SND_SELSETADDR		; Get ready to select the reg
-	sta SND_MODE			; Latch the reg # on Port A
-
-	lda #SND_DESELECT		; Deselect AY
-	sta SND_MODE
-
-	lda #0x00				; Set Port A to input
-	sta IO_0+DDRA
-
-	lda #SND_SELREAD		; Select mode for reading data
-	sta SND_MODE			; Set read mode on AY
-
-	lda SND_ADBUS			; Get value in to Y from Port A
-	pha						; Save it to stack
-	
-	lda #SND_DESELECT		; Deselect AY
-	sta SND_MODE
-
-	pla						; Get the value off stack
-	
-	rts
+;snd_get
+;
+;	lda #0xff				; Set Port A to output
+;	sta IO_0+DDRA
+;
+;	stx SND_ADBUS			; Put X on the sound bus (X = reg address)
+;
+;	lda #SND_SELSETADDR		; Get ready to select the reg
+;	sta SND_MODE			; Latch the reg # on Port A
+;
+;	lda #SND_DESELECT		; Deselect AY
+;	sta SND_MODE
+;
+;	lda #0x00				; Set Port A to input
+;	sta IO_0+DDRA
+;
+;	lda #SND_SELREAD		; Select mode for reading data
+;	sta SND_MODE			; Set read mode on AY
+;
+;	lda SND_ADBUS			; Get value in to Y from Port A
+;	pha						; Save it to stack
+;	
+;	lda #SND_DESELECT		; Deselect AY
+;	sta SND_MODE
+;
+;	lda #0xff				; Set Port A back to output
+;	sta IO_0+DDRA
+;
+;	pla						; Get the value off stack
+;	
+;	rts
 

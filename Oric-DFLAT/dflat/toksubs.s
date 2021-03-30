@@ -254,7 +254,8 @@ df_tk_stick				; This function needs no parms
 	jsr df_tk_expect_tok_err
 	rts
 
-; This function expects a variable only
+; These function expect a variable only
+df_tk_addr
 df_tk_elapsed
 	jsr df_tk_skip_ws
 
