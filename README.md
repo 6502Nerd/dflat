@@ -5,7 +5,7 @@ dflat is a BASIC-like language for 8-bit micros and retro computers running on 6
 * Structured programming including if..elif..endif, while..wend, repeat..until
 * Line numbers only used for sequencing lines, but cannot be referenced - no goto or gosub!
 * Support for sound and graphics
-* Inline assembler that access dflat variables and vice-versa
+* Inline assembler that can access dflat variables and vice-versa
 * Fits in to 16KB ROM (including all low-level BIOS)
 * Core language can be ported easily - just needs character put and get routines for input/output
 
