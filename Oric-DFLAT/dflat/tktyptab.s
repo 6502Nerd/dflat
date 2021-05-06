@@ -78,6 +78,7 @@ df_tk_tokentype
 	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW
+;	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW

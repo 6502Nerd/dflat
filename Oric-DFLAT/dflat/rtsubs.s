@@ -1915,6 +1915,10 @@ df_rt_play
 	lda df_tmpptrd+1
 	jmp snd_set
 
+;df_rt_fill
+;	jsr df_rt_parm_5ints
+;	rts
+	
 ;* common filename procesing routine
 ;*
 df_rt_init_filename

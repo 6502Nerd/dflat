@@ -852,13 +852,34 @@ gr_print_msg_done
 
 ;******* HIRES STUFF *****
 
+
 ;****************************************
-;* gr_fill
-;* Fill bytes X,Y coordinates with char code A
+;* gr_hcode
+;* Plot bytecode at hires X,Y coordinates with code A
 ;* Input : X,Y = coord, A = Char code
 ;* Output : None
 ;* Regs affected : None
 ;****************************************
+gr_hcode
+	pha
+	; Set up destination position tmpalo,hi and Y
+	jsr gr_point_setup
+	ldx #8				; Always do 8 rows like a character
+gr_hcode_loop
+	pla 				; Get the code to place
+	pha					; Need to save it back
+	sta (tmp_alo),y		; Store it in destination
+	clc
+	lda tmp_alo			; Update base pointer
+	adc gr_scrngeom+gr_text_w
+	sta tmp_alo
+	lda tmp_ahi
+	adc #0
+	sta tmp_ahi
+	dex
+	bne gr_hcode_loop
+	pla
+	rts
 
 ;****************************************
 ;* gr_hchar
@@ -868,6 +889,9 @@ gr_print_msg_done
 ;* Regs affected : None
 ;****************************************
 gr_hchar
+	; If char code < 32 then plot attribute
+	cmp #31
+	bcc gr_hcode
 	; Multiply char code by 8
 	; and add to char font base
 	; tmp_clo contains base address

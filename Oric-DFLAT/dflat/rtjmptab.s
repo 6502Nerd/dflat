@@ -78,6 +78,7 @@ df_rt_tokenjmp
 	dw	df_rt_ink
 	dw	df_rt_paper
 	dw	df_rt_circle
+;	dw	df_rt_fill
 	dw	df_rt_himem
 	dw	df_rt_monitor
 	dw	df_rt_sprchar

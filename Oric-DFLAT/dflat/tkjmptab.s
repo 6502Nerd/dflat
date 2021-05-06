@@ -78,6 +78,7 @@ df_tk_tokenjmp
 	dw	df_tk_ink
 	dw	df_tk_paper
 	dw	df_tk_circle
+;	dw	df_tk_fill
 	dw	df_tk_himem
 	dw	df_tk_monitor
 	dw	df_tk_sprchar

@@ -927,44 +927,44 @@ df_rt_parm_4ints
 ;****************************************
 ; common code for 5 ints runtime parsing
 ;****************************************
-df_rt_parm_5ints
-	; evaluate 1st parm
-	jsr df_rt_neval
-	inc df_exeoff
-	; evaluate the 2nd parm
-	jsr df_rt_neval
-	inc df_exeoff
-	; evaluate the 3rd parm
-	jsr df_rt_neval
-	inc df_exeoff
-	; evaluate the 4th parm
-	jsr df_rt_neval
-	inc df_exeoff
-	; evaluate the 5th parm
-	jsr df_rt_neval
-
-	; pop 5th parm
-	jsr df_ost_popInt
-	stx df_tmpptre
-	sta df_tmpptre+1
-	; pop 4th parm
-	jsr df_ost_popInt
-	stx df_tmpptrd
-	sta df_tmpptrd+1
-	; pop 3rd parm
-	jsr df_ost_popInt
-	stx df_tmpptrc
-	sta df_tmpptrc+1
-	; pop 2nd parm
-	jsr df_ost_popInt
-	stx df_tmpptrb
-	sta df_tmpptrb+1
-	; pop 1st parm
-	jsr df_ost_popInt
-	stx df_tmpptra
-	sta df_tmpptra+1
-
-	rts
+;df_rt_parm_5ints
+;	; evaluate 1st parm
+;	jsr df_rt_neval
+;	inc df_exeoff
+;	; evaluate the 2nd parm
+;	jsr df_rt_neval
+;	inc df_exeoff
+;	; evaluate the 3rd parm
+;	jsr df_rt_neval
+;	inc df_exeoff
+;	; evaluate the 4th parm
+;	jsr df_rt_neval
+;	inc df_exeoff
+;	; evaluate the 5th parm
+;	jsr df_rt_neval
+;
+;	; pop 5th parm
+;	jsr df_ost_popInt
+;	stx df_tmpptre
+;	sta df_tmpptre+1
+;	; pop 4th parm
+;	jsr df_ost_popInt
+;	stx df_tmpptrd
+;	sta df_tmpptrd+1
+;	; pop 3rd parm
+;	jsr df_ost_popInt
+;	stx df_tmpptrc
+;	sta df_tmpptrc+1
+;	; pop 2nd parm
+;	jsr df_ost_popInt
+;	stx df_tmpptrb
+;	sta df_tmpptrb+1
+;	; pop 1st parm
+;	jsr df_ost_popInt
+;	stx df_tmpptra
+;	sta df_tmpptra+1
+;
+;	rts
 
 ;****************************************
 ;* initialise statement to be executed

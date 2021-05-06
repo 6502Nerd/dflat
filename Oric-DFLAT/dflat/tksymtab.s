@@ -78,6 +78,7 @@ df_tokensyms
 	db	"in",'k'+0x80				; ink n
 	db	"pape",'r'+0x80				; paper n
 	db	"circl",'e'+0x80			; circle x,y,r
+;	db	"fil",'l'+0x80				; fill x,y,w,h,v
 	db	"hime",'m'+0x80				; himem addr
 	db	"monito",'r'+0x80			; monitor
 	db	"sprcha",'r'+0x80			; sprchar sp,ch

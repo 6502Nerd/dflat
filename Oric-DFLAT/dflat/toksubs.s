@@ -30,6 +30,16 @@
 
 mod_sz_toksubs_s
 
+;* General routine to tokenise a mandatory variable
+df_tk_variable
+	jsr df_tk_skip_ws
+	; tokenise a variable
+	jsr df_tk_peek_buf
+	jsr df_tk_isalpha
+	bcc df_tk_error
+	lda #0
+	rts
+
 ;****************************************
 ;* Parse assignment preamble
 ;****************************************
@@ -40,7 +50,7 @@ df_tk_preassign
 	jsr df_tk_put_tok
 	
 	; first find or create a variable
-	lda #0	
+	jsr df_tk_variable
 	jsr df_tk_var
 	; next char should be '='
 	lda #'='
@@ -58,7 +68,6 @@ df_tk_assign
 	jsr df_tk_expression
 	bcs df_tk_error
 	rts
-
 
 df_tk_comment
 	; copy all subsequent chars to token
@@ -109,10 +118,10 @@ df_tk_list_procs
 	bcc df_tk_list_done
 	; else normal line number or nothing
 df_tk_list_line
-	; tokenise an expression
+	; tokenise an expression, nothing is ok
 	jsr df_tk_expression
-df_tk_list_done
 	clc
+df_tk_list_done
 	rts
 
 ; printat,print,println can have 0,1 or many expressions
@@ -150,17 +159,24 @@ df_tk_expr_more
 df_tk_input
 	jsr df_tk_skip_ws
 	; tokenise a variable
-	lda #0
-	jsr df_tk_var
-	; either cc or cs depending on error condition
-	rts
+	jsr df_tk_variable
+	jmp df_tk_var
 	
 df_tk_read
-df_tk_dim
-	jsr df_tk_skip_ws
 	; tokenise a variable
-	lda #0
+	jsr df_tk_variable
 	jsr df_tk_var
+	; if not at the end then keep going
+	lda #','
+	jsr df_tk_expect_tok
+	bcc df_tk_read
+	clc
+	rts
+
+df_tk_dim
+	; tokenise a variable
+	jsr df_tk_variable
+	jsr df_tk_arrvar
 	; if not at the end then keep going
 	lda #','
 	jsr df_tk_expect_tok
@@ -169,9 +185,8 @@ df_tk_dim
 	rts
 
 df_tk_local
-	jsr df_tk_skip_ws
 	; tokenise a variable
-	lda #0
+	jsr df_tk_variable
 	jsr df_tk_localvar
 	; if not at the end then keep going
 	lda #','
@@ -184,9 +199,7 @@ df_tk_local
 ; A = 1 : Call
 df_tk_def
 	lda #0
-	jsr df_tk_proc
-	rts
-
+	jmp df_tk_proc
 
 ; syntax : for a=1,10,1
 df_tk_for
@@ -209,11 +222,8 @@ df_tk_for
 	; always expect ',' separator
 	; then step value
 	lda #','
-	jsr df_tk_tok_expression
+	jmp df_tk_tok_expression
 
-df_tk_for_done
-	clc
-	rts
 	
 ; call to proc should not occur by itself
 df_tk_callproc
@@ -226,8 +236,7 @@ df_tk_reset
 
 	; tokenise a variable
 	lda #DFVVT_INT
-	jsr df_tk_var
-	rts
+	jmp df_tk_var
 
 df_tk_error2
 	SWBRK DFERR_SYNTAX
@@ -251,16 +260,12 @@ df_tk_sgn
 df_tk_closebrkt
 df_tk_stick				; This function needs no parms
 	lda #')'
-	jsr df_tk_expect_tok_err
-	rts
+	jmp df_tk_expect_tok_err
 
 ; These function expect a variable only
 df_tk_addr
 df_tk_elapsed
-	jsr df_tk_skip_ws
-
-	; tokenise a variable
-	lda #DFVVT_INT
+	jsr df_tk_variable
 	jsr df_tk_var
 	; must have close braket
 	jmp df_tk_closebrkt
@@ -324,8 +329,7 @@ df_tk_hires
 
 ; 0 or 1 parameter special!
 df_tk_return
-	jsr df_tk_expression
-	rts
+	jmp df_tk_expression
 
 
 ; These commands expect 1 parameter	
@@ -385,8 +389,7 @@ df_tk_3parms
 	jsr df_tk_2parms
 	; tokenise third parm
 	lda #','
-	jsr df_tk_tok_expression
-	rts
+	jmp df_tk_tok_expression
 
 ; these commands expect 4 numeric parameters
 df_tk_play
@@ -396,7 +399,13 @@ df_tk_4parms
 	jsr df_tk_2parms
 	lda #','
 	jsr df_tk_expect_tok_err
-	jsr df_tk_2parms
-	rts
+	jmp df_tk_2parms
+
+;df_tk_fill
+;df_tk_5parms
+;	jsr df_tk_3parms
+;	lda #','
+;	jsr df_tk_expect_tok_err
+;	jmp df_tk_2parms
 
 mod_sz_toksubs_e

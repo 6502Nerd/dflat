@@ -264,19 +264,19 @@ df_var_analyse_err
 df_var_analyse_fatal_err
 	SWBRK DFERR_SYNTAX
 df_var_analyse_chk_post
-	; first see if the char is % or $
+	; first see if the char is $
 	; but cannot already have PROC prefix
-	cmp #'%'
-	bne df_var_analyse_chk_dollar
-	ldx df_tmpptra
-	cpx #DFVVT_PROC
-	beq df_var_analyse_fatal_err
+;	cmp #'%'
+;	bne df_var_analyse_chk_dollar
+;	ldx df_tmpptra
+;	cpx #DFVVT_PROC
+;	beq df_var_analyse_fatal_err
 	; Set to INT type although it is the default already
-	lda #DFVVT_INT
-	sta df_tmpptra
+;	lda #DFVVT_INT
+;	sta df_tmpptra
 	; advance the buffer index
-	iny
-	bne df_var_analyse_chk_arry
+;	iny
+;	bne df_var_analyse_chk_arry
 df_var_analyse_chk_dollar
 	; now see if the char is $
 	; but cannot already have PROC prefix

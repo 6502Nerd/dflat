@@ -417,6 +417,7 @@ df_tk_var_ck
 	; process numeric expression in bracket
 	jmp df_tk_narry
 
+
 ;****************************************
 ;* Tokenise a parameter in proc definition
 ;* Return : A = variable index
@@ -457,6 +458,19 @@ df_tk_localvar_cont
 	jsr df_tk_put_tok
 	pla
 	jmp df_tk_put_tok
+
+;****************************************
+;* Tokenise array variable
+;* Return : A = variable index
+;****************************************
+df_tk_arrvar
+	; Like a local var at first
+	jsr df_tk_localvar
+	; but must be array
+	lda #'['
+	jsr df_tk_expect_tok_err
+	; process numeric expression in bracket
+	jmp df_tk_narry
 
 ;****************************************
 ;* Tokenise call or def of proc
