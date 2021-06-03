@@ -22,3 +22,6 @@ The source and binaries are in the Oric-DFLAT folder - the readme provides a qui
 
 I also have a hackaday page for this, although this repo will always have the latest code;
 https://hackaday.io/project/175585-oric-1-dflat-system
+
+Also on hackaday, I have my homebrew computer made on breadboard and housed in a BBC Micro case. I made dflat for this computer first, then ported to the Oric for hopefully a slightly wider user base!
+https://hackaday.io/project/5789-65c02-homebrew-computer-on-breadboard
