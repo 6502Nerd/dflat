@@ -145,7 +145,7 @@ df_rt_asm_string_ch
 	lda (df_tmpptra),y	; Get string char, 0=done
 	beq df_rt_asm_data_next
 	sta df_asmoprnd		; Save as operand
-	stx df_asmoprnd+1	; High is always zero
+	sty df_asmoprnd+1	; High is always zero
 	jsr df_rt_asm_data_write
 	_incZPWord df_tmpptra
 	jmp df_rt_asm_string_ch
@@ -172,16 +172,17 @@ df_rt_asm_data_write_skip1
 	iny
 	lda #2
 	cmp df_asmlen
-	beq df_rt_asm_data_write_hi
+	bne df_rt_asm_data_write_hi
 	lda df_asmoprnd+1
 	bne df_rt_asm_data_write_err
+	beq df_rt_asm_data_write_skip2
 df_rt_asm_data_write_hi
 	lda df_asmoprnd+1
 	sta (df_asmpc),y
 df_rt_asm_data_write_skip2
-	lda df_asmlen
-	sec					; Add 1 less!
-	sbc #1
+	ldy df_asmlen
+	dey					; Add 1 less!
+	tya
 	clc
 	adc df_asmpc
 	sta df_asmpc

@@ -1470,7 +1470,7 @@ gr_spr_erase
 gr_spr_erase_loop
 	lda spr_curX,x					; Is sprite active?
 	bmi gr_spr_erase_next
-	sta tmp_alo						; x pos saved for later
+	tay								; x pos in to Y
 gr_spr_erase_do
 	lda spr_bgnd,x					; Get the background
 	jsr gr_spr_put					; And restore it
@@ -1483,15 +1483,15 @@ gr_spr_erase_next
 gr_spr_new
 	ldx #31							; Start at last sprite
 gr_spr_new_loop
-	lda spr_newX,x					; Is the new position active?
-	bmi gr_spr_new_next
-	sta tmp_alo						; x pos saved for later
-gr_spr_new_pos
 	lda spr_newY,x					; Get new Y
 	sta spr_curY,x					; Update new->cur Y
+	tay								; Used for address calc.
+	lda spr_newX,x					; Get new X
+	sta spr_curX,x					; Update new->cur X
+	bmi gr_spr_new_next				; Is the new position active?
+	pha 							; x pos saved for later
 	; Calculate screen address
 	; save as part of sprite data and in zp area
-	tay
 	clc
 	lda gr_offset_40lo,y
 	adc #lo(TEXTSCRN)
@@ -1501,9 +1501,8 @@ gr_spr_new_pos
 	adc #hi(TEXTSCRN)
 	sta gr_scrngeom+gr_geom_tmp+1
 	sta spr_baseadrh,x
-	ldy tmp_alo						; Get x pos back in to Y reg
-	tya
-	sta spr_curX,x					; Update new->cur X
+	pla								; Get x pos back in to Y reg
+	tay
 	lda (gr_scrngeom+gr_geom_tmp),y	; Get background
 	sta spr_bgnd,x					; And save this
 gr_spr_new_next
@@ -1513,13 +1512,13 @@ gr_spr_new_next
 
 
 ; Draw all active sprites
-; Active sprites are always drawn - 0 = lowest priority
+; Active sprites are always drawn - 0 = highest priority
 gr_spr_draw
 	ldx #31							; Start at last sprite
 gr_spr_draw_loop
 	lda spr_newX,x					; Is sprite active?
-	sta tmp_alo
 	bmi gr_spr_draw_next
+	tay								; X pos in to Y
 	lda spr_chr,x					; Get the sprite char
 	jsr gr_spr_put
 gr_spr_draw_next
@@ -1530,13 +1529,14 @@ gr_spr_draw_next
 
 ;* Common routine to put A to screen address
 ;* Used for erase and draw of sprites
+;* X=index in to sprite table
+;* Y=X offset from screen pointer
 gr_spr_put
 	pha
 	lda spr_baseadrl,x		; Get the screen pointer
 	sta gr_scrngeom+gr_geom_tmp
 	lda spr_baseadrh,x
 	sta gr_scrngeom+gr_geom_tmp+1
-	ldy tmp_alo						; Y reg is in tmp_alo
 	pla								; Get back the char to
 	sta (gr_scrngeom+gr_geom_tmp),y	; put on to screen
 	rts

@@ -41,7 +41,7 @@ int_sub
 	sbc num_b
 	sta num_a
 	lda num_a+1
-	adc num_b+1
+	sbc num_b+1
 	sta num_a+1
 	rts
 	

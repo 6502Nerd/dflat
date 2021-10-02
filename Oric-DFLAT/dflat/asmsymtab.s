@@ -130,7 +130,7 @@ df_asm_tokensyms
 
 	db	"sta",		8*2
 	db	AM_ZP,		0x85
-	db	AM_ZPX,		0x85
+	db	AM_ZPX,		0x95
 	db	AM_ABS,		0x8d
 	db	AM_ABSX,	0x9d
 	db	AM_ABSY,	0x99
