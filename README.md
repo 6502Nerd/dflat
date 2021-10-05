@@ -1,5 +1,13 @@
-# dflat
-dflat is a BASIC-like language for 8-bit micros and retro computers running on 6502 and 65c02.  Key features highlights;
+# Note: Wiki
+A friend recommended that I should point out there is a fairly extensive wiki on dflat.
+
+So after reading this, please have a look through the wiki to really get a feel for this language targeted at constrained 8-bit machinees.
+
+https://github.com/6502Nerd/dflat/wiki
+
+
+# About dflat
+dflat is a BASIC-like language for 8-bit micros and retro computers running on 6502 and 65c02.  Key features & highlights;
 * Procedure orientated structure (all runnable code within def..enddef blocks)
 * Local variables - supports recursion
 * Structured programming including if..elif..endif, while..wend, repeat..until
