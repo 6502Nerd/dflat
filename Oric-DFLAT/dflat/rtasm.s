@@ -21,8 +21,7 @@ df_rt_asm_assemble
 	; check if >=0x80 (directive or mnemonic)
 	ldy df_exeoff
 	lda (df_currlin),y
-	cmp #0x80
-	bcc df_rt_asm_do_label
+	bpl df_rt_asm_do_label
 	jsr df_rt_asm_command
 	jsr df_rt_asm_printCR
 	jmp df_rt_asm_assemble_done
@@ -94,8 +93,7 @@ df_rt_asm_org
 	sta df_asmpc+1
 	lda #3
 	sta df_asmlen
-	jsr df_rt_asm_printPC
-	rts
+	jmp df_rt_asm_printPC
 
 ; Set the assembly option
 ; Bit 0 set = Print code to console
@@ -129,8 +127,8 @@ df_rt_asm_db_start
 df_rt_asm_data
 	jsr df_rt_neval		; Evaluate expression
 	jsr df_ost_peekType	; What is the type
-	cmp #0x80			; If string
-	bcs df_rt_asm_string
+	tay
+	bmi df_rt_asm_string; If string
 	jsr df_ost_popInt	; else get number in A,X
 	stx df_asmoprnd		; store low value
 	sta df_asmoprnd+1	; store high value
@@ -186,9 +184,8 @@ df_rt_asm_data_write_skip2
 	clc
 	adc df_asmpc
 	sta df_asmpc
-	lda df_asmpc+1
-	adc #0
-	sta df_asmpc+1
+	_bcc 2
+	inc df_asmpc+1
 	rts
 df_rt_asm_data_write_err	
 	SWBRK DFERR_QUANTITY
@@ -210,8 +207,7 @@ df_rt_asm_ds
 	; len=1 for printing
 	lda #3
 	sta df_asmlen
-	jsr df_rt_asm_printOPR
-	rts
+	jmp df_rt_asm_printOPR
 
 
 ; Process a normal assembler mnemonic
@@ -256,9 +252,8 @@ df_rt_asm_mnem_done
 	lda (df_symtab),y
 	sta df_asmopcde
 	; Now have all information to assemble
-	jsr df_rt_asm_encode
+	jmp df_rt_asm_encode
 	
-	rts
 df_rt_asm_mnem_err
 	SWBRK DFERR_SYNTAX
 	
@@ -299,7 +294,7 @@ df_rt_asm_encode
 	sty df_asmoprnd+1
 	; detect too far; high byte is either 0 or 255
 	; else it's an error
-	cmp #0
+	tay
 	beq df_rt_asm_encode_relpos
 	cmp #0xff
 	bne df_rt_asm_encode_relfar
@@ -314,9 +309,8 @@ df_rt_asm_encode_relpos
 	bpl df_rt_asm_encode_skiprel
 	; else error
 df_rt_asm_encode_relfar
-	; set to non-zero value
-	lda #0xff
-	sta df_asmoprnd+1
+	; set to non-zero value, dec because it is zero currently
+	dec df_asmoprnd+1
 df_rt_asm_encode_skiprel
 	; Only write the code if bit 1=1
 	lda #0x02
@@ -353,9 +347,8 @@ df_rt_asm_encode_print
 	lda df_asmpc
 	adc df_asmlen
 	sta df_asmpc
-	lda df_asmpc+1
-	adc #0
-	sta df_asmpc+1
+	_bcc 2
+	inc df_asmpc+1
 	clc
 	rts
 
@@ -368,7 +361,7 @@ df_rt_asm_print_mmen
 	jsr df_rt_asm_printOPC
 	jsr df_rt_asm_printSPC
 	jsr df_rt_asm_printOPR
-df_rt_asm_print_rts			; Hopefull subs can get here
+df_rt_asm_print_rts			; Hopefully subs can get here
 	rts
 
 df_rt_asm_printPC
@@ -380,8 +373,7 @@ df_rt_asm_printPC
 	lda df_asmpc+1
 	jsr utilPrintA
 	lda df_asmpc
-	jsr utilPrintA
-	rts
+	jmp utilPrintA
 
 df_rt_asm_printOPC
 	; Check the option bit 0 (Print)
@@ -389,17 +381,14 @@ df_rt_asm_printOPC
 	and df_asmopt
 	beq df_rt_asm_print_rts
 	lda df_asmopcde
-	jsr utilPrintA
-	rts
+	jmp utilPrintA
 
 df_rt_asm_printSPC
 	; Check the option bit 0 (Print)
 	lda #0x01
 	and df_asmopt
 	beq df_rt_asm_print_rts
-	jsr utilPrintSPC
-	rts
-	
+	jmp utilPrintSPC
 	
 df_rt_asm_printOPR
 	; Check the option bit 0 (Print)
@@ -415,16 +404,14 @@ df_rt_asm_printOPR
 	jsr utilPrintA
 df_rt_asm_printOPR_1
 	lda df_asmoprnd
-	jsr utilPrintA
-	rts
+	jmp utilPrintA
 
 df_rt_asm_printCR
 	; Check the option bit 0 (Print)
 	lda #0x01
 	and df_asmopt
 	beq df_rt_asm_print_rts
-	jsr utilPrintCRLF
-	rts
+	jmp utilPrintCRLF
 
 df_rt_asm_printCH
 	sta tmp_d
@@ -434,7 +421,6 @@ df_rt_asm_printCH
 	beq df_rt_asm_print_rts
 	lda tmp_d
 	jmp io_put_ch
-	rts
 
 ; Print an entire line, but save df_exeoff
 df_rt_asm_printline
@@ -596,6 +582,7 @@ df_rt_asm_find_addr_mode_loop
 	rts
 df_rt_asm_find_addr_mode_err
 	lda #AM_NONE
+df_rt_asm_skip_to_sym_done; Used by function below!
 	rts
 
 
@@ -611,7 +598,7 @@ df_rt_asm_skip_to_sym
 	sta df_symtab+1
 	lda #0
 	sta df_symoff
-	ldy #0
+	tay
 df_rt_asm_skip_to_sym_next
 	; Get symtable char
 	lda (df_symtab),y
@@ -630,13 +617,9 @@ df_rt_asm_skip_to_sym_end
 	sec
 	adc df_symtab
 	sta df_symtab
-	lda df_symtab+1
-	adc #0
-	sta df_symtab+1
+	_bcc 2
+	inc df_symtab+1
 	jmp df_rt_asm_skip_to_sym_next
-	
-df_rt_asm_skip_to_sym_done
-	rts
 
 mod_sz_rtasm_e
 

@@ -20,16 +20,15 @@
 ;**********************************************************
 
 ;****************************************
-;* snd_set
-;* Set AY register X to value A
-;* Input : X = Reg no, A = Value
+;* snd_sel_reg
+;* Select AY register from A
+;* Input : A = Value
 ;* Output : None
 ;* Regs affected : None
 ;****************************************
-snd_set
+snd_sel_reg
 	pha
-
-	stx SND_ADBUS			; Put reg # on Port A (sound bus)
+	sta SND_ADBUS			; Put reg # on Port A (sound bus)
 
 	lda #SND_SELSETADDR		; Get ready to select the reg
 	sta SND_MODE			; Latch the reg # on Port A
@@ -37,18 +36,42 @@ snd_set
 	lda #SND_DESELECT		; Deselect AY
 	sta SND_MODE
 
-	pla						; Get value
-	pha						; but don't lose it
+	pla
+	rts
+
+;****************************************
+;* snd_set_reg
+;* Set previosuly selected AY register
+;* Input : A = Value to set
+;* Output : None
+;* Regs affected : None
+;****************************************
+snd_set_reg
+	pha
+
 	sta SND_ADBUS			; Put reg value on Port A (sound bus)
 	lda #SND_SELWRITE		; Select mode for writing data
-	sta SND_MODE			; Latch reg value on Port A
-	
+	sta SND_MODE			; Latch reg value on Port A	
 	lda #SND_DESELECT		; Deselect AY
 	sta SND_MODE
 
 	pla
-	
 	rts
+	
+;****************************************
+;* snd_set
+;* Set reg X to value A
+;* Input : X=Reg, A = Value to set
+;* Output : None
+;* Regs affected : None
+;****************************************
+snd_set
+	pha
+	txa
+	jsr snd_sel_reg
+	pla
+	jmp snd_set_reg
+
 
 ;****************************************
 ;* snd_get

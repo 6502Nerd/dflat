@@ -75,9 +75,7 @@ skip_a_f_1
 	bcc skip_a_f_2		; skip a-f adjustment
 	adc #0x26			; Add 27 (6+C) to get in to A-F range
 skip_a_f_2
-
-	clc					; No error
-	rts					; A high nibble
+	rts					; A high nibble, C=0
 
 ;****************************************
 ;* str_x_to_a
@@ -117,8 +115,7 @@ skip_x_f_2
 	pla					; Get high nibble
 	ora num_a			; OR with low nibble
 
-	clc					; No error
-	rts					; A contains value
+	rts					; A contains value, C=0
 
 str_x_to_a_errl
 	pla
@@ -405,8 +402,8 @@ hex_to_bcd
 
 	stx num_tmp
 	sta num_tmp+1
-	cmp #0x80			; Negative?
-	bcc hex_to_bcd_skip_neg
+	
+	bmi hex_to_bcd_skip_neg	; A is negative?
 	jsr twos_complement
 hex_to_bcd_skip_neg
 	ldx #0
@@ -510,7 +507,7 @@ out_bcd_next
 	inx
 	cpx #6
 	bne out_bcd_digit
-	cpy #0						; If nothing printed
+	tya							; If nothing printed
 	bne out_bcd_fin
 	lda #'0'					; Need to put out 1 zero
 	jsr io_put_ch

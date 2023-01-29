@@ -64,9 +64,6 @@ df_tk_error_error
 ;* at the end jump to program editor
 ;****************************************
 df_trap_error
-	; reset SP
-	ldx df_sp
-	txs
 	; set IO back to normal
 	jsr init_via0
 	jsr io_set_default
@@ -78,27 +75,25 @@ df_trap_error
 	sta df_tmpptra+1
 	ldx errno				; 0 or >=128 goes to monitor
 	beq df_trap_go_monitor
-	bmi df_trap_go_monitor
 	bpl df_trap_normal
 df_trap_go_monitor
 	jmp df_trap_monitor
 df_trap_normal
 	ldy #0
 df_show_err_find
-	cpx #0
-	beq df_show_err_found
 	; If on a zero, then error table exhausted
 	; so drop in to the monitor
 	lda (df_tmpptra),y
 	beq df_trap_monitor
+	; Skip over this error text including zero terminator
 df_show_err_skip
 	_incZPWord df_tmpptra
 	lda (df_tmpptra),y
 	bne df_show_err_skip
 	_incZPWord df_tmpptra
 	dex
-	jmp df_show_err_find
-df_show_err_found
+	bne df_show_err_find
+	; Error message found
 	ldx df_tmpptra
 	lda df_tmpptra+1
 	jsr io_print_line
@@ -111,10 +106,8 @@ df_show_err_found
 	tax
 	iny
 	lda (df_currlin),y
-	cmp #0x00
 	bne df_show_err_linnum
 	cpx #0x00
-	bne df_show_err_linnum
 	beq df_show_err_fin
 df_show_err_linnum
 	_println df_tk_error_inline
@@ -130,8 +123,7 @@ df_show_err_fin
 	clc
 	jsr print_a_to_d
 df_show_err_done
-	lda #UTF_CR
-	jsr io_put_ch
+	jsr utilPrintCRLF
 	clc
 	; back to editor
 	jmp df_pg_dflat

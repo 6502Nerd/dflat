@@ -29,13 +29,13 @@ HITEXT		=	0xbf68
 	dw gr_hi_start				; Address fo hires screen
 	dw gr_char					; Start address of charset
 	dw gr_text_start			; Start of text memory
-	dw gr_geom_tmp2				; (Not used, maintained for alignment)
+	db gr_geom_fill1			; (Not used, maintained for alignment)
 	db gr_text_w				; Number of columns
 	db gr_text_h				; Number of rows
 	db gr_cur_x					; Current X position of cursor
 	db gr_cur_y					; Current Y position of cursor
 	dw gr_cur_ptr				; VDP address of cursor
-	db gr_pixmode				; Pixel plot mode (0=Erase, 1=Plot, 2=XOR)
+	db gr_pixmode				; Pixel plot mode (0=Erase, 1=Plot, -1=XOR)
 	db gr_pitch					; Pixel pitch for char plotting
 	db gr_hires_x				; X pos of hires cursor
 	db gr_hires_y				; Y pos of hires cursor
@@ -43,6 +43,7 @@ HITEXT		=	0xbf68
 	db gr_paper					; Paper colour
 	db gr_margin				; Left margin
 	dw gr_geom_tmp				; One word of temp storage for local use
+	db gr_geom_tmp2				; One byte of temp storage for local use
 	end struct
 	
 ; Sprite data stored in free 256 in font space

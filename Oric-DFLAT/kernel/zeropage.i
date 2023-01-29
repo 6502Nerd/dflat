@@ -112,8 +112,8 @@ df_starstrt	ds	2		; String and array table start
 df_starend	ds	2		; String and array table end
 df_rtstop	ds	1		; Runtime stack pointer
 df_parmtop	ds	1		; Top of parameter stack (grows up)
-df_strbuff	ds	1		; String expression buffer
-df_stridx	ds	1		; Top of string buffer (grows down)
+df_strbuffz	ds	1		; String expression buffer (*unused*)
+df_stridxz	ds	1		; Top of string buffer (grows down) (*unused*)
 df_sevalptr	ds	2		; Pointer to next free char in string eval
 
 df_linoff	ds	1		; Offset in to line buffer
@@ -123,7 +123,7 @@ df_nxtstidx	ds	1		; Offset to the next statement offset
 df_curstidx	ds	1		; Offset to the start of currently executing statement
 df_symtab	ds	2		; Pointer to next free symtab entry
 df_symoff	ds	1		; Offset in to token table
-df_symini	ds	2		; Start of symtab
+df_syminiz	ds	2		; Start of symtab (*unused*)
 df_currlin	ds	2		; Execution current line pointer
 df_exeoff	ds	1		; Execution line buffer offset
 df_nextlin	ds	2		; Next line to execute

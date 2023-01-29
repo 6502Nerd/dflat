@@ -1,0 +1,149 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "dflat",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#types"
+		},
+		{
+			"include": "#identifiers"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+        {
+          "name": "meta.block.dflatasm.dflat",
+          "begin": "asm(?=[ ]*(//.*)?$\\n?)",
+          "end": "endasm",
+          "captures": {
+            "0": {
+                "name": "keyword.dflat"
+            }
+          },
+          "patterns": [
+            {
+              "name": "keyword.other.dflatasm.opcode.legal.dflat",
+              "match": "\\b(.adc|.and|.asl|.bcc|.bcs|.beq|.bit|.bmi|.bne|.bpl|.bra|.brk|.bvc|.bvs|.clc|.cld|.cli|.clv|.cmp|.cpx|.cpy|.dec|.dex|.dey|.eor|.inc|.inx|.iny|.jmp|.jsr|.lda|.ldx|.ldy|.lsr|.nop|.ora|.pha|.php|.phx|.phy|.pla|.plp|.plx|.ply|.rol|.ror|.rti|.rts|.sbc|.sec|.sed|.sei|.sta|.stx|.sty|.tax|.tay|.tsx|.txa|.txs|.tya)\\b"
+            },
+            {
+              "name": "keyword.other.dflatasm.macro.dflat",
+              "match": "\\b(.opt|.org|.dw|.ds|.db)\\b"
+            },
+            {
+              "name": "keyword.other.beebasm.keyword.dflat",
+              "match": "\\b(println|printat|print|def|enddef|return|abort|local|dim|repeat|until|for|next|while|wend|if|else|endif|elif|data|run|list|input|text|plot|cursor|cls|poke|doke|sound|music|play|save|load|read|new|renum|wait|reset|hires|point|line|lineto|pixmode|ink|paper|circle|himem|monitor|sprchar|sprpos|sprupd|sprinit|sprmulti|bsave|bload|peek|deek|stick|get|chr|left|right|mid|len|mem|scrn|rnd|elapsed|call|hex|asc|val|pixel|sprhit|sgn)\\b"
+            },
+            {
+              "name": "comment.line.semicolon.dflat",
+              "match": ";.*$\\n?",
+              "captures": {
+                "1": {
+                  "name": "punctuation.definition.comment.dflat"
+                }
+              }
+            },
+            {
+              "include": "#numbers"
+            },
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#strings"
+            },
+            {
+              "include": "#identifiers"
+            },
+            {
+              "name": "variable.other.dflat",
+              "match": "@[0-9]"
+            }
+          ]
+        },
+        {
+          "name": "keyword.control.dflat",
+          "match": "\\b(if|elif|else|endif|while|endwhile|repeat|until|return|for|next)\\b"
+			  },
+        {
+          "name": "keyword.function.dflat",
+          "match": "\\b(def|enddef)\\b"
+			  },
+        {
+          "name": "keyword.operator.comparison.dflat",
+          "match": "\\b(<|<=|>|>=|==|<>)\\b"
+        },
+        {
+          "name": "keyword.operator.assignment.dflat",
+          "match": "\\b=\\b"
+        },
+        {
+          "name": "keyword.operator.logical.dflat",
+          "match": "\\b(&|\\||^)\\b"
+        },
+        {
+          "name": "keyword.operator.arithmetic.dflat",
+          "match": "\\b(\\+|-|\\*|\\/|\\|<<|>>)\\b"
+        }
+      ]
+		},
+		"comments": {
+		},
+		"strings": {
+			"patterns": [
+		{
+          "name": "string.quoted.double.dflat",
+          "begin": "\"",
+          "end": "\""
+        },
+        {
+          "name": "string.quoted.single.dflat",
+          "match": "'.'"
+        }
+      ]
+		},
+		"numbers": {
+			"patterns": [
+        {
+          "match": "-?[0-9]+",
+          "name": "constant.numeric.decimal.dflat"
+        },
+        {
+          "match": "-?0x([a-f]|[0-9])+",
+          "name": "constant.numeric.hexadecimal.dflat"
+        },
+        {
+          "match": "-?0b[0-1]+",
+          "name": "constant.numeric.binary.dflat"
+        }
+      ]
+    },
+    "types": {
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "match": "(_|[a-z]|[A-Z])(_|[a-z]|[A-Z]|[0-9])*(?=\\()",
+          "name": "entity.name.function.dflat"
+        },
+        {
+          "match": "@?([a-z]|[A-Z])([a-z]|[A-Z]|[0-9])*",
+          "name": "variable.other.dflat"
+        }
+      ]
+    }
+  },
+	"scopeName": "source.dflat"
+}

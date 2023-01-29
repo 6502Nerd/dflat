@@ -51,6 +51,7 @@ df_pg_check_next_line
 	bne df_pg_check_line
 df_pr_line_gt_target	
 	; End of program or line > target
+	; X,A = address of finish
 	; Load Y with the length
 	ldx #0
 	lda (num_tmp,x)
@@ -60,15 +61,29 @@ df_pr_line_gt_target
 	sec
 	rts
 df_pg_check_line
-	ldy #DFTK_LINNUM
+	sec					; Do a trial subtract of
+	ldy #DFTK_LINNUM	; target - line
 	lda num_a
-	cmp (num_tmp),y
-	bne df_pr_line_nomatch
+	sbc (num_tmp),y
+	sta num_tmp+2		; Partial result of sbc
 	iny
 	lda num_a+1
-	cmp (num_tmp),y
-	bne df_pr_line_nomatch
-	; Got an exact match
+	sbc (num_tmp),y
+	ora num_tmp+2		; or with partial result for z check
+	; If C=0 then line > target (done)
+	bcc df_pr_line_gt_target
+	; If partial result Z=0 then got an exact match
+	beq df_pr_line_match
+	; Else we go to next line
+	ldx #0
+	clc
+	lda num_tmp
+	adc (num_tmp,x)
+	sta num_tmp
+	bcc df_pg_check_next_line
+	inc num_tmp+1
+	bne df_pg_check_next_line	; Always
+df_pr_line_match
 	ldx #0
 	lda (num_tmp,x)
 	tay
@@ -76,27 +91,6 @@ df_pg_check_line
 	lda num_tmp+1
 	clc
 	rts
-df_pr_line_nomatch
-	; Check if this line > target
-	sec
-	ldy #DFTK_LINNUM
-	lda num_a
-	sbc (num_tmp),y
-	iny
-	lda num_a+1
-	sbc (num_tmp),y
-	bcc df_pr_line_gt_target
-df_pr_line_next
-	; Else we go to next line
-	ldx #0
-	clc
-	lda num_tmp
-	adc (num_tmp,x)
-	sta num_tmp
-	lda num_tmp+1
-	adc #0
-	sta num_tmp+1
-	jmp df_pg_check_next_line
 	
 ;****************************************
 ;* df_pg_insert_block
@@ -134,20 +128,13 @@ df_pg_insert_byte
 	tya
 	adc df_prgend
 	sta df_prgend
-	lda df_prgend+1
-	adc #0
-	sta df_prgend+1
+	_bcc 2
+	inc df_prgend+1
 	clc
-	rts
+	rts	; C=0
 df_pg_insert_next_byte
-	; Decrement current address
-	sec
-	lda num_x
-	sbc #1
-	sta num_x
-	lda num_x+1
-	sbc #0
-	sta num_x+1
+	; Decrement current address (trashes A)
+	_decZPWordA num_x
 	jmp df_pg_insert_byte
 
 ;****************************************
@@ -163,11 +150,11 @@ df_pg_delete_block
 	; Save address as this is the start address
 	stx num_a
 	sta num_a+1
+	ldx #0	; No indirect indexing
 df_pg_delete_byte
 	; Move a byte from current+Y
 	lda (num_a),y
-	; Down to current
-	ldx #0
+	; Down to current (x=0)
 	sta (num_a,x)
 	; Compare current address with lowest
 	lda num_a
@@ -188,14 +175,8 @@ df_pg_delete_byte
 	clc
 	rts
 df_pg_delete_next_byte
-	; Decrement current address
-	clc
-	lda num_a
-	adc #1
-	sta num_a
-	lda num_a+1
-	adc #0
-	sta num_a+1
+	; Increment current address
+	_incZPWord num_a
 	jmp df_pg_delete_byte
 
 
@@ -210,7 +191,7 @@ df_pg_inputline
 	jsr io_read_line
 	
 	; If nothing entered then sec
-	cpy #0
+	tya
 	bne df_pg_inputline_ok
 	sec
 	rts
@@ -231,9 +212,10 @@ df_pg_copyinputtolinbuff
 ;* Start a dflat editing session
 ;****************************************
 df_pg_dflat
-	; stack pointer
-	tsx
-	stx df_sp
+	; reset stack pointer
+	ldx #255
+	txs
+
 	; error handler address
 	lda #lo(df_trap_error)
 	sta df_pc
@@ -256,7 +238,7 @@ df_pg_getcommand
 	sta df_currlin+1
 	sec
 	jsr df_pg_inputline
-	bcs df_pg_done
+	bcs df_pg_prompt	; If no input then back to prompt
 	jsr df_pg_tokenise
 	lda df_immed
 	beq df_pg_getcommand
@@ -274,10 +256,6 @@ df_pg_getcommand
 	jsr df_rt_exec_stat
 	; Go and get another line of input
 	jmp df_pg_prompt
-	; if blank line then return to cmd
-df_pg_done
-	clc
-	rts
 
 	; tokenise the line
 df_pg_tokenise

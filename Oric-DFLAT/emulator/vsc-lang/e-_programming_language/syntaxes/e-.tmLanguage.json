@@ -1,0 +1,203 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "e-",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		},
+		{
+			"include": "#comments"
+		},
+		{
+			"include": "#numbers"
+		},
+		{
+			"include": "#types"
+		},
+		{
+			"include": "#identifiers"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [
+        {
+          "name": "meta.block.beebasm.e-",
+          "begin": "asm(?=[ ]*(//.*)?$\\n?)",
+          "end": "endasm",
+          "captures": {
+            "0": {
+                "name": "keyword.e-"
+            }
+          },
+          "patterns": [
+            {
+              "name": "keyword.other.beebasm.opcode.legal.e-",
+              "match": "\\b(adc|ADC|and|AND|((asl|ASL)([ ]+(a|A))?)|bcc|BCC|bcs|BCS|beq|BEQ|bit|BIT|bmi|BMI|bne|BNE|bpl|BPL|brk|BRK|bvc|BVC|bvs|BVS|clc|CLC|cld|CLD|cli|CLI|clv|CLV|cmp|CMP|cpx|CPX|cpy|CPY|dec|DEC|dex|DEX|dey|DEY|eor|EOR|inc|INC|inx|INX|iny|INY|jmp|JMP|jsr|JSR|lda|LDA|ldx|LDX|ldy|LDY|((lsr|LSR)([ ]+(a|A))?)|nop|NOP|ora|ORA|pha|PHA|php|PHP|pla|PLA|plp|PLP|((rol|ROL)([ ]+(a|A))?)|((ror|ROR)([ ]+(a|A))?)|rti|RTI|rts|RTS|sbc|SBC|sec|SEC|sed|SED|sei|SEI|sta|STA|stx|STX|sty|STY|tax|TAX|tay|TAY|tsx|TSX|txa|TXA|txs|TXS|tya|TYA)\\b"
+            },
+            {
+              "name": "keyword.other.beebasm.macro.e-",
+              "match": "\\b(stal|ldal|incl|decl|adcl|sbcl|andl|eorl|oral|ldyl|cmpl)\\b"
+            },
+            {
+              "name": "keyword.other.beebasm.keyword.e-",
+              "match": "\\b(macro|MACRO|endmacro|ENDMACRO|print|PRINT|error|ERROR|if|IF|elif|ELIF|else|ELSE|endif|ENDIF|equb|EQUB|equw|EQUW|equd|EQUD|equs|EQUS|for|FOR|next|NEXT|skip|SKIP|skipto|SKIPTO|align|ALIGN|div|DIV|mod|MOD|org|ORG|cpu|CPU|copyblock|COPYBLOCK|include|INCLUDE|incbin|INCBIN|or|OR|eor|EOR|and|AND|mapchar|MAPCHAR|guard|GUARD|clear|CLEAR|save|SAVE|putfile|PUTFILE|puttext|PUTTEXT|putbasic|PUTBASIC|asm|ASM|assert|ASSERT|randomize|RANDOMIZE)\\b"
+            },
+            {
+              "name": "comment.line.semicolon.e-",
+              "match": ";.*$\\n?",
+              "captures": {
+                "1": {
+                  "name": "punctuation.definition.comment.e-"
+                }
+              }
+            },
+            {
+              "name": "comment.line.backslash.e-",
+              "match": "\\\\.*$\\n?",
+              "captures": {
+                "1": {
+                  "name": "punctuation.definition.comment.e-"
+                }
+              }
+            },
+            {
+              "include": "#numbers"
+            },
+            {
+              "include": "#comments"
+            },
+            {
+              "include": "#strings"
+            },
+            {
+              "include": "#identifiers"
+            },
+            {
+              "match": "@[0-9]",
+              "name": "variable.other.e-"
+            }
+          ]
+        },
+        {
+          "name": "keyword.control.directive.e-",
+          "match": "#loadaddr|#ifdef|#ifndef|#endif|#include|#define"
+			  },
+        {
+          "name": "keyword.control.e-",
+          "match": "\\b(if|elif|else|endif|while|endwhile|return)\\b"
+			  },
+        {
+          "name": "keyword.e-",
+          "match": "\\b(declare|function|endfunction|print)\\b"
+			  },
+        {
+          "name": "keyword.operator.comparison.e-",
+          "match": "\\b(<|<=|>|>=|==|!=)\\b"
+        },
+        {
+          "name": "keyword.operator.assignment.e-",
+          "match": "\\b=\\b"
+        },
+        {
+          "name": "keyword.operator.logical.e-",
+          "match": "\\b(!|and|or|xor)\\b"
+        },
+        {
+          "name": "keyword.operator.peekpoke.e-",
+          "match": "\\b(\\?)\\b"
+        },
+        {
+          "name": "keyword.operator.arithmetic.e-",
+          "match": "\\b(\\+|-|\\*|\\/|div|mod)\\b"
+        },
+        {
+          "name": "keyword.operator.bitwise.shift.e-",
+          "match": "\\b(<<|>>)\\b"
+        },
+        {
+          "name": "keyword.e-",
+          "match": "asm(?=[ ]*\\\")"
+        }
+      ]
+		},
+		"comments": {
+			"patterns": [
+				{
+					"begin": "/\\*",
+					"captures": {
+						"0": {
+							"name": "punctuation.definition.comment.e-"
+						}
+					},
+					"end": "\\*/",
+					"name": "comment.block.e-"
+				},
+				{
+					"captures": {
+						"1": {
+							"name": "punctuation.definition.comment.e-"
+						}
+					},
+					"match": "(//).*$\\n?",
+					"name": "comment.line.double-slash.e-"
+				}
+			]
+		},
+		"strings": {
+			"patterns": [
+				{
+          "name": "string.quoted.double.e-",
+          "begin": "\"",
+          "end": "\"",
+          "patterns": [
+            {
+              "name": "constant.character.escape.e-",
+              "match": "\\\\."
+            }
+          ]
+        },
+        {
+          "name": "string.quoted.single.e-",
+          "match": "'.'"
+        }
+      ]
+		},
+		"numbers": {
+			"patterns": [
+        {
+          "match": "-?[0-9]+",
+          "name": "constant.numeric.decimal.e-"
+        },
+        {
+          "match": "-?(\\$|\\&)([a-f]|[0-9]|[A-F])+",
+          "name": "constant.numeric.hexadecimal.e-"
+        },
+        {
+          "match": "-?%[0-1]+",
+          "name": "constant.numeric.binary.e-"
+        }
+      ]
+    },
+    "types": {
+      "match": "\\b(byte|word|dword|int|int8|int16|int32|uint8|uint16|uint32)\\b",
+      "name": "storage.type.built-in.primitive.e-"
+    },
+    "identifiers": {
+      "patterns": [
+        {
+          "match": "(_|[a-z]|[A-Z])(_|[a-z]|[A-Z]|[0-9])*(?=\\()",
+          "name": "entity.name.function.e-"
+        },
+        {
+          "match": "@?(_|[a-z]|[A-Z])(_|[a-z]|[A-Z]|[0-9])*",
+          "name": "variable.other.e-"
+        }
+      ]
+    }
+  },
+	"scopeName": "source.e-"
+}

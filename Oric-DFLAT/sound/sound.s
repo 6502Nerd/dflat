@@ -25,6 +25,7 @@ mod_sz_sound_s
 ;* snd_get_note
 ;* Get a note from the music scale table
 ;* Input : Octave in X, note in Y
+;*         Octave between 1 and 6
 ;* Output : A,X = Value hi,lo
 ;* Regs affected : X
 ;****************************************
@@ -32,14 +33,14 @@ snd_get_note
 	tya
 	asl a
 	tay
-	; Get note for octave 0
+	; Get note for octave 1
 	lda snd_music_tab,y
 	sta tmp_alo
 	lda snd_music_tab+1,y
 	
 snd_get_note_oct
 	dex
-	bmi snd_note_done
+	beq snd_note_done
 	; Divide freq by 2 each octave
 	lsr a
 	ror tmp_alo
@@ -87,17 +88,18 @@ snd_init_tab
 	db 0x00				; R15 = IO Port B ; Initialise to 0 (doesn't exist)
 
 snd_music_tab
-	dw 1911				; C		0
-	dw 1804				; C#	1
-	dw 1703				; D		2
-	dw 1607				; D#	3
-	dw 1517				; E		4
-	dw 1432				; F		5
-	dw 1351				; F#	6
-	dw 1276				; G		7
-	dw 1204				; G#	8
-	dw 1136				; A		9
-	dw 1073				; A#	10
-	dw 1012				; B		11
+	dw 3058				; C		0 (Octave 1 3058Hz)
+	dw 2886				; C#	1
+	dw 2724				; D		2
+	dw 2571				; D#	3
+	dw 2427				; E		4
+	dw 2291				; F		5
+	dw 2162				; F#	6
+	dw 2041				; G		7
+	dw 1926				; G#	8
+	dw 1818				; A		9
+	dw 1716				; A#	10
+	dw 1620				; B		11
+	dw 0				; Null  12
 
 mod_sz_sound_e

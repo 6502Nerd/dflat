@@ -42,6 +42,8 @@ REM 	echo %%f %%e >> emulator\roms\dflat.sym
 REM 	)
 
 color 21
+findstr /c:"mod_sz_bios_e :" bank\bank0.lst
+findstr /c:"mod_sz_language_e :" bank\bank0.lst
 echo COMPILE SUCCESSFUL : !date! !time!
 goto end
 

@@ -58,12 +58,10 @@ cmd_parse
 	
 cmd_check_d
 	cmp #'d'				; Check for d
-	bne cmd_check_s
-	jmp cmd_dumpmem
+	beq cmd_dumpmem
 cmd_check_s
 	cmp #'s'				; Check for s
-	bne cmd_error
-	jmp cmd_setmem
+	beq cmd_setmem
 
 cmd_not_found
 	lda #CMD_ERR_NOTFOUND
@@ -117,8 +115,7 @@ cmd_dumpmem_block
 	jsr utilPrintA
 	lda cmd_lo
 	jsr utilPrintA
-	lda #' '
-	jsr io_put_ch
+	jsr utilPrintSPC
 	
 	ldy #8						; 8 Bytes per line
 cmd_dumpmem_byte
@@ -140,9 +137,9 @@ cmd_dumpmemASCII
 	jsr utilPrintSPC
 	ldy #8						; 8 Bytes per line
 cmd_dumpmem_ascii
-	ldx #'.'					; Non-printable char
 	jsr cmd_peek
-	cmp #' '					; <32 is unprintable
+	ldx #'.'					; Non-printable char
+	cmp #' '					; A<32 is unprintable
 	bcs cmd_dump_skip_ctrl
 	txa							; Replace with dot
 cmd_dump_skip_ctrl
@@ -186,10 +183,8 @@ cmd_incmem
 ;* Regs affected : 
 ;****************************************
 cmd_peek
-	stx tmp_d
 	ldx #0
 	lda (cmd_lo,x)
-	ldx tmp_d
 	rts
 	
 ;****************************************
@@ -267,9 +262,8 @@ cmd_parse_next_parm
 cmd_find_parm
 	iny
 	lda (buf_lo),y
-	cmp #0
 	beq cmd_next_parm_err	; If z then no parms, fin with C set
-	cmp #' '				; Ignore space
+	cmp #' '+1				; Ignore space or less
 	beq cmd_find_parm
 	clc						; else ok, C is cleared
 cmd_next_parm_err

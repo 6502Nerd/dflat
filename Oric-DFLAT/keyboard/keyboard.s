@@ -44,18 +44,23 @@ init_keyboard
 ;* Returns bit mask of keys pressed
 ;****************************************
 kb_stick
-	lda #0					; Result will be in A
-	pha	
 	; Select Row 4 only, all keys on this row
 	lda #4
 	sta IO_0+PRB
-	ldy #4
-	ldx #SND_REG_IOA		; AY Port A for columns
+	lda #SND_REG_IOA		; Select AY Port A for columns
+	jsr snd_sel_reg
+	lda #0					; Result will be in A
+	pha	
+	ldy #4					; Go through the 5 cols on row 4
 kb_stick_pos
 	lda kb_stick_mask,y		; Get the column mask
-	jsr snd_set				; Activate column
-	lda IO_0+PRB			; Read Port B
-	and #KB_SENSE			; Something pressed?
+	jsr snd_set_reg			; Activate column
+	nop
+	nop
+	nop
+	nop
+	lda #KB_SENSE			; Something pressed?
+	and IO_0+PRB			; Read Port B
 	cmp #KB_SENSE			; C=1 if set else 0
 	pla
 	rol a					; Get C in to A
@@ -72,19 +77,25 @@ kb_stick_pos
 ;* Carry = 1 means key pressed
 ;****************************************
 kb_any_key
-	; Select all columns except 4
-	lda #0b00010000			; Deselect only col 4
-	ldx #SND_REG_IOA		; On AY port A
-	jsr snd_set
+	lda #SND_REG_IOA		; Select Port A of AY
+	jsr snd_sel_reg
 
 	ldy #7					; Start from row 7
 kb_any_key_row
 	sty IO_0+PRB			; Select row on port B
+	; Select all columns except 4
+	lda #0b00010000			; Deselect only col 4
+	jsr snd_set_reg
+
 	nop
 	nop
+	nop						; New NOP
+	nop
+	nop
+;	nop						; New NOP
 	
-	lda IO_0+PRB			; Read Port B
-	and #KB_SENSE			; Something pressed?
+	lda #KB_SENSE			; Something pressed?
+	and IO_0+PRB			; Read Port B
 	bne kb_any_key_pressed
 	dey						; If not then next row
 	bpl kb_any_key_row		; Until all rows done
@@ -106,24 +117,35 @@ kb_read_raw
 	jsr kb_any_key			; Quick check is anything down?
 	bcc kb_read_nothing		; Don't bother if not
 kb_read_raw_force
+	ldx #SND_REG_IOA		; Select Port A of AY
+	stx SND_ADBUS			; Put reg # on Port A (sound bus)
+	ldx #SND_SELSETADDR		; Get ready to select the reg
+	stx SND_MODE			; Latch the reg # on Port A
+	ldx #SND_DESELECT		; Deselect AY
+	stx SND_MODE
 	ldx #0					; Start at column 0	
 	stx zp_tmp1
 kb_check_matrix_col
-	; else set the col in the AY port A
-	lda kb_col_mask,x
-	ldx #SND_REG_IOA		; Select Port A of AY
-	jsr snd_set				; Set Port A to column mask
-	ldy #0
+	ldy #0					; Start at row 0
 kb_check_matrix_row
 	sty IO_0+PRB			; Select row from Y
-	
-	ldx #2
-kb_hw_delay
-	dex
-	bne kb_hw_delay
+	; Get the col value for AY port A
+	ldx zp_tmp1
+	lda kb_col_mask,x
+	; Write it to AY port A
+	sta SND_ADBUS			; Put col value on AY bus
+	ldx #SND_SELWRITE		; Select mode for writing data
+	stx SND_MODE			; Latch reg value on Port A
+	ldx #SND_DESELECT		; Deselect AY
+	stx SND_MODE
 
-	lda IO_0+PRB			; Read Port B
-	and #KB_SENSE			; Bit 3 is the sense
+	nop						; Wait 10 cycles before reading sense pin
+	nop
+	nop
+
+	lda #KB_SENSE			; Bit 3 is the sense
+	and IO_0+PRB			; And with Port B
+
 	bne kb_read_raw_got
 	; No key for this row/col, next
 	iny
@@ -163,6 +185,10 @@ kb_read_raw_got
 ;* A = Key code
 ;****************************************
 kb_scan_key
+	lda kb_deb				; Do not scan keyboard too often
+	bne kb_no_scan
+	lda kb_deb_tim			; Else reset debounce timer
+	sta kb_deb
 	jsr kb_read_raw			; Check if a key is sensed
 	bcs kb_scan_decode		; go ahead and decode
 	; If pressed nothing then reset timers
@@ -171,7 +197,8 @@ kb_scan_key
 	sta kb_last				; And last key
 	lda kb_rdel_tim			; Reset repeat timer to initial delay
 	sta kb_rep
-kb_scan_wait
+kb_no_scan
+	lda #0
 	sec						; Code not valid
 	rts						; And done (A=0)	
 kb_scan_decode
@@ -195,11 +222,15 @@ kb_process_new
 	stx IO_0+PRB			; Select row on port B
 	nop
 	nop
+	nop
+	nop
 
 	lda IO_0+PRB			; Read Port B
 
 	ldx #7					; Row 7 (right shift)
 	stx IO_0+PRB			; Select row on port B
+	nop
+	nop
 	nop
 	nop
 
@@ -213,6 +244,8 @@ kb_read_noshift
 	; check ctrl key
 	ldx #2					; Row 2 (ctrl key)
 	stx IO_0+PRB			; Select row on port B
+	nop
+	nop
 	nop
 	nop
 

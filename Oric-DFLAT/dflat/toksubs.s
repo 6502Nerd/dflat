@@ -97,8 +97,7 @@ df_tk_listp_procname_ch
 	jsr df_tk_put_tok
 	jmp df_tk_listp_procname_ch
 df_tk_listp_procname_ok
-	clc
-	rts
+	rts		; C=0
 df_tk_listp_procname_err
 	sec
 	rts

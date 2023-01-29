@@ -79,7 +79,7 @@ io_copy_data
 ;* io_get_ch
 ;* Get a char (wait forever or just check)
 ;* Input : C = 1 for synchronous, 0 for async
-;* Output : A = Byte code, C = 0 means A is invalid
+;* Output : A = Byte code, C = 1 means A is invalid
 ;* Regs affected : P, A
 ;****************************************
 io_get_ch

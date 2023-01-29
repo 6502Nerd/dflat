@@ -105,7 +105,7 @@ df_rt_proc_parm_none
 	; get back the proc address
 	ldx df_procptr
 	lda df_procptr+1
-	bne df_rt_exec_proc		; ALWAYS as procptr+1 !=0
+;	bne df_rt_exec_proc		; ALWAYS as procptr+1 !=0
 	
 ; executing a procedure in VVT slot A,X
 df_rt_exec_proc
@@ -140,7 +140,7 @@ df_rt_exec_proc
 	lda (df_tmpptra),y
 	sta df_exeoff
 	sta df_curstidx
-	ldy #0
+	ldy #0		; hmm XXXXX might need to be tay to get the next statement idx XXXXX
 	lda (df_currlin),y
 	sta df_nxtstidx
 	; now execute statements
@@ -168,9 +168,11 @@ df_rt_exec_proc
 df_rt_def
 	; line offset pointing at DFTK_PROC
 	; skip over PROC address and open bracket
-	inc df_exeoff
-	inc df_exeoff
-	inc df_exeoff
+	ldx df_exeoff
+	inx
+	inx
+	inx
+	stx df_exeoff
 	; parms on stack in reverse order to parm list
 	; so get each parm and type and save to scratch
 	ldx #1									; index in to scratch
@@ -187,7 +189,6 @@ df_rt_def_find_var
 	beq df_rt_def_got_var
 	; else check if non-local specifier
 	cmp #DFTK_VARPARM						; This is a regular ASCII char '&'
-	beq df_rt_def_got_varparm
 	bne df_rt_def_find_var
 df_rt_def_got_varparm
 	; set high bit
@@ -221,13 +222,12 @@ df_rt_def_load_var
 	dec df_procargs
 	beq df_rt_def_load_var_done
 	; get var address
+	dec df_procmode
 	ldx df_procmode
-	dex
 	lda scratch+32,x
 	sta df_tmpptra
 	lda scratch+64,x
 	sta df_tmpptra+1
-	stx df_procmode
 	
 	lda scratch,x
 	; if MSB is clear then this is not a local variable
@@ -271,25 +271,22 @@ df_rt_def_load_var_done
 	rts
 
 	
-; end def for a proc
-df_rt_enddef
-	; unload any locals
-	jsr df_rt_proc_unlocal
-	; nothing to do - main loop will terminate
-	clc
-	rts
-	
 ; return a value
 df_rt_return
 	; evaluate the return and put on the parameter stack
+	; then process this like an end of procedure
 	jsr df_rt_neval
-	; process this like an end of procedure
-	jsr df_rt_enddef
-	rts
-	
+; end def for a proc
+df_rt_enddef
+	; unload any locals
+;	jsr df_rt_proc_unlocal
+	; nothing to do - main loop will terminate
+;	clc
+;	rts
+; enddef falls through to the unlocal code	
 	
 ; unload any local variables from runtime stack
-df_rt_proc_unlocal
+;df_rt_proc_unlocal
 	jsr df_rst_popByte
 	tax
 	beq df_rt_proc_unload_done
@@ -319,6 +316,9 @@ df_rt_proc_unloadvar
 	dex
 	bne df_rt_proc_unloadvar
 df_rt_proc_unload_done
+	pla				; Pull old return address from stack
+	pla
+	clc
 	rts
 	
 ; push a local variable to the runtime stack

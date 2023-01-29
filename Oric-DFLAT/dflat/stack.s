@@ -13,17 +13,17 @@
 ;*  - dflat runtime stack for things like for/next loops
 ;*  - dflat parameter stack for passing parameters etc.
 ;*  The two software stacks are implemented in the same page
-;*  with the runtime stack growing up from 0 and the
-;*  operator stack growing down from 255.  Hopefully they
+;*  with the operator stack growing up from 0 and the
+;*  runtime stack growing down from 255.  Hopefully they
 ;*  don't meet as there are no checks for this at the moment
-;*  purely because I want speed over friendliness, althoug
-;*  I may come to regret this.
+;*  purely because I want speed over friendliness, although
+;*  I may come to regret this!
 ;*  I have also added the only runtime memory allocation
-;*  needed by dflat here.  Humourously I have called it malloc
-;*  which is taken from the C language, but it only to
-;*  grab some memory after the of dflat program code for
+;*  needed by dflat here.  Humourously I have called it 'malloc'
+;*  which is taken from the C language, but it's only to
+;*  grab some memory after end the of dflat program code for
 ;*  arrays - which of course cannot have storage allocated at
-;*  tokenisation time (e.g. because I dimension an array with)
+;*  tokenisation time (e.g. because I dimension an array with
 ;*  a size from a variable).
 ;*
 ;**********************************************************
@@ -87,8 +87,7 @@ df_rst_pushWord
 df_rst_popWord
 	ldy df_rtstop
 	iny
-	lda df_rtstck,y
-	tax
+	ldx df_rtstck,y
 	iny
 	lda df_rtstck,y
 	sty df_rtstop
@@ -156,17 +155,15 @@ df_ost_pushPtr
 ;* Y - type expected
 ;****************************************
 df_ost_popParmX
-	sty tmp_d
+	tya
 	ldy df_parmtop
 	; pull type first
-	lda tmp_d
 	dey
 	and df_rtstck,y
 	beq df_st_typemismatcherr
 	; pull low byte first
 	dey
-	lda df_rtstck,y
-	tax
+	ldx df_rtstck,y
 	; pull high byte next
 	dey
 	lda df_rtstck,y
@@ -179,12 +176,11 @@ df_st_typemismatcherr
 
 ;****************************************
 ;* Return type on top of stack
-;* Y - type
+;* A - type
 ;****************************************
 df_ost_peekType
 	ldy df_parmtop
 	lda df_rtstck-1,y
-;	tay NO LONGER NEEDED - EVERYWHERE USES A
 	rts
 
 ;****************************************

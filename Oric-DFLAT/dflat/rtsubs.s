@@ -246,10 +246,10 @@ df_rt_if
 df_rt_ifeval
 	; get value
 	jsr df_rt_getnval
-	; if value<>0 if is successful then continue normal sequence
-	cmp #0
+	; if X,A<>0 if is successful then continue normal sequence
+	tay
 	bne df_rt_if_done
-	cpx #0
+	txa
 	bne df_rt_if_done
 	; got here then if clause evaluated to false
 	; match with else/elseif/endif
@@ -404,14 +404,11 @@ df_rt_check_pos
 df_rt_next_check
 	; check if true or false
 	jsr df_ost_popInt
-	cpx #0
+	txa
 	; if false then next is done
-	beq df_next_done
+	beq df_rt_untilnext_done
 	; else we continue
 	jmp df_rt_pop_stat_go
-	; if done, then continue with next statement
-df_next_done
-	jmp df_rt_untilnext_done
 
 df_rt_next_err
 	SWBRK DFERR_NEXTFOR
@@ -426,8 +423,7 @@ df_rt_repeat
 
 df_rt_until
 	; remember stack position
-	ldy df_rtstop
-	tya
+	lda df_rtstop
 	pha
 	jsr df_rst_popByte
 	cmp #DFRT_REPEAT
@@ -435,7 +431,7 @@ df_rt_until
 	; evaluate expression in to A,X
 	jsr df_rt_getnval
 	; if value<>0 then continue
-	cpx #0
+	txa
 	bne df_rt_untilnext_done
 
 	; pop the stat and continue
@@ -505,9 +501,8 @@ df_rt_datnextlin
 	lda df_currdat
 	adc (df_currdat,x)
 	sta df_currdat
-	lda df_currdat+1
-	adc #0
-	sta df_currdat+1
+	_bcc 2
+	inc df_currdat+1
 	jmp df_rt_datlinstart
 df_rt_getdatatk
 	lda (df_currdat),y
@@ -540,7 +535,6 @@ df_rt_datumerr
 df_rt_readdatum
 	; update data pointer to next data item
 	jsr df_rt_nextdatum
-
 	; now get lvar X,A from current statement
 	jsr df_rt_getlvar
 	; save lvar in tmpb, vvt ptr in tmpa
@@ -568,7 +562,6 @@ df_rt_readdatum
 	ldx #0
 	lda (df_currdat,x)
 	sta df_eolidx
-	lda #0
 	sta df_nxtstidx
 	lda #3
 	sta df_curstidx
@@ -608,8 +601,8 @@ df_rt_read
 df_rt_read_find_var
 	iny
 	; if end of line or statement then done
-	cpy df_eolidx
-	beq df_rt_read_done
+;	cpy df_eolidx
+;	beq df_rt_read_done
 	cpy df_nxtstidx
 	beq df_rt_read_done
 	; if not found escape then next byte
@@ -682,8 +675,8 @@ df_rt_local
 df_rt_local_findesc
 	iny
 	; check end of line
-	cpy df_eolidx
-	beq df_rt_local_done
+;	cpy df_eolidx
+;	beq df_rt_local_done
 	cpy df_nxtstidx
 	beq df_rt_local_done
 	; find a var
@@ -720,8 +713,8 @@ df_rt_dim
 df_rt_dim_findesc
 	; check end of line
 	iny
-	cpy df_eolidx
-	beq df_rt_dim_done
+;	cpy df_eolidx
+;	beq df_rt_dim_done
 	cpy df_nxtstidx
 	beq df_rt_dim_done
 	; find a var
@@ -843,8 +836,8 @@ df_rt_plot
 	; check the type on the stack
 	jsr df_ost_peekType
 	; if >=0x80 then a pointer / string
-	cmp #0x80
-	bcs df_rt_plotstr
+	tax
+	bmi df_rt_plotstr
 	; else it is int
 	jsr df_ost_popInt
 	; save  low byte of pop result in a temp
@@ -887,7 +880,6 @@ df_rt_plotstrch
 	ldy df_tmpptre
 	lda (df_tmpptra),y
 	sta df_tmpptrd			; char in D
-	cmp #0
 	beq df_rt_plotstrdone
 	inc df_tmpptre
 	lda gr_scrngeom+gr_mode; Check screen mode
@@ -994,6 +986,10 @@ df_rt_wait
 	jsr df_rt_getnval
 	; put high byte in to Y (X,Y)=16 bits
 	tay
+;	bne df_rt_wait_counter
+	; If A=X=0 then don't try to wait
+;	txa
+;	beq df_rt_wait_done
 df_rt_wait_counter
 	; get vdp low byte timer val in A
 	lda vdp_cnt
@@ -1002,15 +998,16 @@ df_rt_wait_tick
 	cmp vdp_cnt
 	beq df_rt_wait_tick
 	; countdown tick
-	dex
-	cpx #0xff
+	txa
 	bne df_rt_wait_skiphi
 	dey
-df_rt_wait_skiphi
-	cpx #0
+df_rt_wait_skiphi	
+	dex
+	txa
 	bne df_rt_wait_counter
-	cpy #0
+	tya
 	bne df_rt_wait_counter
+df_rt_wait_done
 	rts
 
 df_rt_printat
@@ -1028,8 +1025,8 @@ df_rt_print_ws
 	iny
 
 	; evaluate an expression
-	cpy df_eolidx
-	beq df_rt_print_done
+;	cpy df_eolidx
+;	beq df_rt_print_done
 	cpy df_nxtstidx
 	beq df_rt_print_done
 	lda (df_currlin),y
@@ -1175,12 +1172,12 @@ df_rt_run
 ; CS = End, CC = not end
 df_rt_eos
 	ldy df_exeoff
-	cpy df_eolidx
+;	cpy df_eolidx
+;	beq df_rt_eos_true
+	cpy df_nxtstidx
 	beq df_rt_eos_true
 	lda (df_currlin),y
 	cmp #':'
-	beq df_rt_eos_true
-	cpy df_nxtstidx
 	beq df_rt_eos_true
 	clc
 	rts
@@ -1228,9 +1225,8 @@ df_rt_renum_next
 	ldx #0
 	adc (df_tmpptrd,x)
 	sta df_tmpptrd
-	lda df_tmpptrd+1
-	adc #0
-	sta df_tmpptrd+1
+	_bcc 2
+	inc df_tmpptrd+1
 	jmp df_rt_renum_do
 
 
@@ -1252,7 +1248,7 @@ df_rt_listcheckvnt
 df_rt_listprocch
 	lda (df_tmpptra),y
 	jsr io_put_ch
-	cmp #0
+	tax
 	beq df_rt_listproccr
 	iny
 	bne df_rt_listprocch		; Always
@@ -1282,9 +1278,8 @@ df_rt_listgotnext
 	tya
 	adc df_tmpptra
 	sta df_tmpptra
-	lda df_tmpptra+1
-	adc #0
-	sta df_tmpptra+1
+	_bcc 2
+	inc df_tmpptra+1
 	jmp df_rt_listcheckvnt
 df_rt_listpn_done
 	rts
@@ -1317,7 +1312,7 @@ df_rt_listp_copy
 	stx df_tmpptra
 	sta df_tmpptra+1
 	; save statement index in to line
-	sty df_lineidx
+;	sty df_lineidx
 ;	; Check if '-' option used
 ;	ldy df_exeoff
 ;	lda (df_currlin),y
@@ -1431,7 +1426,7 @@ df_rt_list_pause
 	beq df_rt_list_line_fin
 df_rt_list_line_cont
 	ldy #0
-	sty df_exeoff
+	sty df_linoff
 	jsr df_rt_list_all_line
 df_rt_list_next_line
 	; new line
@@ -1442,9 +1437,8 @@ df_rt_list_next_line
 	ldy #0
 	adc (df_tmpptra),y
 	sta df_tmpptra
-	lda df_tmpptra+1
-	adc #0
-	sta df_tmpptra+1
+	_bcc 2
+	inc df_tmpptra+1
 	; if pointer > end then listing is done
 	sec
 	pla
@@ -1470,11 +1464,11 @@ df_rt_list_all_line				; Start here to include number
 df_rt_list_line_only			; Start here for just the line
 	ldy #3
 	lda (df_tmpptra),y
-	sta df_nxtstidx
+	sta df_lineidx
 	iny
-	sty df_exeoff
+	sty df_linoff
 df_rt_list_decode
-	ldy df_exeoff
+	ldy df_linoff
 	lda (df_tmpptra),y
 	bmi df_rt_list_token
 	cmp #DFTK_ESCVAL
@@ -1490,21 +1484,21 @@ df_rt_list_token
 	jsr df_rt_list_decode_token
 df_rt_list_nexttok
 	; advance the line offset
-	inc df_exeoff
-	lda df_exeoff
+	inc df_linoff
+	lda df_linoff
 	; check if at end of line
 	ldx #0
 	cmp (df_tmpptra,x)
 	beq df_rt_list_line_only_fin
 	; check if at end of statement
-	cmp df_nxtstidx
+	cmp df_lineidx
 	bne df_rt_list_decode
 	tay
 	; save the next statement offset
 	lda (df_tmpptra),y
-	sta df_nxtstidx
+	sta df_lineidx
 	iny
-	sty df_exeoff
+	sty df_linoff
 	jmp df_rt_list_decode
 
 
@@ -1513,7 +1507,7 @@ df_rt_list_nexttok
 df_rt_list_decode_esc
 	; jump over esc byte
 	iny
-	sty df_exeoff
+	sty df_linoff
 	pha
 	; get the next two bytes in case needed
 	lda (df_tmpptra),y
@@ -1546,7 +1540,7 @@ df_rt_lst_chr
 	lda #0x27			; Single quote
 	jsr io_put_ch
 	iny
-	sty df_exeoff
+	sty df_linoff
 	rts
 
 ; Output 0x for hex chars
@@ -1568,7 +1562,7 @@ df_rt_lst_lo_hex
 	jsr io_put_ch
 df_rt_lst_const_done
 	iny
-	sty df_exeoff
+	sty df_linoff
 	rts
 
 ; Decode an int hex
@@ -1583,10 +1577,10 @@ df_rt_lst_inthex
 
 ; Decode a byte binary
 df_rt_lst_bytbin
-	ldx #8
 	lda df_tmpptrb
 	sta df_tmpptrb+1
-	jmp df_rt_lst_bin
+	ldx #8
+	bne df_rt_lst_bin
 
 ; Decode a int binary
 df_rt_lst_intbin
@@ -1614,7 +1608,7 @@ df_rt_lst_intdec
 	ldx df_tmpptrb
 	lda df_tmpptrb+1
 	iny
-	sty df_exeoff
+	sty df_linoff
 	clc
 	jmp print_a_to_d
 
@@ -1625,7 +1619,7 @@ df_rt_lst_var
 df_rt_lst_proc
 	; jump over the address bytes
 	iny
-	sty df_exeoff
+	sty df_linoff
 
 	; ptrc starts at VNT start
 	_cpyZPWord df_vntstrt,df_tmpptrc
@@ -1653,9 +1647,8 @@ df_rt_list_gotvvtend
 	lda df_tmpptrd
 	adc #DFVVT_SZ
 	sta df_tmpptrd
-	lda df_tmpptrd+1
-	adc #0
-	sta df_tmpptrd+1
+	_bcc 2
+	inc df_tmpptrd+1
 	; go back and check again
 	jmp df_rt_list_findvvt
 df_rt_list_gotvvt
@@ -1668,7 +1661,7 @@ df_rt_list_gotvvt
 df_rt_lst_strlit
 	lda #0x22
 	jsr io_put_ch
-	ldy df_exeoff
+	ldy df_linoff
 df_rt_lst_strlitch
 	lda (df_tmpptra),y
 	beq df_rt_lst_strlitdon
@@ -1678,7 +1671,7 @@ df_rt_lst_strlitch
 df_rt_lst_strlitdon
 	lda #0x22
 	jsr io_put_ch
-	sty df_exeoff
+	sty df_linoff
 df_rt_list_donvvt
 	rts
 
@@ -1686,10 +1679,12 @@ df_rt_list_linnum
 	ldy #1
 	lda (df_tmpptra),y
 	tax
-	ldy #2
+	iny
 	lda (df_tmpptra),y
 	clc
-	jmp print_a_to_d
+	jsr print_a_to_d
+	lda #0x20			; Always add a space after line num
+	jmp io_put_ch
 
 ; decode a token value with MSB set
 df_rt_list_decode_token
@@ -1710,7 +1705,7 @@ df_rt_list_do_decode_tkn
 	lda #hi(df_tokensyms)
 	sta df_tmpptrb+1
 df_rt_list_find_sym
-	cpx #0
+	txa
 	beq df_rt_list_got_sym
 	ldy #0
 df_rt_list_next_ch
@@ -1738,10 +1733,10 @@ df_rt_list_got_sym
 df_rt_asm_decode_token
 	lda #'.'			;Always put out the . symbol
 	jsr io_put_ch
-	ldy df_exeoff		;Print out any whitespace
+	ldy df_linoff		;Print out any whitespace
 df_rt_asm_decode_token_ws
 	iny					;Point to char after the asm token
-	sty df_exeoff
+	sty df_linoff
 	lda (df_tmpptra),y	;What is the char?
 	jsr df_tk_isws		;If not then found the keyword
 	bcc df_rt_asm_decode_token_found
@@ -1761,7 +1756,7 @@ df_rt_asm_decode_token_keyword
 	lda #hi(df_asm_tokensyms)
 	sta df_tmpptrb+1
 df_rt_list_find_asm_sym
-	cpx #0
+	txa
 	beq df_rt_list_got_asm_sym
 	ldy #0
 df_rt_list_next_asm_ch
@@ -1772,9 +1767,8 @@ df_rt_list_next_asm_ch
 	sec					; Skip offset and mode bytes
 	adc df_tmpptrb
 	sta df_tmpptrb
-	lda df_tmpptrb+1
-	adc #0
-	sta df_tmpptrb+1
+	_bcc 2
+	inc df_tmpptrb+1
 	dex					; One less symbol to skip over
 	jmp df_rt_list_find_asm_sym
 df_rt_list_got_asm_sym
@@ -1937,7 +1931,7 @@ df_rt_copy_fn
 df_rt_fname_case
 	sta df_linbuff,y				; Put filename in line buffer
 	iny
-	cmp #0
+	tax
 	bne df_rt_copy_fn
 	rts
 
@@ -1986,13 +1980,14 @@ df_rt_loadline
 	; else done
 	; clear dflat runtime else will try to execute
 	; the last tokenised line!
-	lda #0
-	sta df_tokbuff			; Offset to next line
-	sta df_tokbuff+1		; Clear line low
-	sta df_tokbuff+2		; Clear line high
-	sta df_nxtstidx			; Clear next statement
-	lda #1					; Set immediate mode
-	sta df_immed
+	ldx #0
+	stx df_tokbuff			; Offset to next line
+	stx df_tokbuff+1		; Clear line low
+	stx df_tokbuff+2		; Clear line high
+	stx df_nxtstidx			; Clear next statement
+	stx df_eolidx			; Clear end of line too
+	inx						; Set immediate mode
+	stx df_immed
 	jmp df_rt_file_cleanup	; Ok now can close and done
 df_rt_ldtokenise
 	jsr df_pg_tokenise		; Tokenise loaded string
@@ -2276,7 +2271,7 @@ df_rt_reset
 
 df_rt_deek
 	sec
-	bcs df_rt_readbyte
+	db 0x24	; BIT skip the clc
 df_rt_peek
 	clc
 df_rt_readbyte

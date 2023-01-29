@@ -290,9 +290,8 @@ gr_init_tab_row
 	lda tmp_alo
 	adc #40
 	sta tmp_alo
-	lda tmp_ahi
-	adc #0
-	sta tmp_ahi
+	_bcc 2
+	inc tmp_ahi
 	; Max 200 rows
 	iny
 	cpy #200
@@ -362,9 +361,8 @@ gr_cls_col
 	lda gr_scrngeom+gr_geom_tmp
 	adc gr_scrngeom+gr_text_w
 	sta gr_scrngeom+gr_geom_tmp
-	lda gr_scrngeom+gr_geom_tmp+1
-	adc #0
-	sta gr_scrngeom+gr_geom_tmp+1
+	_bcc 2
+	inc gr_scrngeom+gr_geom_tmp+1
 	dex								; 1 row done
 	bne gr_cls_row					; Done all rows?
 
@@ -539,17 +537,15 @@ gr_scroll_char
 	lda tmp_alo
 	adc gr_scrngeom+gr_text_w
 	sta tmp_alo
-	lda tmp_ahi
-	adc #0
-	sta tmp_ahi
+	_bcc 2
+	inc tmp_ahi
 	; Update destination address
 	clc
 	lda tmp_blo
 	adc gr_scrngeom+gr_text_w
 	sta tmp_blo
-	lda tmp_bhi
-	adc #0
-	sta tmp_bhi
+	_bcc 2
+	inc tmp_bhi
 
 	; One line complete
 	dex
@@ -868,14 +864,13 @@ gr_hcode
 gr_hcode_loop
 	pla 				; Get the code to place
 	pha					; Need to save it back
-	sta (tmp_alo),y		; Store it in destination
+	sta (gr_scrngeom+gr_geom_tmp),y		; Store it in destination
 	clc
-	lda tmp_alo			; Update base pointer
+	lda gr_scrngeom+gr_geom_tmp			; Update base pointer
 	adc gr_scrngeom+gr_text_w
-	sta tmp_alo
-	lda tmp_ahi
-	adc #0
-	sta tmp_ahi
+	sta gr_scrngeom+gr_geom_tmp
+	_bcc 2
+	inc gr_scrngeom+gr_geom_tmp+1
 	dex
 	bne gr_hcode_loop
 	pla
@@ -911,22 +906,21 @@ gr_hchar
 
 	; Set up destination position
 	jsr gr_point_setup
-	; tmp_alo contains address including column offset
+	; tmp needs to contains address including column offset
 	clc
 	tya
-	adc tmp_alo
-	sta tmp_alo
-	lda tmp_ahi
-	adc #0
-	sta tmp_ahi
+	adc gr_scrngeom+gr_geom_tmp
+	sta gr_scrngeom+gr_geom_tmp
+	_bcc 2
+	inc gr_scrngeom+gr_geom_tmp+1
 
-	lda tmp_blo					; Get the mask
+	lda gr_scrngeom+gr_geom_tmp2		; Get the mask
 	ldx #7
-gr_hchar_mask					; Calculate how many shifts to tmp_blo
+gr_hchar_mask							; Calculate how many shifts to tmp
 	dex
 	lsr a
 	bne gr_hchar_mask
-	stx tmp_blo					; number between 1 and 6 : shift n-1 times
+	stx gr_scrngeom+gr_geom_tmp2		; number between 1 and 6 : shift n-1 times
 
 	; copy font bytes and shift the required number of times
 	; go from bottom to top as data gets stored on the stack!
@@ -937,8 +931,8 @@ gr_hchar_getfont
 	lda #0
 	sta ztmp_24+1
 
-	; shift right number of times
-	ldx tmp_blo
+	; shift the right number of times
+	ldx gr_scrngeom+gr_geom_tmp2
 gr_hchar_rot1bit
 	dex
 	beq gr_hchar_rot1bit_nx
@@ -959,58 +953,55 @@ gr_hchar_rot1bit_nx
 	bpl gr_hchar_getfont
 
 	; Now copy shift source to destination, accounting for pixmode
-	ldx #0
+	ldx #8
 gr_hchar_copyline
 	ldy gr_scrngeom+gr_pixmode	; Mode determines how to modify
-	beq gr_hchar_copyline_0
-	cpy #2
-	beq gr_hchar_copyline_2
+	beq gr_hchar_copyline_erase
+	bmi gr_hchar_copyline_eor
 
-	; Mode = 1 : OR
+	; Mode = ~Z : OR
 	ldy #0						; Get lh side source
 	pla
-	ora (tmp_alo),y
-	sta (tmp_alo),y
+	ora (gr_scrngeom+gr_geom_tmp),y
+	sta (gr_scrngeom+gr_geom_tmp),y
 	iny							; Get rh side source
 	pla
-	ora (tmp_alo),y
-	sta (tmp_alo),y
+	ora (gr_scrngeom+gr_geom_tmp),y
+	sta (gr_scrngeom+gr_geom_tmp),y
 	jmp gr_hchar_copyline_nx
-gr_hchar_copyline_2
-	; Mode = 2 : EOR
+gr_hchar_copyline_eor
+	; Mode = N : EOR
 	ldy #0						; Get lh side source
 	pla
-	eor (tmp_alo),y
-	sta (tmp_alo),y
+	eor (gr_scrngeom+gr_geom_tmp),y
+	sta (gr_scrngeom+gr_geom_tmp),y
 	iny							; Get rh side source
 	pla
-	eor (tmp_alo),y
-	sta (tmp_alo),y
+	eor (gr_scrngeom+gr_geom_tmp),y
+	sta (gr_scrngeom+gr_geom_tmp),y
 	jmp gr_hchar_copyline_nx
-gr_hchar_copyline_0
-	; Mode = 0 : erase
+gr_hchar_copyline_erase
+	; Mode = Z : erase
 	ldy #0						; Get lh side source
 	pla
 	sta ztmp_24
-	ora (tmp_alo),y
+	ora (gr_scrngeom+gr_geom_tmp),y
 	eor ztmp_24
-	sta (tmp_alo),y
+	sta (gr_scrngeom+gr_geom_tmp),y
 	iny							; Get rh side source
 	pla
 	sta ztmp_24
-	ora (tmp_alo),y
+	ora (gr_scrngeom+gr_geom_tmp),y
 	eor ztmp_24
-	sta (tmp_alo),y
+	sta (gr_scrngeom+gr_geom_tmp),y
 gr_hchar_copyline_nx
 	clc							; Next address
-	lda tmp_alo
+	lda gr_scrngeom+gr_geom_tmp
 	adc #40
-	sta tmp_alo
-	lda tmp_alo+1
-	adc #0
-	sta tmp_alo+1
-	inx
-	cpx #8
+	sta gr_scrngeom+gr_geom_tmp
+	_bcc 2
+	inc gr_scrngeom+gr_geom_tmp+1
+	dex
 	bne gr_hchar_copyline
 	rts							; Done after 8 lines
 
@@ -1020,21 +1011,21 @@ gr_hchar_copyline_nx
 ;* Input : X,Y = coord
 ;* Output : None
 ;* Regs affected :
-;* tmp_alo,hi contains the row base address
-;* tmp_blo contains the mask index
-;* tmp_bhi contains the column offset in to row
-;* Y is same as tmp_bhi
-;* X is same as tmp_blo
+;* gr_geom_tmp contains the row base address
+;* gr_geom_tmp2 contains the mask
+;* A contains the mask
+;* X untouched
+;* Y contains column offet from base address
 ;****************************************
 gr_point_setup
 	; Get row address
 	lda hires_row_low,y
-	sta tmp_alo
+	sta gr_scrngeom+gr_geom_tmp
 	lda hires_row_hi,y
-	sta tmp_ahi
+	sta gr_scrngeom+gr_geom_tmp+1
 	; Get the pixel mask
 	lda hires_mask,x
-	sta tmp_blo
+	sta gr_scrngeom+gr_geom_tmp2
 	; Get the column offset to Y
 	ldy hires_col,x
 	rts
@@ -1046,9 +1037,8 @@ gr_set_hires_cur
 
 ;* Get pixel value at X,Y in to A
 gr_pixel
-	jsr gr_point_setup				; Set up mask and addresses, Y=column, X=rem
-	lda (tmp_alo),y					; Get screen byte
-	and tmp_blo						; Check if pixel coincides with mask
+	jsr gr_point_setup				; Set up mask and addresses, Y=column, A=mask
+	and (gr_scrngeom+gr_geom_tmp),y	; And with screen byte
 	rts
 
 ;* Plot a point based on X,Y coordinates
@@ -1058,34 +1048,36 @@ gr_point
 	cpy #200
 	bcs gr_point_done
 
-	;** FOR SPEED COPYING THE POINT SETUP ROUTINE
+	;** FOR SPEED COPYING THE POINT SETUP ROUTINE **
+	;** OBVS MAKE SURE THIS REFLECTS ANY POINT SETUP CHANGES **
 	; Get row address
 	lda hires_row_low,y
-	sta tmp_alo
+	sta gr_scrngeom+gr_geom_tmp
 	lda hires_row_hi,y
-	sta tmp_ahi
+	sta gr_scrngeom+gr_geom_tmp+1
 	; Get the pixel mask
 	lda hires_mask,x
-	sta tmp_blo
+	sta gr_scrngeom+gr_geom_tmp2
 	; Get the column offset to Y
 	ldy hires_col,x
 
-;	jsr gr_point_setup				; Set up mask and addresses, Y=column, X=rem
-;* Plot a point based on tmp_alo base, Y offset and X index mask
-	lda (tmp_alo),y					; Get screen byte
+;* Plot a point based on gr_geom_tmp base, Y offset and X index mask
+	lda (gr_scrngeom+gr_geom_tmp),y	; Get screen byte
+	cmp #32							; If less than 32 (i.e. an attribute)
+	bcs gr_point_skip_attr
+	lda #64							; then make it a normal cell (else weird things happen)
+gr_point_skip_attr
 	ldx gr_scrngeom+gr_pixmode		; Look at the mode
-	cpx #2							; If eor mode then go and write
-	beq gr_point_eor
-	ora tmp_blo						; Or with MASK
-	cpx #0							; But if not then eor
+	bmi gr_point_eor				; If eor mode then go and write
+	ora gr_scrngeom+gr_geom_tmp2	; Or with MASK
+	cpx #0							; But if zero mode then eor
 	bne gr_point_write
 gr_point_eor
-	eor tmp_blo						; EOR with MASK
+	eor gr_scrngeom+gr_geom_tmp2	; EOR with MASK
 gr_point_write
-	sta (tmp_alo),y
+	sta (gr_scrngeom+gr_geom_tmp),y
 gr_point_done
 	rts
-
 
 ;****************************************
 ;* gr_circle

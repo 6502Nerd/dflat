@@ -84,7 +84,7 @@ KB_CAPSLK	= 0x01			; Id of Caps Lock - maps to Led 1
 
 KB_REP_TIM	= 3 			; Number of VB periods for the repeat speed
 KB_REP_DEL	= 20			; Number of VB periods before repeat activates
-KB_DEBOUNCE	= 2				; Number of VB periods before debounce
+KB_DEBOUNCE	= 1				; Number of VB periods before debounce / max keyboard scan rate
 
 UTF_ETX		= 0x03			; Break character
 UTF_BEL		= 0x07
@@ -214,6 +214,13 @@ _incZPWord macro wordp
 	inc wordp+1
 	endm
 
+_decZPWordA macro wordp
+	lda wordp
+	db	0xd0, 0x02
+	dec wordp+1
+	dec wordp
+	endm
+	
 _decZPWord macro wordp
 	pha
 	sec
@@ -253,16 +260,32 @@ _subZPWord macro worda, wordb
 	sta worda+1
 	endm
 	
-_adcZPWord macro worda,const
+_adcZPByte macro worda, byte
 	clc
 	lda worda
-	adc #const
+	adc byte
 	sta worda
-	lda worda+1
-	adc #0
-	sta worda+1
+	db 0x90, 0x02		; bcc 2
+	inc worda+1
 	endm
-	
+
+_sbcZPByte macro worda, byte
+	sec
+	lda worda
+	sbc byte
+	sta worda
+	db 0xb0, 0x02		; bcs 2
+	inc worda+1
+	endm
+
+_bcc macro skip
+	db 0x90, skip
+	endm
+
+_bcs macro skip
+	db 0xb0, skip
+	endm
+
 _debug macro ch
 	pha
 	lda #ch

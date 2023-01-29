@@ -1,0 +1,25 @@
+{
+    "name": "dflat_programming_language",
+    "displayName": "dflat programming language",
+    "description": "Syntax highlighting for the dflat programming language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.63.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "dflat",
+            "aliases": ["dflat", "dflat"],
+            "extensions": [".prg"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "dflat",
+            "scopeName": "source.prg",
+            "path": "./syntaxes/dflat.tmLanguage.json"
+        }]
+    }
+}

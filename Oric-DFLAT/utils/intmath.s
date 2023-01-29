@@ -22,42 +22,42 @@
 ;****************************************
 ;* Add : A + B result in A
 ;****************************************
-int_add
-	clc
-	lda num_a
-	adc num_b
-	sta num_a
-	lda num_a+1
-	adc num_b+1
-	sta num_a+1
-	rts
+;int_add
+;	clc
+;	lda num_a
+;	adc num_b
+;	sta num_a
+;	lda num_a+1
+;	adc num_b+1
+;	sta num_a+1
+;	rts
 	
 ;****************************************
 ;* Sub : A - B result in A
 ;****************************************
-int_sub
-	sec
-	lda num_a
-	sbc num_b
-	sta num_a
-	lda num_a+1
-	sbc num_b+1
-	sta num_a+1
-	rts
+;int_sub
+;	sec
+;	lda num_a
+;	sbc num_b
+;	sta num_a
+;	lda num_a+1
+;	sbc num_b+1
+;	sta num_a+1
+;	rts
 	
 ;****************************************
 ;* Swp : A <-> B 
 ;****************************************
-int_swp
-	lda num_a
-	ldx num_b
-	sta num_b
-	stx num_a
-	lda num_a+1
-	ldx num_b+1
-	sta num_b+1
-	stx num_a+1
-	rts
+;int_swp
+;	lda num_a
+;	ldx num_b
+;	sta num_b
+;	stx num_a
+;	lda num_a+1
+;	ldx num_b+1
+;	sta num_b+1
+;	stx num_a+1
+;	rts
 	
 ;****************************************
 ;* Mult : A * B result in A

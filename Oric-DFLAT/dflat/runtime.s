@@ -99,8 +99,8 @@ df_rt_init_vvt_slot_undim
 	sta (df_tmpptra),y
 df_rt_init_vvt_skip
 	; increment pointer to next slot
-	_adcZPWord df_tmpptra,8
-	bcc df_rt_init_vvt_slot 	; Always branches
+	_adcZPByte df_tmpptra,#8
+	jmp df_rt_init_vvt_slot 	; Don't rely on bcc
 df_rt_init_done
 	rts
 
@@ -132,13 +132,13 @@ df_rt_neval_optk
 	ldy df_exeoff
 	; check end of line
 
-	cpy df_eolidx
-	beq df_rt_neval_process
+;	cpy df_eolidx
+;	beq df_rt_neval_process
 	cpy df_nxtstidx
 	beq df_rt_neval_process
-	lda (df_currlin),y
-	bmi df_rt_neval_tk
-	cmp #DFTK_ESCVAL
+	lda (df_currlin),y		; Get the byte which could be a token
+	bmi df_rt_neval_tk		; N=1 means it's a keyword token
+	cmp #DFTK_ESCVAL		; <=32 means it's an escape token
 	bcc df_rt_neval_esc
 	; check for evaluation terminators
 	; specifically ',' and ']'
@@ -150,17 +150,22 @@ df_rt_neval_optk
 	; if close bracket then process
 	cmp #')'
 	beq df_rt_neval_process
+	; Nothing of interest matched or it's open bracket
+	; so move to next byte either way
+	inc df_exeoff				; Next byte 
 	; if bracket then evaluate expression recursively
 	cmp #'('
-	bne df_rt_neval_nextbyte
-	; move past open bracket
-	inc df_exeoff
+	bne df_rt_neval_optk
 	; call evaluation function recursively
 	jsr df_rt_neval
-	jmp df_rt_neval_nextbyte
+	; move to next byte
+	inc df_exeoff
+	bne df_rt_neval_optk		; ALWAYS as exeoff != 0
 df_rt_neval_esc
 	jsr df_rt_eval_esc
-	jmp df_rt_neval_nextbyte
+	; move to next byte
+	inc df_exeoff
+	bne df_rt_neval_optk		; ALWAYS as exeoff != 0
 	; if a token then push on operator stack
 df_rt_neval_tk
 	and #0x7f
@@ -260,6 +265,7 @@ df_rt_neval_pushOp
 	; push the operator
 	lda df_tmpptra
 	pha
+	; move to next byte
 	bne df_rt_neval_nextbyte	; ALWAYS as token index != 0
 
 
@@ -333,8 +339,8 @@ df_rt_sval
 df_rt_seval_optk
 	ldy df_exeoff
 	; check end of line
-	cpy df_eolidx
-	beq df_rt_seval_done
+;	cpy df_eolidx
+;	beq df_rt_seval_done
 	cpy df_nxtstidx
 	beq df_rt_seval_done
 
@@ -452,10 +458,8 @@ df_rt_copyStr_done
 	clc
 	adc df_tmpptra
 	sta df_tmpptra
-	lda df_tmpptra+1
-	adc #0
-	sta df_tmpptra+1
-	clc
+	_bcc 2
+	inc df_tmpptra+1
 	rts
 
 ;****************************************
@@ -488,17 +492,15 @@ df_rt_eval_reserved
 ;****************************************
 df_rt_eval_strlit
 	sty df_exeoff
-	; calculate the effective address
+	; calculate the effective address in to AX
 	; y + currlin
 	tya
 	; set carry to add one extra
 	sec
 	adc df_currlin
-	sta df_tmpptra
 	tax
 	lda df_currlin+1
 	adc #0
-	sta df_tmpptra+1
 
 	; push string on to stack
 	jsr df_ost_pushStr
@@ -593,8 +595,8 @@ df_rt_eval_lvskip
 	bpl df_rt_eval_var_notarry
 	; even if an array if no dimensions then return base pointer
 	; if at end of statement or line then simple copy
-	cpy df_eolidx
-	beq df_rt_eval_var_simple
+;	cpy df_eolidx
+;	beq df_rt_eval_var_simple
 	cpy df_nxtstidx
 	beq df_rt_eval_var_simple
 	; if next ch is not [ then simple copy
@@ -668,35 +670,25 @@ df_rt_eval_var_do_arry
 	pla
 	sta df_tmpptra+1
 	; save dimension indices for later
-	; save x last as needed first
-	; A ok to trample
-	tya
-	pha
-	txa
-	pha
+	stx df_tmpptrb
+	sty df_tmpptrb+1
 	; if y is zero then need to decide some stuff
 	cpy #0
 	bne df_rt_eval_var_dim2adj
 	; if dim2 > 0 then swap x,y
 	ldy #DFVVT_DIM2
 	lda (df_tmpptra),y
-	ldy #0
-	cmp #0
 	beq df_rt_eval_var_dim2adj
-	; pop from stack in swapped order
-	pla
-	tay
-	pla
-	tax
-	; save back on stack, A ok to trample
-	tya
-	pha
-	txa
-	pha
+	; swap x,y
+	ldx df_tmpptrb
+	ldy df_tmpptrb+1
+	stx df_tmpptrb+1
+	sty df_tmpptrb
 
 df_rt_eval_var_dim2adj
+	ldx df_tmpptrb
+	ldy df_tmpptrb+1
 	; don't let y=0
-	cpy #0
 	bne df_rt_eval_var_dim2adjy
 	iny
 df_rt_eval_var_dim2adjy
@@ -708,13 +700,12 @@ df_rt_eval_var_dim2adjx
 	;calculate offset
 	;(y-1)*dim1 + (x-1)
 	dex
+	lda #0
+	sta num_a+1
 	dey
 	; (y-1)
 	sty num_a
-	lda #0
-	sta num_a+1
 	; if y is 0 then no need to multiply
-	cpy #0
 	beq df_rt_eval_var_nomult
 	; (dim1)
 	ldy #DFVVT_DIM1
@@ -731,15 +722,12 @@ df_rt_eval_var_nomult
 	clc
 	adc num_a
 	sta num_a
-	lda num_a+1
-	adc #0
-	sta num_a+1
+	_bcc 2
+	inc num_a+1
 	; now have element offset in num_a
 	; dimensions in x and y
-	pla
-	tax
-	pla
-	tay
+	ldx df_tmpptrb
+	ldy df_tmpptrb+1
 	; get type of variable originally found
 	pla
 	pha
@@ -786,7 +774,7 @@ df_rt_eval_byt
 	ldy #0
 	lda (num_a),y
 	tax
-	lda #0
+	tya			; Make A=0
 	jmp df_ost_pushInt
 df_rt_eval_var_str
 	plp
@@ -852,16 +840,17 @@ df_rt_parm_2ints
 	inc df_exeoff
 	; evaluate the 2nd parm
 	jsr df_rt_neval
-
+	
+	jmp df_rt_get2Ints
 	; pop 2nd parm
-	jsr df_ost_popInt
-	stx df_tmpptrb
-	sta df_tmpptrb+1
+;	jsr df_ost_popInt
+;	stx df_tmpptrb
+;	sta df_tmpptrb+1
 	; pop 1st parm
-	jsr df_ost_popInt
-	stx df_tmpptra
-	sta df_tmpptra+1
-	rts
+;	jsr df_ost_popInt
+;	stx df_tmpptra
+;	sta df_tmpptra+1
+;	rts
 
 ;****************************************
 ; common code for 3 ints runtime parsing
@@ -877,18 +866,20 @@ df_rt_parm_3ints
 	jsr df_rt_neval
 
 	; pop 3rd parm
+df_rt_parm_pop3
 	jsr df_ost_popInt
 	stx df_tmpptrc
 	sta df_tmpptrc+1
-	; pop 2nd parm
-	jsr df_ost_popInt
-	stx df_tmpptrb
-	sta df_tmpptrb+1
+	; pop 2nd and 1st
+	jmp df_rt_get2Ints
+;	jsr df_ost_popInt
+;	stx df_tmpptrb
+;	sta df_tmpptrb+1
 	; pop 1st parm
-	jsr df_ost_popInt
-	stx df_tmpptra
-	sta df_tmpptra+1
-	rts
+;	jsr df_ost_popInt
+;	stx df_tmpptra
+;	sta df_tmpptra+1
+;	rts
 
 ;****************************************
 ; common code for 4 ints runtime parsing
@@ -910,19 +901,23 @@ df_rt_parm_4ints
 	jsr df_ost_popInt
 	stx df_tmpptrd
 	sta df_tmpptrd+1
+
+	; pop 3,2,1 parms
+	jmp df_rt_parm_pop3
+
 	; pop 3rd parm
-	jsr df_ost_popInt
-	stx df_tmpptrc
-	sta df_tmpptrc+1
+;	jsr df_ost_popInt
+;	stx df_tmpptrc
+;	sta df_tmpptrc+1
 	; pop 2nd parm
-	jsr df_ost_popInt
-	stx df_tmpptrb
-	sta df_tmpptrb+1
+;	jsr df_ost_popInt
+;	stx df_tmpptrb
+;	sta df_tmpptrb+1
 	; pop 1st parm
-	jsr df_ost_popInt
-	stx df_tmpptra
-	sta df_tmpptra+1
-	rts
+;	jsr df_ost_popInt
+;	stx df_tmpptra
+;	sta df_tmpptra+1
+;	rts
 
 ;****************************************
 ; common code for 5 ints runtime parsing
@@ -976,12 +971,14 @@ df_rt_init_stat_ptr
 	sta df_currlin+1
 	sty df_curstidx
 	sty df_exeoff
-	ldy #0
-	lda (df_currlin),y
-	sta df_eolidx
-	ldy df_curstidx
 	lda (df_currlin),y
 	sta df_nxtstidx
+	ldx #0
+	lda (df_currlin,x)
+	sta df_eolidx
+;	ldy df_curstidx
+;	lda (df_currlin),y
+;	sta df_nxtstidx
 	rts
 
 ;****************************************
@@ -1008,16 +1005,9 @@ df_rt_exec_found_tok
 	; skip past token to next byte in readiness
 	iny
 	sty df_exeoff
-	; save the token
-	pha
-	; Run that statement
+	; Run that statement - if end of return will pull the jsr
+	; and effectively do an rts from this routine.
 	jsr df_rt_run_token
-	; what token was run, if it was enddef or return then we are done
-	pla
-	cmp #DFRT_ENDDEF
-	beq df_rt_exec_end
-	cmp #DFRT_RETURN
-	beq df_rt_exec_end
 
 	; check for break, asynch get
 	dec df_checkkey
@@ -1026,29 +1016,25 @@ df_rt_exec_found_tok
 	sta df_checkkey
 	clc
 	jsr io_get_ch
-	bcs df_rt_exec_no_key
-	cmp #UTF_ETX					; CTRL-C?
-	beq df_rt_exec_ctrl_c
-	cmp #UTF_BRK					; CTRK-Z?
-	beq df_rt_exec_ctrl_z
+	bcc df_rt_exec_check_key
 df_rt_exec_no_key
 	; check if normal flow of control
 	lda df_nextlin+1
 	bne df_rt_exec_jump
-	; try and execute another statement
+	; try and execute another statement until end of line
 	ldy df_nxtstidx
+	cpy df_eolidx
 	sty df_exeoff
 	bne df_rt_exec_stat
-
+	
 	; reached end of line, move to next
 	ldx #0
 	clc
 	lda (df_currlin,x)
 	adc df_currlin
 	sta df_currlin
-	lda df_currlin+1
-	adc #0
-	sta df_currlin+1
+	_bcc 2
+	inc df_currlin+1
 
 	; start from first statement in new line
 	ldy #3
@@ -1067,14 +1053,20 @@ df_rt_exec_no_key
 df_rt_exec_end
 	clc
 	rts
+df_rt_exec_check_key
+	cmp #UTF_BRK					; CTRK-Z?
+	beq df_rt_exec_ctrl_z
+	cmp #UTF_ETX					; CTRL-C?
+	bne df_rt_exec_no_key			; None relevant keys, go back to runtime loop
 df_rt_exec_ctrl_c
 	SWBRK DFERR_BREAK
-df_rt_unexpected_end
-	SWBRK DFERR_IMMEDIATE
 df_rt_exec_ctrl_z
 	; Force a break with zero error number
 	; this will drop in to the monitor
-	db 0,0
+	SWBRK 0
+
+df_rt_unexpected_end
+	SWBRK DFERR_IMMEDIATE
 
 	; if hi byte of nextline is not zero then
 	; current line = next line
@@ -1116,10 +1108,13 @@ df_rt_nextstat
 	ldx #0
 	lda (df_lineptr,x)
 	beq df_rt_nextstat_err
-	; if next statement idx 0
+	; if next statement idx == line length
+;	lda (df_lineptr),y
+;	beq df_rt_nextstat_ln
 	lda (df_lineptr),y
-	; then go to next line
+	cmp (df_lineptr,x)
 	beq df_rt_nextstat_ln
+	; then go to next line
 	; else make this Y
 	tay
 	; X = line low
@@ -1131,25 +1126,23 @@ df_rt_nextstat
 df_rt_nextstat_ln
 	; for next line, add line length to ptr
 	clc
-	lda (df_lineptr,x)
+;	lda (df_lineptr,x)
 	adc df_lineptr
 	sta df_lineptr
-	lda df_lineptr+1
-	adc #0
-	sta df_lineptr+1
-	; if end of program set C
+	_bcc 2
+	inc df_lineptr+1
+	; if end of program set C as error
 	lda (df_lineptr,x)
-	bne df_rt_nextstat_dn
-df_rt_nextstat_err
-	ldy #0
-	sec
-	rts
-df_rt_nextstat_dn
+	beq df_rt_nextstat_err
 	ldx df_lineptr
 	lda df_lineptr+1
 	; always skip line number and length for start of 1st stat
 	ldy #3
 	clc
+	rts
+df_rt_nextstat_err
+	ldy #0
+	sec
 	rts
 
 ;****************************************

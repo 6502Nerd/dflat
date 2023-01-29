@@ -46,12 +46,12 @@ df_init
 	sta df_memtop+1
 
 	; Init program space
-	jsr df_clear
+	jmp df_clear
 
 	; Initialise assembler
 ;	jsr asm_init
 
-	rts
+;	rts
 
 
 ;****************************************
@@ -68,7 +68,7 @@ df_clear
 	sta df_prgend+1
 	; Terminal value in prog space
 	lda #0
-	ldy #0
+	tay
 	sta (df_prgstrt),y
 	; No variables - zero the count
 	sta df_varcnt
@@ -92,9 +92,9 @@ df_clear
 	sta df_vntend+1
 
 	; String accumulator
-	lda #lo(df_raw)
+	lda #lo(scratch)
 	sta df_sevalptr
-	lda #hi(df_raw)
+	lda #hi(scratch)
 	sta df_sevalptr+1
 
 	rts

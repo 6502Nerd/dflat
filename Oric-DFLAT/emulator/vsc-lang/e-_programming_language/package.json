@@ -1,0 +1,25 @@
+{
+    "name": "e-_programming_language",
+    "displayName": "e- programming language",
+    "description": "Syntax highlighting for the e- programming language",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.63.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "e-",
+            "aliases": ["e-", "e-"],
+            "extensions": [".e-"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "e-",
+            "scopeName": "source.e-",
+            "path": "./syntaxes/e-.tmLanguage.json"
+        }]
+    }
+}

@@ -40,8 +40,10 @@
 	org 0xc000			; Start of ROM
 
 _code_start
-	; Restore current bank always at address c001
+	; Restore current bank always at address c001 * not used for Oric *
 mod_sz_kernel_s
+	; include OS ROM calls - must be from 0xc000
+	include "kernel/osromvec.i"
 
 ;* Include all core code in the right order
 	include "kernel/snd-low.s"
@@ -71,7 +73,6 @@ kernel_init
 	jsr init_via0		; initialise cia 0 - tape inactive
 	jsr tp_init			; Initialise tape handling
 
-kernel_test
 	jsr init_snd		; initialise the sound chip
 
 	jsr gr_init			; Initialise graphics, default is text mode
@@ -86,25 +87,31 @@ kernel_test
 
 	cli					; irq interrupts enable
 
+kernel_test
+;	jsr kb_read_raw
+;	jsr utilPrintA
+;	jsr utilPrintCRLF
+;	jmp kernel_test
+	
 	rts
 
 
 ;* Initialises RAM, skipping page 3 which is for IO
 ;* Zeroes all addressable RAM in the default bank i.e. up to 0xc000
 init_ram
+	lda #0				; Normal RAM filled with zero
 	ldy #0x02			; But Y initially at 2 to not overwrite pointer
-	ldx #0x00			; Page counter starts at zero
+	tax 				; Page counter starts at zero
 	stx 0x00			; Start at page 0
 	stx 0x01
 init_ram_1
 	cpx	#3				; Ignore page 3 (IO page)
 	beq init_ram_skip
 init_ram_fill
-	lda #0				; Normal RAM filled with zero
 	sta (0x00),y		; Write byte to RAM (zero or copy of ROM)
-init_ram_skip
 	iny
 	bne init_ram_1		; Do a whole page
+init_ram_skip
 	inc 0x01			; Increase page pointer
 	inx					; Reduce page count
 	cpx #0xc0			; Do all pages until page until we get to page C0

@@ -21,8 +21,8 @@
 ;*  Atari 8 bit.  The disadvantage is that during a big edit
 ;*  session you may end up having a much larger variable
 ;*  table than you need.  Why?  Well because say you enter
-;*  %a as a new variable, but then later change it to %b.
-;*  In this case %a remains in the variable tables - dflat
+;*  a as a new variable, but then later change it to b.
+;*  In this case a remains in the variable tables - dflat
 ;*  only ever adds to the table!  However it is easily
 ;*  solved - when you save and then reload from new a
 ;*  program, the variable table is built up as the program
@@ -80,16 +80,15 @@ df_var_match_vnt_sym
 	lda df_linbuff,y
 	; check for valid alpha-numeric
 	jsr df_tk_isalphanum
-	bcc df_var_check_type
 	; if there is a valid alpha-num then no match
 	bcs df_var_vnt_sym_nomatch
+	; else check type
 df_var_check_type
 	; if not alpha-num then check for type
 	; string or int postfix didn't match with VNT
-	cmp #'%'
-	beq df_var_vnt_sym_nomatch
+;	cmp #'%'
+;	beq df_var_vnt_sym_nomatch
 	cmp #'$'
-	beq df_var_vnt_sym_nomatch
 	; ok, all good got a match
 	bne df_var_find_true
 df_var_vnt_sym_nomatch
@@ -106,15 +105,14 @@ df_var_vnt_entry_end
 	lda df_tmpptra
 	adc #8
 	sta df_tmpptra
-	lda df_tmpptra+1
-	adc #0
-	sta df_tmpptra+1
+	_bcc 2
+	inc df_tmpptra+1
 	bne df_var_match_vnt		; Always - high byte is not zero
 
 	; if at end of vnt then no matches found
 df_var_find_no_vnt
 	lda #0
-	ldx #0
+	tax
 	sec
 	rts
 
@@ -165,7 +163,6 @@ df_var_insert_space
 	_cpyZPWord df_vntstrt,df_tmpptra
 
 	; Now move all bytes from old VNT (higher up) to new VNT position
-	clc
 df_var_move_byte
 	; When pointer = vntend then done
 	lda df_tmpptra
@@ -181,7 +178,7 @@ df_var_move_byte_do
 	; And copy to new position lower in memory
 	ldy #0
 	sta (df_tmpptra),y
-	; Increment memor pointer
+	; Increment memory pointer
 	_incZPWord df_tmpptra
 	jmp df_var_move_byte		; Always as C is not touched (WRONG!)
 df_var_move_byte_fin
@@ -398,12 +395,11 @@ df_var_initialise_var
 df_var_zero_vnt
 	sta (df_vvtend),y
 	dey
-	bne df_var_zero_vnt
+	bne df_var_zero_vnt			; Don't zero out the type
 
 	dec df_tmpptrc				; 1 less to copy variable name
 
-	ldx df_linoff				; Start at var name beginning
-	ldy #0
+	ldx df_linoff				; Start at var name beginning, Y already 0
 	; copy variable name to vnt slot
 df_var_findcreate_copy
 	lda df_linbuff,x
@@ -416,16 +412,12 @@ df_var_findcreate_copy
 	lda #0
 	sta (df_vntstrt),y
 
-	; Put X in to Y
-	txa
-	tay
+	stx df_linoff				; Update line pointer
 
 	; Return address of slot in X,A
 	ldx df_vvtend
 	lda df_vvtend+1
 	
-	sty df_linoff				; Y is the main index used
-
 	clc
 	rts
 	

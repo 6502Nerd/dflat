@@ -18,12 +18,12 @@
 	code
 
 main
-	_println msg_hello_world
-
+	ldx #lo(msg_hello_world)
+	lda #hi(msg_hello_world)
+	jsr io_print_line
 
 infinity
-	jsr df_pg_dflat
-	jmp infinity
+	jmp df_pg_dflat
 
 msg_hello_world
 	;* build.s is generate by the assemble.bat file

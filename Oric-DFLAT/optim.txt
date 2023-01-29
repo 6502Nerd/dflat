@@ -1,0 +1,587 @@
+
+dflat\dflat.6502:
+  44  	; Init program space
+  45: 	jsr df_clear ; &&&& JSR+RTS=JMP (NERD - YES)
+  46  
+
+  66  	lda #0
+  67: 	ldy #0 ; &&&& TAY (NERD - YES)
+  68  	sta (df_prgstrt),y
+
+dflat\error.6502:
+   78  	beq df_trap_go_monitor
+   79: 	bmi df_trap_go_monitor ; &&&& not needed // check these jumps (NERD - YES)
+   80  	bpl df_trap_normal
+
+   85  .df_show_err_find
+   86: 	cpx #0 ; &&&& TXA	(NERD - I don't need line 86 or 87 as X!=0 on entry!)
+   87  	beq df_show_err_found	(NERD - hence df_show_err_found label not needed)
+
+   97  	dex
+   98: 	jmp df_show_err_find ;&&&& branch?	(NERD - YES)
+   99  .df_show_err_found
+
+  111  	lda (df_currlin),y
+  112: 	cmp #0 ; &&&& not needed		(NERD - YES)
+  113  	bne df_show_err_linnum
+  114  	cpx #0
+  115: 	bne df_show_err_linnum ; &&&& not needed	(NERD - YES)
+  116  	beq df_show_err_fin
+
+  130  .df_show_err_done
+  131: 	lda #UTF_CR ; &&&& use utilPrintCRLF?	(NERD - YES, good spot!)
+  132  	jsr io_put_ch
+
+dflat\numop.6502:
+  269  .df_rt_str_comp_false
+  270: 	jmp df_rt_false ; &&&& check these jumps // move df_rt_xxx down a little?
+  271  .df_rt_str_comp_true
+
+dflat\proc.6502:
+  186  	cmp #DFTK_VARPARM						; This is a regular ASCII char '&'
+  187: 	beq df_rt_def_got_varparm ; &&&& not needed (NERD - Yes)
+  188  	bne df_rt_def_find_var
+
+  220  	; get var address
+  221: 	ldx df_procmode ; &&&& better? dec df_procmode: ldx df_procmode and skip stx df_procmode (NERD - YES!)
+  222  	dex
+
+dflat\progedit.6502:
+   95  	sta num_tmp
+   96: 	lda num_tmp+1 ;&&&& bcc+inc	(NERD - Yes, but I need to take care as sometimes value of C is important..iirc)
+   97  	adc #0
+
+  136  	sta df_prgend
+  137: 	lda df_prgend+1 ; &&&& bcc+inc
+  138  	adc #0
+  139  	sta df_prgend+1
+  140: 	clc ; &&&& not needed		(NERD - yes C will always be zero)
+  141  	rts
+
+  144  	sec
+  145: 	lda num_x ; &&&& can be optimised (NERD - yes, added new macro for this in case I need it again)
+  146  	sbc #1
+
+  184  	sta df_prgend
+  185: 	lda df_prgend+1 ; &&&& optimise 
+  186  	sbc #0
+
+  192  	clc
+  193: 	lda num_a ; &&&& optimise (NERD - yes I already had a macro _incZPWord I should have used!)
+  194  	adc #1
+
+  212  	; If nothing entered then sec
+  213: 	cpy #0 ; &&&& TYA	(Nerd - Yes)
+  214  	bne df_pg_inputline_ok
+
+  223  	dey
+  224: 	bpl df_pg_copyinputtolinbuff ; &&&& bpl okay here? (Nerd - yes, 127 is max input length in io.s)
+  225  	clc
+
+  364  	dey
+  365: 	bpl df_pg_insertlinbyte ; &&&& bpl safe here? yes
+  366  	rts
+
+  368  .df_pg_prompt_msg
+  369: 	equb "Ready",UTF_CR,0 ; &&&& needs LF? no
+  370  
+
+dflat\rtasm.6502:
+   20  	lda (df_currlin),y
+   21: 	cmp #&80 ; &&&& bmi (Nerd - yes, line 22 is bpl and remove cmp)
+   22  	bcc df_rt_asm_do_label
+
+   24  	jsr df_rt_asm_printCR
+   25: 	jmp df_rt_asm_assemble_done ; &&&& rts, or better: just jmp df_rt_asm_printCR (Nerd - will keep as I keep thinking I want some clean up code in the done section!!)
+   26  .df_rt_asm_do_label
+
+   48  	; Else must be a normal mnemonic
+   49: 	jmp df_rt_asm_mnem ; &&&& too far for bne? (Nerd - yes, just tried it, so stays as jmp!)
+   50  
+
+   93  	sta df_asmlen
+   94: 	jsr df_rt_asm_printPC ; &&&& JMP (Nerd - yes)
+   95  	rts
+
+  129  	cmp #&80			; If string
+  130: 	bcs df_rt_asm_string ; &&&& TAX or TAY plus BMI? (Nerd - yes TAY because X is used)
+  131  	jsr df_ost_popInt	; else get number in A,X
+
+  179  .df_rt_asm_data_write_skip2
+  180: 	ldy df_asmlen ; &&&& optimise?
+  181  	dey					; Add 1 less!
+
+  209  	sta df_asmlen
+  210: 	jsr df_rt_asm_printOPR ; &&&& JMP
+  211  	rts
+
+  255  	; Now have all information to assemble
+  256: 	jsr df_rt_asm_encode ; &&&& JMP
+  257  	
+
+  278  	sec
+  279: 	lda df_asmoprnd ; &&&& optimise?
+  280  	sbc #2
+
+  298  	; else it's an error
+  299: 	cmp #0 ; &&&& tax/tay? (Nerd - yes TAY)
+  300  	beq df_rt_asm_encode_relpos
+
+  315  	lda #&ff
+  316: 	sta df_asmoprnd+1 ; &&&& dec? (Nerd - YES! Nice spot)
+  317  .df_rt_asm_encode_skiprel
+
+  352  	sta df_asmpc
+  353: 	lda df_asmpc+1 ; &&&& optimise
+  354  	adc #0
+  355  	sta df_asmpc+1
+  356: 	clc ; &&&& already 0?
+  357  	rts
+
+  379  	lda df_asmpc
+  380: 	jsr utilPrintA ; &&&& jmp
+  381  	rts
+
+  388  	lda df_asmopcde
+  389: 	jsr utilPrintA ; &&&& jmp
+  390  	rts
+
+  396  	beq df_rt_asm_print_rts
+  397: 	jsr utilPrintSPC ; &&&& jmp
+  398  	rts
+
+  414  	lda df_asmoprnd
+  415: 	jsr utilPrintA ; &&&& jmp
+  416  	rts
+
+  422  	beq df_rt_asm_print_rts
+  423: 	jsr utilPrintCRLF ; &&&& jmp
+  424  	rts
+
+  433  	jmp io_put_ch
+  434: 	rts ; &&&& not needed
+  435  
+
+  610  	sta df_symoff
+  611: 	ldy #0 ; &&&& tay
+  612  .df_rt_asm_skip_to_sym_next
+
+  624  	dex
+  625: 	beq df_rt_asm_skip_to_sym_done ; &&&& jump to different rts and skip the one at the end of this function
+  626  	;jump over addr and op code by A bytes
+
+  629  	sta df_symtab
+  630: 	lda df_symtab+1 ; &&&& optimise
+  631  	adc #0
+
+dflat\rtsubs.6502:
+    41  	; if value<>0 then continue
+    42: 	cpx #0 ; &&&& txa? (Nerd - A is in use)
+    43  	beq df_rt_while_done
+
+   246  	; if value<>0 if is successful then continue normal sequence (Nerd - yes)
+   247: 	cmp #0 ; &&&& tay?
+   248  	bne df_rt_if_done
+   249: 	cpx #0 ; &&&& txa?
+   250  	bne df_rt_if_done
+
+   403  	jsr df_ost_popInt
+   404: 	cpx #0 ; &&&& txa? (Nerd - yes, plus can branch to df_rt_untilnext_done as near enough!)
+   405  	; if false then next is done
+
+   423  
+   424: if 0 ; &&&& already defined in stack.6502
+   425  .df_rst_popByte
+
+   438  	pha
+   439: 	jsr df_rst_popByte ; &&&& does LDY so previous code can be: LDA df_rtstop: PHA (Nerd - yes)
+   440  	cmp #DFRT_REPEAT
+
+   444  	; if value<>0 then continue
+   445: 	cpx #0 ; &&&& txa? (Nerd - yes)
+   446  	bne df_rt_untilnext_done
+
+   514  	sta df_currdat
+   515: 	lda df_currdat+1 ; &&&& optimise
+   516  	adc #0
+
+   577  	sta df_eolidx
+   578: 	lda #0 ; &&&& stx df_nxtstidx (X is still 0) (Nerd - yes!)
+   579  	sta df_nxtstidx
+
+   661  	dey
+   662: 	bpl df_rt_input_str ; &&&& is bpl safe here? (Nerd - should be ok, max is 127 in io.s)
+   663  	rts
+
+   852  	; if >=0x80 then a pointer / string
+   853: 	cmp #&80 ; &&&& tax? (Nerd - yes tax then bmi)
+   854  	bcs df_rt_plotstr
+
+   898  	sta df_tmpptrd			; char in D
+   899: 	cmp #0 ; &&&& not needed (Nerd - yes!)
+   900  	beq df_rt_plotstrdone
+
+  1022  	; countdown tick
+  1023: 	dex ; &&&& optimise?
+  1024  	cpx #&ff
+Nerd - yes much simpler now!
+**
+	; countdown tick
+	txa
+	bne df_rt_wait_skiphi
+	dey
+df_rt_wait_skiphi	
+	dex
+	txa
+	bne df_rt_wait_counter
+	tya
+	bne df_rt_wait_counter
+**
+
+  1248  	sta df_tmpptrd
+  1249: 	lda df_tmpptrd+1 ; &&&& optimise
+  1250  	adc #0
+
+  1272  	jsr io_put_ch
+  1273: 	cmp #0 ; &&&& tax or tay?
+  1274  	beq df_rt_listproccr
+
+  1284  	bne df_rt_listnextvnt
+  1285: .df_rt_listwait ; &&&& optimise???
+  1286  	sec
+
+  1302  	sta df_tmpptra
+  1303: 	lda df_tmpptra+1 ; &&&& optimise
+  1304  	adc #0
+
+  1462  	sta df_tmpptra
+  1463: 	lda df_tmpptra+1 ; &&&& optimise
+  1464  	adc #0
+
+  1544  	; x2 to get jmp offset
+  1545: 	asl a ; &&&& not needed if tables like this are split into lo and hi components (NERD - agree, it was just ugly so took the hit, but might fix it soon!)
+  1546  	tax
+
+  1551  	; now jump to decoder
+  1552: 	jmp (df_tmpptrc) ; &&&& this may be better: PHA:PHA:RTS (Nerd - yes, table has to be addr-1)
+  1553  
+
+  1606  	sta df_tmpptrb+1
+  1607: 	jmp df_rt_lst_bin ; &&&& ldx #8 here and then BNE to always branch (Nerd - yes !)
+  1608  
+
+  1673  	sta df_tmpptrd
+  1674: 	lda df_tmpptrd+1 ; &&&& optimise
+  1675  	adc #0
+
+  1706  	tax
+  1707: 	ldy #2 ; &&&& iny
+  1708  	lda (df_tmpptra),y
+
+  1730  .df_rt_list_find_sym
+  1731: 	cpx #0 ; &&&& txa?
+  1732  	beq df_rt_list_got_sym
+
+  1781  .df_rt_list_find_asm_sym
+  1782: 	cpx #0 ; &&&& txa?
+  1783  	beq df_rt_list_got_asm_sym
+
+  1792  	sta df_tmpptrb
+  1793: 	lda df_tmpptrb+1 ; &&&& optimise
+  1794  	adc #0
+
+  1957  	iny
+  1958: 	cmp #0 ; &&&& optimise this loop?
+  1959  	bne df_rt_copy_fn
+
+  2014  	; the last tokenised line!
+  2015: 	lda #0 ; &&&& optimise: ldx stx stx inx stx (nerd - haha yes)
+  2016  	sta df_tokbuff			; Offset to next line
+
+  2323  	sec
+  2324: 	bcs df_rt_readbyte ; &&&& optimise with BIT skip (BIT doesn't affect C)
+  2325  .df_rt_peek
+
+  2335  	tax
+  2336: 	lda #0 ; &&&& tya
+  2337  	plp
+
+  2350  	; if input is 0 then generate next random number
+  2351: 	cpx #0 ; &&&& optimise?
+  2352  	bne df_rt_rnd_set
+
+  2379  	; only low byte is used
+  2380: 	cpx #1 ; &&&& optimise: cpx #1: beq: bcs
+  2381  	beq df_rt_mem_prg
+
+  2560  .df_str_src_end
+  2561: 	lda #0 ; &&&& txa?
+  2562  	sta (df_tmpptrb,x)
+
+  2577  	; zero terminator
+  2578: 	lda #0 ; &&&& instead of iny:lda#0 do tya:iny
+  2579  	sta (df_sevalptr),y
+
+dflat\runtime.6502:
+    52  	; clear proc addresses
+    53: 	jsr df_rt_init_vvt ; &&&& jmp
+    54  
+
+    81  	; zero out first 3 bytes for proc and arrays
+    82: 	lda #0 ; &&&& txa?
+    83  	sta (df_tmpptra),y
+
+    94  	; if not proc then zero dim2
+    95: 	lda #0 ; &&&& txa?
+    96  	sta (df_tmpptra),y
+
+    99  	_adcZPWord df_tmpptra,8
+   100: 	bcc df_rt_init_vvt_slot 	; Always branches ;&&&& sure?
+   101  .df_rt_init_done
+
+   266  .df_rt_eval_esc
+   267: 	asl a ; &&&& jump table can be optimised: lo/hi and rts
+   268  	tax
+
+   451  	sta df_tmpptra
+   452: 	lda df_tmpptra+1 ; &&&& optimise
+   453  	adc #0
+
+   533  	pha
+   534: 	ldx #0 ; &&&& not needed?
+   535  	ldy df_exeoff
+
+   553  .df_rt_arry_parm2_skiparry2
+   554: 	ldy #0 ; &&&& optimise by: ldy #0: beq done where: .done: pla tax rts (see above)
+   555  	pla
+
+   674  	; if y is zero then need to decide some stuff
+   675: 	cpy #0 ; &&&& tya?
+   676  	bne df_rt_eval_var_dim2adj
+
+   680  	ldy #0
+   681: 	cmp #0 ; &&&& tax?
+   682  	beq df_rt_eval_var_dim2adj
+
+   695  	; don't let y=0
+   696: 	cpy #0 ; &&&& tya?
+   697  	bne df_rt_eval_var_dim2adjy
+
+   700  	; don't let x=0
+   701: 	cpx #0 ; &&&& txa?
+   702  	bne df_rt_eval_var_dim2adjx
+
+   713  	; if y is 0 then no need to multiply
+   714: 	cpy #0 ; &&&& tya?
+   715  	beq df_rt_eval_var_nomult
+
+   717  	ldy #DFVVT_DIM1
+   718: 	lda #0 ; &&&& A still 0 here? (see above)
+   719  	sta num_b+1
+
+   730  	sta num_a
+   731: 	lda num_a+1 ; &&&& optimise
+   732  	adc #0
+
+   785  	tax
+   786: 	lda #0 ; &&&& tya?
+   787  	jmp df_ost_pushInt
+
+   841  
+   842: ;&&&& these functions have common tail code, can be optimised (Nerd - I had kept them to void the penalty of a JMP, but it's minimal so yes factored it)
+   843  ;****************************************
+
+  1046  	sta df_currlin
+  1047: 	lda df_currlin+1 ; &&&& optimise
+  1048  	adc #0
+
+  1093  	; multiply by 2
+  1094: 	asl a ; &&&& jump table can be optimised
+  1095  	tax
+
+  1134  	sta df_lineptr
+  1135: 	lda df_lineptr+1 ; &&&& optimise
+  1136  	adc #0
+
+dflat\tkasm.6502:
+   80  	sta df_symoff
+   81: 	ldx #0 ; &&&& tax, or better: ldx #0: stx
+   82  .df_tk_asm_checknexttok
+
+  119  	sta df_symtab
+  120: 	lda df_symtab+1 ; &&&& optimise
+  121  	adc #0
+
+  160  .df_tk_asm_exec_parser
+  161: 	asl a ; &&&& jump table can be optimised
+  162  	tax
+
+  177  	jsr df_tk_skip_ws		;Skip whitespace
+  178: 	cmp #0					;End of line? ; &&&& tax or tay?
+  179  	beq df_tk_asm_addr_mode_ok
+
+dflat\tokenise.6502:
+  180  
+  181: ;&&&& fixed: 2nd BCC --> BCS, removed RTS, changed comment
+  182  ;****************************************
+
+  341  	jsr df_tk_get_buf
+  342: 	cmp #0 ; &&&& tax?
+  343  	beq df_tk_str_err
+
+  602  	jsr df_tk_skip_ws
+  603: 	cmp #0 ; &&&& tax?
+  604  	beq df_tk_nterm_done
+
+  662  	jsr df_tk_skip_ws
+  663: 	cmp #0 ; &&&& tax?
+  664  	beq df_tk_nop_false
+
+  801  	; token buffer
+  802: 	cmp #0 ; &&&& tax?
+  803  	beq df_tk_line_empty
+
+  811  	jsr df_tk_parse_command
+  812: 	bcs	df_tk_try_assign ; &&&& not needed
+  813  	bcc df_tk_done
+
+  825  	jsr df_tk_peek_buf
+  826: 	cmp #0 ; &&&& tax?
+  827  	bne df_tk_parseerror
+
+  830  	; ensure there is always a zero after the last tokenised byte
+  831: 	lda #0 ; &&&& not needed because A is still 0 here I think (Nerd - yes)
+  832  	sta df_tokbuff,y
+
+  834  	tya
+  835: 	sta df_tokbuff ; &&&& if A doesn't need to be set then this could just be STY
+  836  .df_tk_line_empty
+
+  848  .df_tk_exec_parser
+  849: 	asl a ; &&&& jump table could be optimised
+  850  	tax
+
+dflat\toksubs.6502:
+  96  .df_tk_listp_procname_ok
+  97: 	clc ; &&&& already C=0? (Nerd - yup)
+  98  	rts
+
+dflat\var.6502:
+   79  	jsr df_tk_isalphanum
+   80: 	bcc df_var_check_type ; &&&& not needed
+   81  	; if there is a valid alpha-num then no match
+
+   88  	cmp #'$'
+   89: 	beq df_var_vnt_sym_nomatch ; &&&& not needed (Nerd - ha, this is very old, I don't even need the cmp #'%' !!)
+   90  	; ok, all good got a match
+
+  105  	sta df_tmpptra
+  106: 	lda df_tmpptra+1 ; &&&& optimise
+  107  	adc #0
+
+  113  	lda #0
+  114: 	ldx #0 ; &&&& tax (Nerd - yes)
+  115  	sec
+
+  146  	sta df_vntstrt
+  147: 	lda df_vntstrt+1 ; &&&& optimise
+  148  	sbc #0
+
+  156  	sta df_vntend
+  157: 	lda df_vntend+1 ; &&&& optimise
+  158  	sbc #0
+
+  164  	; Now move all bytes from old VNT (higher up) to new VNT position
+  165: 	clc ; &&&& why? (Nerd - don't know!)
+  166  .df_var_move_byte
+
+  191  	sta df_vntstrt
+  192: 	lda df_vntstrt+1 ; &&&& optimise
+  193  	sbc #0
+
+  241  	; first char has to be alpha, rest can be alpha-numeric
+  242: 	cpx #0 ; &&&& optimise (Nerd - need to keep A)
+  243  	bne df_var_type_countlen_alphanum
+
+  250  .df_var_type_countlen_done
+  251: 	cpx #0 ; &&&& optimise (Nerd - need to keep A)
+  252  	bne df_var_analyse_chk_post
+
+  397  	dey
+  398: 	bne df_var_zero_vnt ; &&&& should it be bne or bpl? (Nerd - bne to preserve type byte in index 0)
+  399  
+
+  402  	ldx df_linoff				; Start at var name beginning
+  403: 	ldy #0 ; &&&& Y is still 0 here? (Nerd - Yes!)
+  404  	; copy variable name to vnt slot
+
+  423  	
+(Nerd - interesting, I probably had this routine returnin A,X,Y initialised for further use
+ Y is often used as the index in to the line buffer, so save time loading elsewhere ironically..
+ I tried without initialising A,X and resulting in syntax errors! But without setting Y is ok
+ so I do stx earlier before I trash it. Indeed, not setting Y at all is fine so moving X to Y is not needed)
+  424: 	sty df_linoff				; Y is the main index used ; &&&& does Y need to be set or can we just do sta df_linoff earlier?
+  425  
+
+inc\includes.inc.6502:
+  228  	sta dz_wordp
+  229: 	lda dz_wordp+1 ; &&&& optimise
+  230  	sbc #0
+
+  266  	sta azw_worda
+  267: 	lda azw_worda+1 ; &&&& optimise
+  268  	adc #0
+
+io\io.6502:
+  176  	bne io_do_echo
+  177: 	cpy #0				; Already at beginning? ; &&&& tya? (Nerd - need to keep A)
+  178  	beq io_skip_echo	; Don't echo delete
+
+kernel\kernel.6502:
+  59  	sta vdp_cnt
+  60: 	; &&&& clear all 3 bytes
+  61  	sta vdp_cnt+1
+
+monitor\cmd.6502:
+  132  	sta cmd_lo
+  133: 	lda cmd_hi ; &&&& optimise
+  134  	sbc #0
+
+  266  	lda (buf_lo),y
+  267: 	cmp #0 ; &&&& not needed (Nerd - yes)
+  268  	beq cmd_next_parm_err	; If z then no parms, fin with C set
+
+utils\intmath.6502:
+  45  
+  46: ;&&&& merge with fastmult? code nearly identical
+  47  ;****************************************
+
+utils\utils.6502:
+   75  
+   76: 	clc					; No error ;&&&& C always 0 here already? (Nerd - yes!)
+   77  	rts					; A high nibble
+
+  116  
+  117: 	clc					; No error ;&&&& C always 0 here already?
+  118  	rts					; A contains value
+
+  143  .con_dec_jmp
+  144: 	jmp con_dec_to_a_int ; &&&& can use short branch? (Nerd - tried it but too far)
+  145  .con_n_not_dec
+
+  148  .con_hex_jmp
+  149: 	jmp con_hex_to_a_int ; &&&& can use short branch?
+  150  .con_n_not_hex
+
+  153  .con_bin_jmp
+  154: 	jmp con_bin_to_a_int ; &&&& can use short branch?
+  155  .con_n_err
+
+  404  	sta num_tmp+1
+  405: 	cmp #&80			; Negative? ; &&&& use BMI here because flags are still okay after lda tmp_d (Nerd - yes!)
+  406  	bcc hex_to_bcd_skip_neg
+
+  509  	bne out_bcd_digit
+  510: 	cpy #0						; If nothing printed ; &&&& use TYA? (Nerd - yes!)
+  511  	bne out_bcd_fin
+

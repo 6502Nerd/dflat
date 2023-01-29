@@ -70,8 +70,6 @@ df_tk_put_tok
 	clc
 	rts
 df_tk_put_overflow
-	lda #'X'
-	sta 48000
 	SWBRK DFERR_STRLONG
 
 ;****************************************
@@ -151,6 +149,7 @@ df_tk_isalpha
 df_tk_isalphanum
 	jsr df_tk_isalpha
 	bcc df_tk_isdigit
+df_tk_rts1				; branch to this RTS where possible!
 	rts
 
 ;****************************************
@@ -174,27 +173,23 @@ df_tk_skip_ws
 df_tk_ws_loop1
 	jsr df_tk_peek_buf
 	jsr df_tk_isws
-	bcc df_tk_ws_done
+	bcc df_tk_rts1
 	inc df_linoff
 	jsr df_tk_put_tok
 	bcc df_tk_ws_loop1		; Always as put_tok clears C
-df_tk_ws_done
-	rts
 
 ;****************************************
 ;* df_tk_skip_ws
 ;* Skip ws in linbuff
 ;* Return: linoff updated to next non-ws, A = char
 ;****************************************
-df_tk_strip_ws
-df_tk_sws_loop1
-	jsr df_tk_peek_buf
-	jsr df_tk_isws
-	bcc df_tk_ws_done
-	inc df_linoff
-	bcc df_tk_sws_loop1		; Always as C is not touched
-df_tk_sws_done
-	rts
+;df_tk_strip_ws
+;df_tk_sws_loop1
+;	jsr df_tk_peek_buf
+;	jsr df_tk_isws
+;	bcc df_tk_rts1
+;	inc df_linoff
+;	bcs df_tk_sws_loop1		; Always as C is not touched
 
 ;****************************************
 ;* df_tk_isws
@@ -240,11 +235,9 @@ df_tk_char_err
 ;****************************************
 df_tk_expect_tok
 	jsr df_tk_expect
-	bcs df_tk_expecttokret
+	bcs df_tk_rts1
 	jsr df_tk_get_buf
 	jmp df_tk_put_tok
-df_tk_expecttokret
-	rts
 
 ;****************************************
 ;* Find a character expected ignoring ws
@@ -254,9 +247,7 @@ df_tk_expecttokret
 ;****************************************
 df_tk_expect_tok_err
 	jsr df_tk_expect_tok
-	bcs df_tk_expect_tok_fatal
-	; C must be 0 here
-	rts
+	bcc df_tk_rts1
 df_tk_expect_tok_fatal
 	SWBRK DFERR_SYNTAX
 
@@ -777,10 +768,11 @@ df_lexer_line
 	jsr df_tk_put_tok
 
 	; any leading white space, ignore and discard
-	jsr df_tk_strip_ws
+;	jsr df_tk_strip_ws
 
 	; if peek next character is a number then assume line number
 	; else assume a statement
+	jsr df_tk_peek_buf
 	jsr df_tk_isdigit
 	bcc df_lexer_skip_lnum
 	; if line number then capture the line number and advance line buffer pointer
@@ -798,6 +790,11 @@ df_tk_body
 	sta df_nxtstidx
 	lda #0
 	jsr df_tk_put_tok				; Offset to next statement
+	jsr df_tk_peek_buf				; Check for a single space between line num
+	jsr df_tk_isws					; and first character
+	bcc df_tk_skip_1_spc
+	inc df_linoff					; Don't tokenise this single space
+df_tk_skip_1_spc
 	; [1] capture white space from line buffer in to tokenised buffer
 	jsr df_tk_skip_ws
 	; If next non ws is zero then this is an empty line
@@ -813,7 +810,7 @@ df_tk_body
 df_tk_try_command
 	; try  a keyword
 	jsr df_tk_parse_command
-	bcs	df_tk_try_assign
+;	bcs	df_tk_try_assign
 	bcc df_tk_done
 df_tk_try_assign
 	; nothing but to try an assignment operation
@@ -829,9 +826,15 @@ df_tk_done
 	jsr df_tk_peek_buf
 	cmp #0
 	bne df_tk_parseerror
-	; Get line length length
+	; this is the position of the next line
+	lda df_tokoff
+	; put it in the last statement offset slot
+	ldy df_nxtstidx
+	sta df_tokbuff,y
+	; Get line length
 	ldy df_tokoff
 	; ensure there is always a zero after the last tokenised byte
+	; A is already zero
 	lda #0
 	sta df_tokbuff,y
 	; save the line length
