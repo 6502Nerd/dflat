@@ -63,7 +63,7 @@ init_via0_tab
 	db IER, 	0x7f
 	db DDRA,	0xff			; Port A output by default
 	db DDRB,	0xf7			; Tape motor + KB select
-	db PRB,		0xbf			; Port B default = cassette motor off
+	db PRB,		0xb7			; Port B default = cassette motor off
 	db PCR,		0xdd			; Ensure AY is not selected (CB1 active)
 	db T1CL,	lo(TIMER1_RATE)	; 50Hz
 	db T1LL,	lo(TIMER1_RATE)	; 50Hz
@@ -80,7 +80,7 @@ init_tape_tab
 	db ACR,		0xc0			; T1 continuous and toggle PB7
 	db T1CL,	lo(TAPE_RATE*2)	; Tape rate /2 = 0
 	db T1CH,	hi(TAPE_RATE*2)	; Tape rate /2 = 0
-	db PRB,		0xbf			; Tape motor ON
+	db PRB,		0x50			; Tape motor ON
 	db -1
 ;init_ser_tab
 ;	db IER,		0x7f			; Disable all interrupts
