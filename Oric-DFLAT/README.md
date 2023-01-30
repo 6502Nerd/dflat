@@ -1,3 +1,6 @@
+# For the impatient!
+If you just want to see dflat running in under emulation, please visit the emulator folder and follow a few short steps in the readme.txt file to spin up an instance of Oricutron running dflat and then load up a game!
+
 # Note: Wiki
 A friend recommended that I should point out there is a fairly extensive wiki on dflat.
 
