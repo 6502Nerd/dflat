@@ -45,7 +45,7 @@ init_keyboard
 ;****************************************
 kb_stick
 	; Select Row 4 only, all keys on this row
-	lda #4
+	lda #4+KB_PRB			; Maintain upper nibble of PRB
 	sta IO_0+PRB
 	lda #SND_REG_IOA		; Select AY Port A for columns
 	jsr snd_sel_reg
@@ -80,11 +80,9 @@ kb_any_key
 	lda #SND_REG_IOA		; Select Port A of AY
 	jsr snd_sel_reg
 
-	ldy #7					; Start from row 7
+	ldy #7+KB_PRB			; Start from row 7
 kb_any_key_row
-	tya
-	ora #0b10110000
-	sta IO_0+PRB			; Select row on port B
+	sty IO_0+PRB			; Select row on port B
 	; Select all columns except 4
 	lda #0b00010000			; Deselect only col 4
 	jsr snd_set_reg
@@ -100,7 +98,8 @@ kb_any_key_row
 	and IO_0+PRB			; Read Port B
 	bne kb_any_key_pressed
 	dey						; If not then next row
-	bpl kb_any_key_row		; Until all rows done
+	cpy #KB_PRB-1			; Done rows 0..8?
+	bne kb_any_key_row		; Until all rows done
 kb_any_key_none
 	clc						; C=0 means not pressed
 	rts
@@ -128,11 +127,9 @@ kb_read_raw_force
 	ldx #0					; Start at column 0
 	stx zp_tmp1
 kb_check_matrix_col
-	ldy #0					; Start at row 0
+	ldy #0+KB_PRB			; Start at row 0 (maintain PRB upper nibble)
 kb_check_matrix_row
-	tya
-	ora #0b10110000
-	sta IO_0+PRB			; Select row from Y
+	sty IO_0+PRB			; Select row from Y
 	; Get the col value for AY port A
 	ldx zp_tmp1
 	lda kb_col_mask,x
@@ -153,7 +150,7 @@ kb_check_matrix_row
 	bne kb_read_raw_got
 	; No key for this row/col, next
 	iny
-	cpy #8					; Done 8 rows?
+	cpy #8+KB_PRB			; Done 8 rows?
 	bne kb_check_matrix_row
 	; ok check next row
 	ldx zp_tmp1
@@ -222,10 +219,8 @@ kb_process_new
 	jsr snd_set
 
 	; check shifted keys
-	ldx #4					; Row 4 (left shift)
-	txa
-	ora #0b10110000
-	sta IO_0+PRB			; Select row on port B
+	ldx #4+KB_PRB			; Row 4 (left shift)
+	stx IO_0+PRB			; Select row on port B
 	nop
 	nop
 	nop
@@ -234,10 +229,8 @@ kb_process_new
 	lda IO_0+PRB			; Read Port B
 	pha
 
-	ldx #7					; Row 7 (right shift)
-	txa
-	ora #0b10110000
-	sta IO_0+PRB			; Select row on port B
+	ldx #7+KB_PRB			; Row 7 (right shift)
+	stx IO_0+PRB			; Select row on port B
 	nop
 	nop
 	nop
@@ -252,10 +245,8 @@ kb_process_new
 kb_read_noshift
 	stx kb_code				; Save the mapped keycode
 	; check ctrl key
-	ldx #2					; Row 2 (ctrl key)
-	txa
-	ora #0b10110000
-	sta IO_0+PRB			; Select row on port B
+	ldx #2+KB_PRB			; Row 2 (ctrl key)
+	stx IO_0+PRB			; Select row on port B
 	nop
 	nop
 	nop
