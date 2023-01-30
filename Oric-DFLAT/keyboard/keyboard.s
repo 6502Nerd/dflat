@@ -50,7 +50,7 @@ kb_stick
 	lda #SND_REG_IOA		; Select AY Port A for columns
 	jsr snd_sel_reg
 	lda #0					; Result will be in A
-	pha	
+	pha
 	ldy #4					; Go through the 5 cols on row 4
 kb_stick_pos
 	lda kb_stick_mask,y		; Get the column mask
@@ -70,7 +70,7 @@ kb_stick_pos
 	pla						; Result in A
 	rts
 
-	
+
 ;****************************************
 ;* kb_any_key
 ;* Quick check for any key except shifts & ctrl
@@ -82,7 +82,9 @@ kb_any_key
 
 	ldy #7					; Start from row 7
 kb_any_key_row
-	sty IO_0+PRB			; Select row on port B
+	tya
+	ora #0b10110000
+	sta IO_0+PRB			; Select row on port B
 	; Select all columns except 4
 	lda #0b00010000			; Deselect only col 4
 	jsr snd_set_reg
@@ -93,7 +95,7 @@ kb_any_key_row
 	nop
 	nop
 ;	nop						; New NOP
-	
+
 	lda #KB_SENSE			; Something pressed?
 	and IO_0+PRB			; Read Port B
 	bne kb_any_key_pressed
@@ -123,12 +125,14 @@ kb_read_raw_force
 	stx SND_MODE			; Latch the reg # on Port A
 	ldx #SND_DESELECT		; Deselect AY
 	stx SND_MODE
-	ldx #0					; Start at column 0	
+	ldx #0					; Start at column 0
 	stx zp_tmp1
 kb_check_matrix_col
 	ldy #0					; Start at row 0
 kb_check_matrix_row
-	sty IO_0+PRB			; Select row from Y
+	tya
+	ora #0b10110000
+	sta IO_0+PRB			; Select row from Y
 	; Get the col value for AY port A
 	ldx zp_tmp1
 	lda kb_col_mask,x
@@ -177,7 +181,7 @@ kb_read_raw_got
 	tay						; Put in to Y
 	sec
 	rts
-	
+
 ;****************************************
 ;* kb_scan_key
 ;* Scans for a key, returns zero for no key found
@@ -200,7 +204,7 @@ kb_scan_key
 kb_no_scan
 	lda #0
 	sec						; Code not valid
-	rts						; And done (A=0)	
+	rts						; And done (A=0)
 kb_scan_decode
 	; If got here then raw key is good
 	lda kb_last				; Preload A with last decoded key value
@@ -219,31 +223,39 @@ kb_process_new
 
 	; check shifted keys
 	ldx #4					; Row 4 (left shift)
-	stx IO_0+PRB			; Select row on port B
+	txa
+	ora #0b10110000
+	sta IO_0+PRB			; Select row on port B
 	nop
 	nop
 	nop
 	nop
 
 	lda IO_0+PRB			; Read Port B
+	pha
 
 	ldx #7					; Row 7 (right shift)
-	stx IO_0+PRB			; Select row on port B
+	txa
+	ora #0b10110000
+	sta IO_0+PRB			; Select row on port B
 	nop
 	nop
 	nop
 	nop
 
+	pla
 	ora IO_0+PRB			; Combine Port B
 	ldx kb_table_std,y		; Pre-load standard key code in X
 	and #KB_SENSE			; Bit 3 is the sense
 	beq kb_read_noshift		; Skip over if no shift
-	ldx kb_table_shift,y	; Load up standard key code mapping	
+	ldx kb_table_shift,y	; Load up standard key code mapping
 kb_read_noshift
 	stx kb_code				; Save the mapped keycode
 	; check ctrl key
 	ldx #2					; Row 2 (ctrl key)
-	stx IO_0+PRB			; Select row on port B
+	txa
+	ora #0b10110000
+	sta IO_0+PRB			; Select row on port B
 	nop
 	nop
 	nop
@@ -266,7 +278,7 @@ kb_skip_ctrl
 	bcc kb_store_last
 	cmp #'z'+1				; If > 'z' then skip
 	bcs kb_store_last
-	lda kb_code				; Get the actual code	
+	lda kb_code				; Get the actual code
 	eor #0x20				; Switch off bit 0x20
 	bne kb_store_last
 kb_do_repeat
@@ -277,7 +289,7 @@ kb_do_repeat
 kb_store_last
 	sta kb_last				; Make last code same as this
 	clc						; Code valid
-	rts	
+	rts
 kb_in_repeat
 	lda #0					; Don't emit a keycode
 	sec
@@ -296,20 +308,20 @@ kb_get_key
 	tya
 	pha
 
-kb_get_try	
+kb_get_try
 	php
 	jsr kb_scan_key
 	bcc kb_scan_got_key
 	plp						; No key, so check C
 	bcs kb_get_try			; Keep looking if C
 	sec						; Indicate key not valid
-	
+
 	pla
 	tay
 	pla
 	tax
 	lda #0
-	
+
 	rts
 kb_scan_got_key
 	plp						; Pull stack
@@ -319,11 +331,11 @@ kb_scan_got_key
 	tay
 	pla
 	tax
-	
+
 	lda kb_code
-	
+
 	rts
-	
+
 ;****************************************
 ;* kb_table_std (no shift)
 ;* Each line is one column
