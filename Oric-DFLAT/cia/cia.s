@@ -32,7 +32,7 @@
 	code
 
 mod_sz_cia_s
-	
+
 
 ;****************************************
 ;* init_via0
@@ -55,10 +55,10 @@ init_via0_loop
 	sta IO_0,x
 	iny
 	bne init_via0_loop
-	
-init_via0_done	
+
+init_via0_done
 	rts							; return from sub
-	
+
 init_via0_tab
 	db IER, 	0x7f
 	db DDRA,	0xff			; Port A output by default
@@ -80,7 +80,7 @@ init_tape_tab
 	db ACR,		0xc0			; T1 continuous and toggle PB7
 	db T1CL,	lo(TAPE_RATE*2)	; Tape rate /2 = 0
 	db T1CH,	hi(TAPE_RATE*2)	; Tape rate /2 = 0
-	db PRB,		0x50			; Tape motor ON
+	db PRB,		0xf0			; Tape motor ON
 	db -1
 ;init_ser_tab
 ;	db IER,		0x7f			; Disable all interrupts
@@ -88,5 +88,5 @@ init_tape_tab
 ;	db PCR,		0xdd			; Ensure AY is not selected (CB1 active)
 ;	db DDRB,	0xff			; Set port B output
 ;	db -1
-	
+
 mod_sz_cia_e
