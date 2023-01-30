@@ -1,10 +1,17 @@
-# For the impatient!
-If you want to get dflat running, please visit the emulator folder and follow a few short steps in the readme.txt file to spin up an instance of Oricutron running dflat and then load up a game!
+# About Oric
+I've owned the same Oric-1 since 1983 (my first computer!) and thought it was well enough known.. but apparently not!
+
+So for the unitiated, the Oric-1 was a low cost microcomputer designed and built in the UK as a competitor to the ZX Spectrum.
+
+For more information please see: https://en.wikipedia.org/wiki/Oric
+
+# For the impatient (like me)!
+If you want to get dflat running quickly, please visit the emulator folder and follow a few short steps in the readme.txt file to spin up an instance of Oricutron running dflat and then load up a game!
 
 # Note: Wiki
 A friend recommended that I should point out there is a fairly extensive wiki on dflat.
 
-So after reading this, please have a look through the wiki to really get a feel for this language targeted at constrained 8-bit machinees.
+So after reading this, please have a look through the wiki to really get a feel for this language targeted at constrained 8-bit machines.
 
 https://github.com/6502Nerd/dflat/wiki
 
