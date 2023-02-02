@@ -1,6 +1,4 @@
 echo off
-REM ** Make sure this path is right for your location **
-cd C:\Users\Lenovo PC\Documents\GitHub\dflat\Oric-DFLAT
 setlocal EnableDelayedExpansion
 
 
