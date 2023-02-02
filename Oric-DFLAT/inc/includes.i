@@ -81,6 +81,7 @@ SND_REG_IOB	= 0x0f
 ;* Port B
 KB_PRB		= 0xb0			; Upper nibble of PRB default state (for correct operation of periperhals)
 KB_SENSE	= 0x08			; Input - Bit 3 port A
+KB_CAPSLK	= 0x01			; Id of Caps Lock - maps to Led 1
 
 KB_REP_TIM	= 3 			; Number of VB periods for the repeat speed
 KB_REP_DEL	= 20			; Number of VB periods before repeat activates

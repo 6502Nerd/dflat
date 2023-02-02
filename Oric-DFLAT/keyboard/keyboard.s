@@ -174,6 +174,7 @@ kb_read_raw_got
 	asl a
 	sta zp_tmp1
 	tya						; Now or with row number
+	and #7					; Only bottom 3 bits!
 	ora zp_tmp1
 	tay						; Put in to Y
 	sec
@@ -227,7 +228,6 @@ kb_process_new
 	nop
 
 	lda IO_0+PRB			; Read Port B
-	pha
 
 	ldx #7+KB_PRB			; Row 7 (right shift)
 	stx IO_0+PRB			; Select row on port B
@@ -236,7 +236,6 @@ kb_process_new
 	nop
 	nop
 
-	pla
 	ora IO_0+PRB			; Combine Port B
 	ldx kb_table_std,y		; Pre-load standard key code in X
 	and #KB_SENSE			; Bit 3 is the sense
