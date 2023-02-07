@@ -403,14 +403,14 @@ hex_to_bcd
 	stx num_tmp
 	sta num_tmp+1
 	
-	bmi hex_to_bcd_skip_neg	; A is negative?
-	jsr twos_complement
-hex_to_bcd_skip_neg
+;	bmi hex_to_bcd_skip_neg	; A is negative?
+;	jsr twos_complement
+;hex_to_bcd_skip_neg
 	ldx #0
 	stx num_a
 	stx num_a+1
 	stx num_a+2
-	stx num_a+3
+;	stx num_a+3
 	ldx #16
 	sed
 bin_to_bcd_bit
@@ -433,7 +433,82 @@ bin_to_bcd_bit
 	pla
 	plp
 	rts
-	
+
+
+;****************************************
+;* int_to_str_ch
+;* Helper routine to stuff decimal char in to num_buf
+;* Input : A=BCD digit, Y=num_buf index, C=insert zero
+;* Output : num_buf in ASCII, A=ASCII digit
+;* Regs affected : C cleared if non-zero
+;****************************************
+int_to_str_ch
+	and #0xf
+	ora #0x30					; Convert to ascii
+	eor #0x30					; Check if zero digit
+	bne int_to_str_nz			; If not zero definitely store it
+	bcs int_to_str_nz			; Also if C=1
+	eor #0x30					; Restore A
+	rts							; Return without storing anything
+int_to_str_nz
+	eor #0x30					; Restore A
+	sta num_buf,y
+	iny
+	sec							; Set C as a non-zero encountered
+int_to_str_ch_fin
+	rts
+
+
+;****************************************
+;* int_to_str
+;* Convert int to string
+;* Input : in X,A (low,high), C=leading zeros wanted
+;* Output : num_buf in ASCII 6 digits + zero terminator
+;* Regs affected : P
+;****************************************
+int_to_str
+	_pushAXY
+	ldy #0						; first pos of num_buf
+	ora #0						; Test A for sign bit
+	php							; Remember C bit of P
+	bpl int_to_str_skip_neg		; Skip if not (postive num)
+	jsr twos_complement			; Flip X,A from 2s complement
+	pha							; Remember A
+	lda #'-'					; Put in negative sign
+	sta num_buf
+	iny							; Start at second buffer pos
+	pla							; Restore A
+int_to_str_skip_neg
+ 	jsr hex_to_bcd				; Convert X,A to BCD
+	ldx #2						; Start at BCD high byte
+int_str
+	plp							; Get C but immediately
+	php							; Save C (due to loop check later)
+	lda num_a,x					; Get BCD digit
+	sta num_buf+7				; Save A it for the units later
+	lsr a						; Tens - shift to lower nibble
+	lsr a
+	lsr a
+	lsr a
+	plp							; Get C
+	jsr int_to_str_ch			; Put ASCII code in num_buf
+	lda num_buf+7				; Get A for the units
+	jsr int_to_str_ch			; Put ASCII code in num_buf
+	php							; Save C
+	dex
+	bpl int_str
+	plp							; Check C
+	bcs	int_to_str_fin			; If set then something printed
+	lda #'0'					; Stuff a zero
+	sta num_buf					; Must be in first position..
+	iny
+int_to_str_fin
+	lda #0						; Terminator
+	sta num_buf,y
+	iny
+	_pullAXY
+	rts
+
 ;****************************************
 ;* bcd_to_str
 ;* Convert num_buf to chars
@@ -442,36 +517,36 @@ bin_to_bcd_bit
 ;* Output is big endian, input is not
 ;* Regs affected : P
 ;****************************************
-bcd_to_str
-	_pushAXY
-
-	ldx #5						; Index in to string
-	ldy #0						; Current BCD digit
-bcd_str
-	lda num_a,y
-	; Convert 1s digit of byte
-	pha
-	and #0xf
-	clc
-	adc #0x30
-	sta num_buf,x
-	; Convert 10s digit of byte
-	pla
-	lsr a
-	lsr a
-	lsr a
-	lsr a
-	clc
-	adc #0x30					; Convert to ASCII
-	sta num_buf-1,x
-	dex
-	dex
-	iny
-	cpy #3						; 3 BCD digits max
-	bne bcd_str
-
-	_pullAXY
-	rts
+;bcd_to_str
+;	_pushAXY
+;
+;	ldx #5						; Index in to string
+;	ldy #0						; Current BCD digit
+;bcd_str
+;	lda num_a,y
+;	; Convert 1s digit of byte
+;	pha
+;	and #0xf
+;	clc
+;	adc #0x30
+;	sta num_buf,x
+;	; Convert 10s digit of byte
+;	pla
+;	lsr a
+;	lsr a
+;	lsr a
+;	lsr a
+;	clc
+;	adc #0x30					; Convert to ASCII
+;	sta num_buf-1,x
+;	dex
+;	dex
+;	iny
+;	cpy #3						; 3 BCD digits max
+;	bne bcd_str
+;
+;	_pullAXY
+;	rts
 	
 ;****************************************
 ;* out_bcd
@@ -482,43 +557,43 @@ bcd_str
 ;* Output is big endian, input is not, Y=digits printed
 ;* Regs affected : P
 ;****************************************
-out_bcd
-	pha
-	txa
-	pha
-	php
-	ldy #0						; How many digits printed
-	ldx #0						; Index in to string
-out_bcd_digit
-	lda num_buf,x
-	cpy #0						; If not in leading zero mode
-	bne out_bcd_print			; No then go print
-
-	cmp #'0'					; else check if zero
-	bne out_bcd_print			; No then go print
-
-	plp
-	php
-	bcc out_bcd_next			; If C=0 go to next digit, else print
-out_bcd_print
-	iny
-	jsr io_put_ch
-out_bcd_next
-	inx
-	cpx #6
-	bne out_bcd_digit
-	tya							; If nothing printed
-	bne out_bcd_fin
-	lda #'0'					; Need to put out 1 zero
-	jsr io_put_ch
-	iny
-out_bcd_fin
-	plp
-	pla
-	tax
-	pla
-	clc
-	rts
+;out_bcd
+;	pha
+;	txa
+;	pha
+;	php
+;	ldy #0						; How many digits printed
+;	ldx #0						; Index in to string
+;out_bcd_digit
+;	lda num_buf,x
+;	cpy #0						; If not in leading zero mode
+;	bne out_bcd_print			; No then go print
+;
+;	cmp #'0'					; else check if zero
+;	bne out_bcd_print			; No then go print
+;
+;	plp
+;	php
+;	bcc out_bcd_next			; If C=0 go to next digit, else print
+;out_bcd_print
+;	iny
+;	jsr io_put_ch
+;out_bcd_next
+;	inx
+;	cpx #6
+;	bne out_bcd_digit
+;	tya							; If nothing printed
+;	bne out_bcd_fin
+;	lda #'0'					; Need to put out 1 zero
+;	jsr io_put_ch
+;	iny
+;out_bcd_fin
+;	plp
+;	pla
+;	tax
+;	pla
+;	clc
+;	rts
 	
 	
 ;****************************************
@@ -532,21 +607,32 @@ out_bcd_fin
 ;* Regs affected : P
 ;****************************************
 print_a_to_d
-	php
-	cmp #0x80					; Check if sign bit is set
-	bcc print_a_to_d_skip_neg	; Skip if not (postive num)
-	jsr twos_complement			; Flip from 2s complement
-	jsr hex_to_bcd				; Convert to BCD
-	jsr bcd_to_str				; Convert BCD to string
-	lda #'-'
+	jsr int_to_str
+	ldy #0
+print_a_to_d_ch
+	lda num_buf,y
+	beq print_a_to_d_fin
 	jsr io_put_ch
-	plp							; Leading zeros preference
-	jsr out_bcd
-	iny							; Account for sign
+	iny
+	bne print_a_to_d_ch
+print_a_to_d_fin
 	rts
-print_a_to_d_skip_neg
-	jsr hex_to_bcd				; Convert to BCD
-	jsr bcd_to_str				; Convert BCD to string
-	plp							; Leading zeros preference
-	jmp out_bcd					; Print +ve string
+
+;	php
+;	cmp #0x80					; Check if sign bit is set
+;	bcc print_a_to_d_skip_neg	; Skip if not (postive num)
+;	jsr twos_complement			; Flip from 2s complement
+;	jsr hex_to_bcd				; Convert to BCD
+;	jsr bcd_to_str				; Convert BCD to string
+;	lda #'-'
+;	jsr io_put_ch
+;	plp							; Leading zeros preference
+;	jsr out_bcd
+;	iny							; Account for sign
+;	rts
+;print_a_to_d_skip_neg
+;	jsr hex_to_bcd				; Convert to BCD
+;	jsr bcd_to_str				; Convert BCD to string
+;	plp							; Leading zeros preference
+;	jmp out_bcd					; Print +ve string
 	

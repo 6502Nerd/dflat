@@ -106,6 +106,7 @@ df_rt_tokenjmp
 	dw	df_rt_elapsed
 	dw	df_rt_call
 	dw	df_rt_hex
+	dw	df_rt_dec
 	dw	df_rt_asc
 	dw	df_rt_val
 	dw	df_rt_pixel

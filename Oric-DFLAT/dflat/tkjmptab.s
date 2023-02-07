@@ -106,6 +106,7 @@ df_tk_tokenjmp
 	dw	df_tk_elapsed
 	dw	df_tk_call
 	dw	df_tk_hex
+	dw	df_tk_dec
 	dw	df_tk_asc
 	dw	df_tk_val
 	dw	df_tk_pixel

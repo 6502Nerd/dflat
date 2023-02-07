@@ -106,6 +106,7 @@ df_tokensyms
 	db	"elapsed",'('+0x80			; elapsed(var)
 	db	"call",'('+0x80				; call(addr,A,X,Y)
 	db	"hex",'('+0x80				; hex(x)
+	db	"dec",'('+0x80				; dec(x)
 	db	"asc",'('+0x80				; asc(x$)
 	db	"val",'('+0x80				; val(x$)
 	db	"pixel",'('+0x80			; pixel(x,y)

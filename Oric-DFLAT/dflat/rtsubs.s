@@ -2572,6 +2572,18 @@ df_rt_hex
 	lda df_sevalptr+1
 	jmp df_ost_pushStr
 
+; $c = dec(x)
+df_rt_dec
+;	inc df_exeoff
+	; create dec digits
+	jsr df_rt_getnval
+	jsr int_to_str
+	; point to num_buf scratch area
+	ldx #lo(num_buf)
+	lda #hi(num_buf)
+	jmp df_ost_pushStr
+
+
 ; $l = left($s, x)
 df_rt_left
 ;	inc df_exeoff

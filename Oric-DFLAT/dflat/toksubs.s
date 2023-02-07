@@ -250,6 +250,7 @@ df_tk_peek
 df_tk_mem
 df_tk_rnd
 df_tk_hex
+df_tk_dec
 df_tk_asc
 df_tk_val
 df_tk_sprhit
