@@ -54,10 +54,10 @@ SND_ADBUS	= IO_0+PRAH
 SND_MODE	= IO_0+PCR
 
 ; Values for the PCR register - always enable CB1 active edge (bit 4)
-SND_SELREAD			= 0b11011111
-SND_SELWRITE		= 0b11111101
-SND_SELSETADDR		= 0b11111111
-SND_DESELECT		= 0b11011101
+SND_SELREAD			= 0b11011111		; CB2=low, CA2=high
+SND_SELWRITE		= 0b11111101		; CB2=high, CA2=low
+SND_SELSETADDR		= 0b11111111		; CB2=high, CA2=high
+SND_DESELECT		= 0b11011101		; CB2=low,CA2=low
 
 SND_REG_CHAPL	= 0x00
 SND_REG_CHAPH	= 0x01
@@ -81,7 +81,8 @@ SND_REG_IOB	= 0x0f
 ;* Port B
 KB_PRB		= 0xb0			; Upper nibble of PRB default state (for correct operation of periperhals)
 KB_SENSE	= 0x08			; Input - Bit 3 port A
-KB_CAPSLK	= 0x01			; Id of Caps Lock - maps to Led 1
+KB_CAPSLK	= 0x01			; Id of Caps Lock
+KB_IJK		= 0b00100000	; IJK joystick detect bit
 
 KB_REP_TIM	= 3 			; Number of VB periods for the repeat speed
 KB_REP_DEL	= 20			; Number of VB periods before repeat activates

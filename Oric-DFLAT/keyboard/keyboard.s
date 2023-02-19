@@ -32,18 +32,78 @@ init_keyboard
 	sta kb_rep_tim
 	lda #KB_DEBOUNCE
 	sta kb_deb_tim
-	lda #0
-	sta kb_stat
 
+	; ** check if IJK stick connected **
+	php
+	sei
+	; Save port A
+	lda IO_0+DDRA
+	pha
+	lda IO_0+PRA
+	pha
+
+	jsr ijk_prepare
+	lda #0b11000000
+	sta IO_0+PRAH
+	lda IO_0+PRAH
+	and #KB_IJK
+	eor #KB_IJK
+	sta kb_stat
+	jsr ijk_release
+
+	; Restore port A
+	pla
+	sta IO_0+PRA
+	pla
+	sta IO_0+DDRA
+
+	plp
+	rts
+
+;****************************************
+;* ijk_prepare
+;* get ready to read ijk joystick status
+;****************************************
+ijk_prepare
+	;ensure printer strobe is set to output
+	lda   IO_0+DDRB
+	ora   #0b00010000
+	sta   IO_0+DDRB
+
+	;set strobe low
+	lda   IO_0+PRB
+	and   #0b11101111
+	sta   IO_0+PRB
+
+	;set top two bits of porta to output and rest as input
+	lda   #0b11000000
+	sta   IO_0+DDRA
+	rts
+
+;****************************************
+;* ijk_release
+;* stop reading ijk port
+;****************************************
+ijk_release
+	;set strobe high
+	lda   IO_0+PRB
+	ora   #0b00010000
+	sta   IO_0+PRB
 	rts
 
 ;****************************************
 ;* kb_stick
 ;* Check for fire | down | up | right | left
 ;*        bit  4     3      2     1       0
-;* Returns bit mask of keys pressed
+;* A = Returns bit mask of keys pressed
+;* Y corrupted
 ;****************************************
 kb_stick
+	; if IJK connected then read joystick
+	lda kb_stat
+	and #KB_IJK
+	bne kb_stick_ijk
+
 	; Select Row 4 only, all keys on this row
 	lda #4+KB_PRB			; Maintain upper nibble of PRB
 	sta IO_0+PRB
@@ -68,6 +128,45 @@ kb_stick_pos
 	dey
 	bpl kb_stick_pos		; Do all 5 positions
 	pla						; Result in A
+	rts
+kb_stick_ijk
+	php
+	sei
+
+	; Save port A
+	lda IO_0+DDRA
+	pha
+	lda IO_0+PRA
+	pha
+
+	jsr ijk_prepare
+	;Set Top two bits of PortA to Output and rest as Input
+	lda #0b11000000
+	sta IO_0+DDRA
+	;Select Left Joystick
+	lda #0b01111111
+	sta IO_0+PRA
+	;Read back Left Joystick state into A
+	lda IO_0+PRA
+	;Mask out unused bits and invert
+	and #0b00011111
+	eor #0b00011111
+	tay
+	; use this as an index into the mapping
+	; to get the same bit representation
+	; as if using cursor and space keys
+	lda kb_ijk_map,y
+	tay
+
+	; Restore port A
+	pla
+	sta IO_0+PRA
+	pla
+	sta IO_0+DDRA
+
+	plp
+	; result in A
+	tya
 	rts
 
 
@@ -270,7 +369,8 @@ kb_skip_ctrl
 	bcs kb_store_last
 	lda kb_code				; Get the actual code
 	eor #0x20				; Switch off bit 0x20
-	bne kb_store_last
+	sta kb_code				; Save the capitalised code
+	bne kb_store_last		; always
 kb_do_repeat
 	ldx kb_rep				; Has repeat expired?
 	bne	kb_in_repeat		; If not then still in repeat
@@ -367,3 +467,38 @@ kb_stick_mask
 	db 0b11110111		; Up	= Bit 2
 	db 0b10111111		; Down	= Bit 3
 	db 0b11111110		; Space	= Bit 4
+
+kb_ijk_map
+	db 0b00000000		; 00000 = nothing
+	db 0b00000010		; 00001 = right
+	db 0b00000001		; 00010 = left
+	db 0b00000011		; 00011 = left+right
+	db 0b00010000		; 00100 = fire
+	db 0b00010010		; 00101 = fire+right
+	db 0b00010001		; 00110 = fire+left
+	db 0b00010011		; 00111 = fire+left+right
+	db 0b00001000		; 01000 = down
+	db 0b00001010		; 01001 = down+right
+	db 0b00001001		; 01010 = down+left
+	db 0b00001011		; 01011 = down+left+right
+	db 0b00011000		; 01100 = down+fire
+	db 0b00011010		; 01101 = down+fire+right
+	db 0b00011001		; 01110 = down+fire+left
+	db 0b00011011		; 01111 = down+fire+left+right
+	db 0b00000100		; 10000 = up
+	db 0b00000110		; 10001 = up+right
+	db 0b00000101		; 10010 = up+left
+	db 0b00000111		; 10011 = up+left+right
+	db 0b00010100		; 10100 = up+fire
+	db 0b00010110		; 10101 = up+fire+right
+	db 0b00010101		; 10110 = up+fire+left
+	db 0b00010111		; 10111 = up+fire+left+right
+	db 0b00001100		; 11000 = up+down
+	db 0b00001110		; 11001 = up+down+right
+	db 0b00001101		; 11010 = up+down+left
+	db 0b00001111		; 11011 = up+down+left+right
+	db 0b00011100		; 11100 = up+down+fire
+	db 0b00011110		; 11101 = up+down+fire+right
+	db 0b00011101		; 11110 = up+down+fire+left
+	db 0b00011111		; 11111 = up+down+fire+left+right
+	

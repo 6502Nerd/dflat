@@ -64,7 +64,7 @@ init_via0_tab
 	db DDRA,	0xff			; Port A output by default
 	db DDRB,	0xf7			; Tape motor + KB select
 	db PRB,		KB_PRB+7		; Port B default (cassette motor off)
-	db PCR,		0xdd			; Ensure AY is not selected (CB1 active)
+	db PCR,		SND_DESELECT	; Ensure AY is not selected (CA2=low, CB2=low) + CB1 high
 	db T1CL,	lo(TIMER1_RATE)	; 50Hz
 	db T1LL,	lo(TIMER1_RATE)	; 50Hz
 	db T1CH,	hi(TIMER1_RATE)	; 50Hz
