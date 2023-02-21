@@ -65,10 +65,11 @@ init_keyboard
 ;* get ready to read ijk joystick status
 ;****************************************
 ijk_prepare
+	pha
 	;ensure printer strobe is set to output
-	lda   IO_0+DDRB
-	ora   #0b00010000
-	sta   IO_0+DDRB
+;	lda   IO_0+DDRB
+;	ora   #0b00010000
+;	sta   IO_0+DDRB
 
 	;set strobe low
 	lda   IO_0+PRB
@@ -78,6 +79,8 @@ ijk_prepare
 	;set top two bits of porta to output and rest as input
 	lda   #0b11000000
 	sta   IO_0+DDRA
+
+	pla
 	rts
 
 ;****************************************
@@ -85,10 +88,18 @@ ijk_prepare
 ;* stop reading ijk port
 ;****************************************
 ijk_release
+	pha
+
 	;set strobe high
 	lda   IO_0+PRB
 	ora   #0b00010000
 	sta   IO_0+PRB
+
+	;set all bits of porta except kb sense to output
+	lda   #0xf7
+	sta   IO_0+DDRA
+
+	pla
 	rts
 
 ;****************************************
@@ -148,6 +159,8 @@ kb_stick_ijk
 	sta IO_0+PRA
 	;Read back Left Joystick state into A
 	lda IO_0+PRA
+	; release joystick IO settings
+	jsr ijk_release
 	;Mask out unused bits and invert
 	and #0b00011111
 	eor #0b00011111
