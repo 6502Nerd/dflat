@@ -123,6 +123,7 @@ sd_timeout
 
 ; Write nibble in bit 1..4 plus clock high
 sd_write_nibble
+	ldy #0b00000000
 	sty IO_0+PRA				; Clock low, data low
 	jsr sd_delay
 	ora IO_0+PRA				; Set bits to transfer for nibble
@@ -135,6 +136,8 @@ sd_write_nibble
 sd_write_byte
 	sta tmp_d
 	pha
+	txa
+	pha
 	tya
 	pha
 
@@ -145,10 +148,6 @@ sd_write_byte
 	; Set DDRA to output from Oric
 	lda #0b11011111
 	sta IO_0+DDRA
-
-	lda IO_0+PRA				; Get port A value
-	and #0b11100000				; Ensure clock and data is low
-	tay							; Y is clock zero and data zero
 
 	; Write low nibble
 	lda tmp_d					; Get the byte to transmit
@@ -167,12 +166,16 @@ sd_write_byte
 	pla
 	tay
 	pla
+	tax
+
+	pla
 	rts
 
 
 ;* Read nibble from Arduino plus clock high
 sd_read_nibble
-	sty IO_0+PRA				; Set clock low
+	ldy #0b00000000
+	sty IO_0+PRA				; Set clock low, data low
 	jsr sd_delay				
 
 	ora #1						; Clock bit high
