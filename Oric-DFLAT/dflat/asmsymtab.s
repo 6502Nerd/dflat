@@ -47,15 +47,15 @@ df_asm_altaddrmode
 	;* 	Mode		Opcode for mode
 df_asm_tokensyms
 	;* Start with directives
-	db	"org",		1*2
+	db	".org",		1*2
 	db	AM_DIR,		0x00
-	db	"opt",		1*2
+	db	".opt",		1*2
 	db	AM_DIR,		0x00
-	db	"db",		1*2
+	db	".db",		1*2
 	db	AM_DIR,		0x00
-	db	"dw",		1*2
+	db	".dw",		1*2
 	db	AM_DIR,		0x00
-	db	"ds",		1*2
+	db	".ds",		1*2
 	db	AM_DIR,		0x00	
 
 	db	"adc",		8*2

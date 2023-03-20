@@ -26,15 +26,18 @@ mod_sz_tkasm_s
 
 	; if didn't find regular keywords then try assenbler
 df_tk_asm_parse_command
-	; skip the white space after the dot
-	jsr df_tk_skip_ws
+;	; skip the white space after the dot
+;	jsr df_tk_skip_ws
 	; find the assembler symbol
 	jsr df_tk_asm_matchtok
-	; if not found then must be a label assignment
-	bcs df_tk_asm_parse_command_symbol
-	; Get the assembler symbol and put the token
+	; if no match with asm token they maybe a label?
+	bcs df_tk_asm_label
+df_tk_asm_found_command
+	; Before asm keyword, put the asm handler token
+	lda #DFRT_ASM
+	jsr df_tk_put_tok
+	; Set the MSB of found symbol index
 	lda df_symoff
-	; Set the MSB
 	ora #0x80
 	jsr df_tk_put_tok
 	; check the first addressing mode code
@@ -46,24 +49,26 @@ df_tk_asm_parse_command
 	bne df_tk_asm_mnemonic
 	; if directive then process it
 	lda df_symoff
-	jsr df_tk_asm_exec_parser
-	bcs df_tk_asm_parse_command_err
-	; [1] ignore white space but keep it
-	jsr df_tk_skip_ws
-	; No error in parsing this command
-	clc
+	jmp df_tk_asm_exec_parser
 df_tk_asm_parse_command_err
 	rts
 df_tk_asm_mnemonic
 	; for all nmemonics, work out the addressing mode
-	jsr df_tk_asm_addr_mode
+	jmp df_tk_asm_addr_mode
+
+; try to tokenise a label
+df_tk_asm_label
+	; labels must start with '.'
+	lda #'.'
+	jsr df_tk_expect
 	bcs df_tk_asm_parse_command_err
-	rts
-df_tk_asm_parse_command_symbol
-	; No mask
+	; Before asm label, put the asm handler token
+	lda #DFRT_ASM
+	jsr df_tk_put_tok
+	inc df_linoff			;Skip the '.'
+	; Tokenise a variable
 	lda #0
 	jmp df_tk_var
-
 
 ;****************************************
 ;* df_tk_asm_matchtok

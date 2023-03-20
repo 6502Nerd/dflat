@@ -65,9 +65,7 @@ df_tk_tokentype
 	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW
-	db	DFTK_KW
-	db	DFTK_KW
-	db	DFTK_KW
+;	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW
@@ -84,6 +82,9 @@ df_tk_tokentype
 	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW
+	db	DFTK_KW
+;	db	DFTK_KW
+;	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW
 	db	DFTK_KW

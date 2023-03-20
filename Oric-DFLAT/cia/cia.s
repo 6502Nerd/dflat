@@ -76,17 +76,44 @@ init_tape_tab
 	db IER,		0x7f			; Disable all interrupts
 	db T2CL,	0xf4			; Timer 2 used for measuring CB1 time
 	db PCR,		0x10			; Interrupt on CB1 positive edge
-;	db DDRB,	0xff			; Set port B output
 	db ACR,		0xc0			; T1 continuous and toggle PB7
 	db T1CL,	lo(TAPE_RATE*2)	; Tape rate /2 = 0
 	db T1CH,	hi(TAPE_RATE*2)	; Tape rate /2 = 0
 	db PRB,		KB_PRB+0x40		; Tape motor ON
 	db -1
-;init_ser_tab
-;	db IER,		0x7f			; Disable all interrupts
-;	db T2CL,	0xf4			; Timer 2 used for measuring bit time
-;	db PCR,		0xdd			; Ensure AY is not selected (CB1 active)
-;	db DDRB,	0xff			; Set port B output
-;	db -1
+
+;****************************************
+;* via_strobe_init
+;* set strobe low & port A pin directions
+;****************************************
+via_strobe_init
+	sta   IO_0+DDRA
+
+	;set strobe low
+	lda   IO_0+PRB
+	and   #0b11101111
+	sta   IO_0+PRB
+
+	rts
+
+;****************************************
+;* via_strobe_off
+;* deselect printer port devices
+;****************************************
+via_strobe_off
+	pha
+
+	;set strobe high
+	lda   IO_0+PRB
+	ora   #0b00010000
+	sta   IO_0+PRB
+
+	;set all bits of porta except kb sense to output
+	lda   #0xf7
+	sta   IO_0+DDRA
+
+	pla
+	rts
+
 
 mod_sz_cia_e

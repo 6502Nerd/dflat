@@ -911,14 +911,14 @@ df_rt_cursor
 	stx vdp_curoff
 	rts
 
-df_rt_himem
-	; evaluate the expression
-	jsr df_rt_getnval
-	; write X,A to df_memtop
-	stx df_memtop
-	sta df_memtop+1
-	; now clear everything down
-	jmp df_clear
+;df_rt_himem
+;	; evaluate the expression
+;	jsr df_rt_getnval
+;	; write X,A to df_memtop
+;	stx df_memtop
+;	sta df_memtop+1
+;	; now clear everything down
+;	jmp df_clear
 
 df_rt_text
 	jmp gr_init_screen_txt
@@ -986,10 +986,6 @@ df_rt_wait
 	jsr df_rt_getnval
 	; put high byte in to Y (X,Y)=16 bits
 	tay
-;	bne df_rt_wait_counter
-	; If A=X=0 then don't try to wait
-;	txa
-;	beq df_rt_wait_done
 df_rt_wait_counter
 	; get vdp low byte timer val in A
 	lda vdp_cnt
@@ -1187,47 +1183,47 @@ df_rt_eos_true
 
 ; renum startLine,newStart,increment
 ; renumbers from the first matching line to end of program
-df_rt_renum
-	inc df_exeoff
-	jsr df_rt_parm_3ints
-	; starting line number
-	ldx df_tmpptra
-	lda df_tmpptra+1
-	jsr df_pg_find_line
-	bcc df_rt_renum_ok
-	SWBRK DFERR_NOLINE
-df_rt_renum_ok
-	; save starting position pointer in ptrd
-	stx df_tmpptrd
-	sta df_tmpptrd+1
-df_rt_renum_do
-	; if not end of program
-	ldy #0
-	lda (df_tmpptrd),y
-	; then renumber this line
-	bne df_rt_renum_update
-	; else done
-	rts
-df_rt_renum_update
-	; so set this line number to new line number
-	ldy #DFTK_LINNUM
-	lda df_tmpptrb
-	sta (df_tmpptrd),y
-	iny
-	lda df_tmpptrb+1
-	sta (df_tmpptrd),y
-	; add increment to new line
-	_addZPWord df_tmpptrb,df_tmpptrc
-df_rt_renum_next
-	; point ptrd to the next line
-	clc
-	lda df_tmpptrd
-	ldx #0
-	adc (df_tmpptrd,x)
-	sta df_tmpptrd
-	_bcc 2
-	inc df_tmpptrd+1
-	jmp df_rt_renum_do
+;df_rt_renum
+;	inc df_exeoff
+;	jsr df_rt_parm_3ints
+;	; starting line number
+;	ldx df_tmpptra
+;	lda df_tmpptra+1
+;	jsr df_pg_find_line
+;	bcc df_rt_renum_ok
+;	SWBRK DFERR_NOLINE
+;df_rt_renum_ok
+;	; save starting position pointer in ptrd
+;	stx df_tmpptrd
+;	sta df_tmpptrd+1
+;df_rt_renum_do
+;	; if not end of program
+;	ldy #0
+;	lda (df_tmpptrd),y
+;	; then renumber this line
+;	bne df_rt_renum_update
+;	; else done
+;	rts
+;df_rt_renum_update
+;	; so set this line number to new line number
+;	ldy #DFTK_LINNUM
+;	lda df_tmpptrb
+;	sta (df_tmpptrd),y
+;	iny
+;	lda df_tmpptrb+1
+;	sta (df_tmpptrd),y
+;	; add increment to new line
+;	_addZPWord df_tmpptrb,df_tmpptrc
+;df_rt_renum_next
+;	; point ptrd to the next line
+;	clc
+;	lda df_tmpptrd
+;	ldx #0
+;	adc (df_tmpptrd,x)
+;	sta df_tmpptrd
+;	_bcc 2
+;	inc df_tmpptrd+1
+;	jmp df_rt_renum_do
 
 
 ; * List all procs in VNT
@@ -1731,21 +1727,13 @@ df_rt_list_got_sym
 
 ;** Decode assembler token in A **
 df_rt_asm_decode_token
-	lda #'.'			;Always put out the . symbol
+	inc df_linoff		; Point to token after asm token
+	ldy df_linoff
+	lda (df_tmpptra),y	;If token N=1 then keyword
+	bmi df_rt_asm_decode_token_keyword
+	lda #'.'			;Put the '.' before escape processing
 	jsr io_put_ch
-	ldy df_linoff		;Print out any whitespace
-df_rt_asm_decode_token_ws
-	iny					;Point to char after the asm token
-	sty df_linoff
-	lda (df_tmpptra),y	;What is the char?
-	jsr df_tk_isws		;If not then found the keyword
-	bcc df_rt_asm_decode_token_found
-	jsr io_put_ch		;Print the space
-	jmp df_rt_asm_decode_token_ws
-df_rt_asm_decode_token_found
-	cmp #DFTK_VAR		; If is a label variable?
-	bne df_rt_asm_decode_token_keyword
-	; if so then process as normal escape handling
+	lda (df_tmpptra),y	;Get asm token back
 	jmp df_rt_list_decode_esc
 df_rt_asm_decode_token_keyword
 	and #0x7f			; Mask off MSB
@@ -1924,23 +1912,61 @@ df_rt_init_filename
 	stx df_tmpptrc
 	sta df_tmpptrc+1
 
-	; copy string to fhandle
-	ldy #0
+	; Check first 2 chars of string
+	; if s: then device = sd card
+	; if t: then device = tape
+	lda #0							; Assume tape i.e. device 0
+	pha
+	ldy #1
+	lda (df_tmpptrc),y
+	dey								; Y=0 i.e. assume no s: or t:
+	cmp #':'						; if no ':' in pos 1 then tape
+	bne df_rt_do_fname
+	lda (df_tmpptrc),y				; get first char
+	ldy #2							; filename must start at pos 2
+	cmp #'t'						; if t then still tape
+	beq df_rt_do_fname
+	cmp #'s'						; MUST be s else an error!
+	bne df_rt_file_errc
+	pla
+	lda #1							; Set to sd card
+	pha
+df_rt_do_fname
+	; copy string to fhandle, Y is at start pos of filename
+	ldx #0
 df_rt_copy_fn
 	lda (df_tmpptrc),y
 df_rt_fname_case
-	sta df_linbuff,y				; Put filename in line buffer
+	sta df_linbuff,x				; Put filename in line buffer
 	iny
-	tax
+	inx
+	cmp #0
 	bne df_rt_copy_fn
+	pla								; Get device number in A
 	rts
+
+; Delete a file from SD card
+; Only valid for SD card
+df_rt_delete
+	jsr df_rt_parse_file
+	cmp #1
+	bne df_rt_file_errc
+	jsr sd_delete
+	jmp io_set_default
+
+df_rt_dir
+	jmp sd_dir
 
 ;* common file parsing routine
 df_rt_parse_file
 	; now process filename
 	jsr df_rt_init_filename
-	lda #0						; Initialise tape system
-	jmp io_active_device
+	; device number is in A (0=tape, 1=sdcard)
+	pha								; Save sub-device number
+	lda #0							; Always 0 for file device
+	jsr io_active_device
+	pla								; Exit with device number found
+	rts
 df_rt_file_errc
 	SWBRK DFERR_FNAME
 
@@ -2081,104 +2107,104 @@ df_rt_bsave
 
 
 ; save dflat tokenised program as binary
-df_rt_save
-	; Process file and open for binary save
-	jsr df_rt_openforbinsave
-
-	; first save zero page stuff
-	; ok this saves a bit more than needed
-	; but it's no biggie and doesn't
-	; clobber temp space
-	lda #lo(dflat_zp_save_s)
-	sta df_tmpptra
-	lda #hi(dflat_zp_save_s)
-	sta df_tmpptra+1
-	; save length
-	sec
-	lda #lo(dflat_zp_save_e)
-	sbc #lo(dflat_zp_save_s)
-	sta df_tmpptrb
-	lda #hi(dflat_zp_save_e)
-	sbc #hi(dflat_zp_save_s)
-	sta df_tmpptrb+1
-	; now save bytes
-	jsr df_rt_savebin
-
-	; now save the dflat program
-	lda df_prgstrt
-	sta df_tmpptra
-	lda df_prgstrt+1
-	sta df_tmpptra+1
-	; save length
-	sec
-	lda df_prgend
-	sbc df_prgstrt
-	sta df_tmpptrb
-	lda df_prgend+1
-	sbc df_prgstrt+1
-	sta df_tmpptrb+1
-	; now save bytes
-	jsr df_rt_savebin
-
-	; now save the variables VVT and VNT
-	lda df_vntstrt
-	sta df_tmpptra
-	lda df_vntstrt+1
-	sta df_tmpptra+1
-	; save length
-	sec
-	lda df_vvtstrt
-	sbc df_vntstrt
-	sta df_tmpptrb
-	lda df_vvtstrt+1
-	sbc df_vntstrt+1
-	sta df_tmpptrb+1
-	; now save bytes
-	jsr df_rt_savebin
-
-	; close the file
-	jsr io_close
-	clc
-	; Close the file
-	jmp df_rt_file_cleanup
+;df_rt_save
+;	; Process file and open for binary save
+;	jsr df_rt_openforbinsave
+;
+;	; first save zero page stuff
+;	; ok this saves a bit more than needed
+;	; but it's no biggie and doesn't
+;	; clobber temp space
+;	lda #lo(dflat_zp_save_s)
+;	sta df_tmpptra
+;	lda #hi(dflat_zp_save_s)
+;	sta df_tmpptra+1
+;	; save length
+;	sec
+;	lda #lo(dflat_zp_save_e)
+;	sbc #lo(dflat_zp_save_s)
+;	sta df_tmpptrb
+;	lda #hi(dflat_zp_save_e)
+;	sbc #hi(dflat_zp_save_s)
+;	sta df_tmpptrb+1
+;	; now save bytes
+;	jsr df_rt_savebin
+;
+;	; now save the dflat program
+;	lda df_prgstrt
+;	sta df_tmpptra
+;	lda df_prgstrt+1
+;	sta df_tmpptra+1
+;	; save length
+;	sec
+;	lda df_prgend
+;	sbc df_prgstrt
+;	sta df_tmpptrb
+;	lda df_prgend+1
+;	sbc df_prgstrt+1
+;	sta df_tmpptrb+1
+;	; now save bytes
+;	jsr df_rt_savebin
+;
+;	; now save the variables VVT and VNT
+;	lda df_vntstrt
+;	sta df_tmpptra
+;	lda df_vntstrt+1
+;	sta df_tmpptra+1
+;	; save length
+;	sec
+;	lda df_vvtstrt
+;	sbc df_vntstrt
+;	sta df_tmpptrb
+;	lda df_vvtstrt+1
+;	sbc df_vntstrt+1
+;	sta df_tmpptrb+1
+;	; now save bytes
+;	jsr df_rt_savebin
+;
+;	; close the file
+;	jsr io_close
+;	clc
+;	; Close the file
+;	jmp df_rt_file_cleanup
 
 
 ; load dflat tokenised program as binary
-df_rt_load
-	jsr df_rt_openforbinload
-
-	; Get zero page header
-	jsr df_rt_getbin_parms
-	; and get bytes
-	jsr df_rt_loadbin
-
-	; Get program header
-	jsr df_rt_getbin_parms
-	; and get bytes
-	jsr df_rt_loadbin
-
-	; Get variables header
-	jsr df_rt_getbin_parms
-	; and get bytes
-	jsr df_rt_loadbin
-
-	; close the file
-	jsr io_close
-	clc
-	; Close the file
-	jmp df_rt_file_cleanup
-
+;df_rt_load
+;	jsr df_rt_openforbinload
+;
+;	; Get zero page header
+;	jsr df_rt_getbin_parms
+;	; and get bytes
+;	jsr df_rt_loadbin
+;
+;	; Get program header
+;	jsr df_rt_getbin_parms
+;	; and get bytes
+;	jsr df_rt_loadbin
+;
+;	; Get variables header
+;	jsr df_rt_getbin_parms
+;	; and get bytes
+;	jsr df_rt_loadbin
+;
+;	; close the file
+;	jsr io_close
+;	clc
+;	; Close the file
+;	jmp df_rt_file_cleanup
+;
 
 ; Utility to get 4 parms from binary header
-df_rt_getbin_parms
-	ldx #0
-df_rt_getbin_parms_loop
-	jsr io_get_ch
-	sta df_tmpptra,x
-	inx
-	cpx #4
-	bne df_rt_getbin_parms_loop
-	rts
+;df_rt_getbin_parms
+;	ldx #0
+;df_rt_getbin_parms_loop
+;	jsr io_get_ch
+;	sta df_tmpptra,x
+;	inx
+;	cpx #4
+;	bne df_rt_getbin_parms_loop
+;	rts
 
 ; Utility to load a bin file in address ptra
 ; Length in ptr b

@@ -50,7 +50,7 @@ df_tokensyms
 	db	"endi",'f'+0x80				; endif
 	db	"eli",'f'+0x80				; elif condition
 	db	"dat",'a'+0x80				; data
-	db	'.'+0x80					; assembler command
+	db	0xff						; assembler command (non standard parse)
 	db	"ru",'n'+0x80				; run
 	db	"lis",'t'+0x80				; list _proc-|*|line,line
 	db	"inpu",'t'+0x80				; input var
@@ -63,11 +63,9 @@ df_tokensyms
 	db	"soun",'d'+0x80				; sound
 	db	"musi",'c'+0x80				; music
 	db	"pla",'y'+0x80				; play
-	db	"sav",'e'+0x80				; save "fname"
-	db	"loa",'d'+0x80				; load "fname"
 	db	"rea",'d'+0x80				; read
 	db	"ne",'w'+0x80				; new
-	db	"renu",'m'+0x80				; renum start,offset,increment
+;	db	"renu",'m'+0x80				; renum start,offset,increment
 	db	"wai",'t'+0x80				; wait delay
 	db	"rese",'t'+0x80				; reset var
 	db	"hire",'s'+0x80				; hires col
@@ -78,18 +76,21 @@ df_tokensyms
 	db	"in",'k'+0x80				; ink n
 	db	"pape",'r'+0x80				; paper n
 	db	"circl",'e'+0x80			; circle x,y,r
-;	db	"fil",'l'+0x80				; fill x,y,w,h,v
-	db	"hime",'m'+0x80				; himem addr
+;	db	"hime",'m'+0x80				; himem addr
 	db	"monito",'r'+0x80			; monitor
 	db	"sprcha",'r'+0x80			; sprchar sp,ch
 	db	"sprpo",'s'+0x80			; sprpos sp,x,y
 	db	"sprup",'d'+0x80			; sprupd
 	db	"sprini",'t'+0x80			; sprinit
 	db	"sprmult",'i'+0x80			; sprmulti x[],y[]
+;	db	"sav",'e'+0x80				; save "fname"
+;	db	"loa",'d'+0x80				; load "fname"
 	db	"bsav",'e'+0x80				; bsave addr,len,"fname"
 	db	"bloa",'d'+0x80				; bload addr,"fname"
 	db	"tsav",'e'+0x80				; tsave "fname"
 	db	"tloa",'d'+0x80				; tload "fname"
+	db 	"delet",'e'+0x80			; delete "fname"
+	db	"di",'r'+0x80				; dir
 ; Functions
 	db	"peek",'('+0x80				; peek(x)
 	db	"deek",'('+0x80				; peek(x)

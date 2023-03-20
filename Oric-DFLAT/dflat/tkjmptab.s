@@ -50,7 +50,7 @@ df_tk_tokenjmp
 	dw	df_tk_endif
 	dw	df_tk_elseif
 	dw	df_tk_data
-	dw	df_tk_asm_parse_command
+	dw	df_trap_monitor
 	dw	df_tk_run
 	dw	df_tk_list
 	dw	df_tk_input
@@ -63,11 +63,9 @@ df_tk_tokenjmp
 	dw	df_tk_sound
 	dw	df_tk_music
 	dw	df_tk_play
-	dw	df_tk_save
-	dw	df_tk_load
 	dw	df_tk_read
 	dw	df_tk_new
-	dw	df_tk_renum
+;	dw	df_tk_renum
 	dw	df_tk_wait
 	dw	df_tk_reset
 	dw	df_tk_hires
@@ -78,18 +76,21 @@ df_tk_tokenjmp
 	dw	df_tk_ink
 	dw	df_tk_paper
 	dw	df_tk_circle
-;	dw	df_tk_fill
-	dw	df_tk_himem
+;	dw	df_tk_himem
 	dw	df_tk_monitor
 	dw	df_tk_sprchar
 	dw	df_tk_sprpos
 	dw	df_tk_sprupd
 	dw	df_tk_sprinit
 	dw	df_tk_sprmulti
+;	dw	df_tk_save
+;	dw	df_tk_load
 	dw	df_tk_bsave
 	dw	df_tk_bload
 	dw	df_tk_tsave
 	dw	df_tk_tload
+	dw	df_tk_delete
+	dw	df_tk_dir
 	
 	dw	df_tk_peek
 	dw	df_tk_deek

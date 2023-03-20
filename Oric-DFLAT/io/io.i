@@ -26,3 +26,13 @@
 	ds	io_ext1,		2			;* Address of extended function 1
 	ds	io_ext2,		2			;* Address of extended function 2
 	end struct
+
+;* Structure storage device specific vectors
+	struct f_storage_table
+	ds	f_init_vec,			2
+	ds	f_read_byte_vec,	2
+	ds	f_write_byte_vec,	2
+	ds	f_put_delay_vec,	2
+	ds	f_block_gap_vec,	2
+	ds	f_release_vec,		2
+	end struct

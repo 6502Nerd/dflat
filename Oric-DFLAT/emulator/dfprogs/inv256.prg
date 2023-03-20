@@ -43,133 +43,133 @@ def_asm(o)
 .codeStart
 ;
 .moveAliens
- .lda #0:.sta alienNewDir
- .ldx #31
+ lda #0:sta alienNewDir
+ ldx #31
 .moveSingleAlien
- .ldy sprcurX,x
- .bmi skipRowChange
- .lda sprcurY,x
- .cmp #basePosition
- .bne notDead
- .inc dead
+ ldy sprcurX,x
+ bmi skipRowChange
+ lda sprcurY,x
+ cmp #basePosition
+ bne notDead
+ inc dead
 .notDead
 ; .sta sprnewY,x
- .lda alienDir
- .bne goLeft
- .iny
+ lda alienDir
+ bne goLeft
+ iny
  .db 0x24:; BIT zero page to skip the dey
 .goLeft
- .dey
- .tya
- .sta sprnewX,x
- .cmp #3
- .beq changeDir
- .cmp #37
- .bne skipRowChange
+ dey
+ tya
+ sta sprnewX,x
+ cmp #3
+ beq changeDir
+ cmp #37
+ bne skipRowChange
 .changeDir
- .inc alienNewDir
+ inc alienNewDir
 .skipRowChange
- .dex
- .cpx #1
- .bne moveSingleAlien
+ dex
+ cpx #1
+ bne moveSingleAlien
 .checkDir
- .lda alienNewDir:.beq skipDirChange
- .lda #1:.eor alienDir:.sta alienDir
- .ldx #31
+ lda alienNewDir:beq skipDirChange
+ lda #1:eor alienDir:sta alienDir
+ ldx #31
 .changeRow
- .lda sprcurX,x:.sta sprnewX,x
- .inc sprnewY,x
- .dex:.cpx #1:.bne changeRow
+ lda sprcurX,x:sta sprnewX,x
+ inc sprnewY,x
+ dex:cpx #1:bne changeRow
 .skipDirChange
- .rts
+ rts
 ;
 .movePlayer
- .jsr kbstick:.pha
- .ldy sprcurX
- .and #16:.beq skipPlayerShoot
- .ldx sprcurX+1:.bpl skipPlayerShoot
- .sty sprnewX+1
- .ldx #basePosition:.stx sprnewY+1
+ jsr kbstick:pha
+ ldy sprcurX
+ and #16:beq skipPlayerShoot
+ ldx sprcurX+1:bpl skipPlayerShoot
+ sty sprnewX+1
+ ldx #basePosition:stx sprnewY+1
 .skipPlayerShoot
- .pla:.pha
- .and #1:.beq skipPlayerLeft
- .cpy #2:.beq updatePlayer
- .dey:.bne updatePlayer
+ pla:pha
+ and #1:beq skipPlayerLeft
+ cpy #2:beq updatePlayer
+ dey:bne updatePlayer
 .skipPlayerLeft
- .pla:.pha
- .and #2:.beq updatePlayer
- .cpy #38:.beq updatePlayer
- .iny
+ pla:pha
+ and #2:beq updatePlayer
+ cpy #38:beq updatePlayer
+ iny
 .updatePlayer
- .pla
- .sty sprnewX
- .rts
+ pla
+ sty sprnewX
+ rts
 ;
 .moveBullet
- .ldx sprcurY+1
- .ldy sprcurX+1:.bmi bulletInactive
- .dex:.bne bulletDone
+ ldx sprcurY+1
+ ldy sprcurX+1:bmi bulletInactive
+ dex:bne bulletDone
 .bulletEnd
- .ldy #0xff
+ ldy #0xff
 .bulletDone
- .sty sprnewX+1
- .stx sprnewY+1
+ sty sprnewX+1
+ stx sprnewY+1
 .bulletInactive
- .rts
+ rts
 ;
 .checkCollisions
- .ldy sprcurX+1:.bmi noCollision
- .ldx #24
+ ldy sprcurX+1:bmi noCollision
+ ldx #24
 .checkHitAlien
- .dex:.bmi noCollision
- .lda sprcurX+2,x:.cmp sprcurX+1
- .bne checkHitAlien
- .lda sprcurY+2,x:.cmp sprcurY+1
- .bne checkHitAlien
- .dec alienHit
- .lda #' ':.sta sprchr+2,x
- .lda #255:.sta sprnewX+2,x:.sta sprnewX+1
- .ldy #3
+ dex:bmi noCollision
+ lda sprcurX+2,x:cmp sprcurX+1
+ bne checkHitAlien
+ lda sprcurY+2,x:cmp sprcurY+1
+ bne checkHitAlien
+ dec alienHit
+ lda #' ':sta sprchr+2,x
+ lda #255:sta sprnewX+2,x:sta sprnewX+1
+ ldy #3
 .updateScore
- .dey
- .ldx score,y:.inx
- .cpx #'9'+1:.bcc noOverflow
- .ldx #'0'
+ dey
+ ldx score,y:inx
+ cpx #'9'+1:bcc noOverflow
+ ldx #'0'
 .noOverflow
- .txa:.sta score,y
- .bcs updateScore
+ txa:sta score,y
+ bcs updateScore
 .noCollision
- .rts
+ rts
 ;
 .gameLoop
 ; vdpcounter=0x08
-; .dec bulletSpeed:.bpl gameLoop
-; .ldx #1:.stx bulletSpeed
- .jsr moveBullet
+; dec bulletSpeed:bpl gameLoop
+; ldx #1:stx bulletSpeed
+ jsr moveBullet
 .skipMoveBullet
- .dec playerSpeed:.bpl skipMovePlayer
- .ldx #2:.stx playerSpeed
- .jsr movePlayer
+ dec playerSpeed:bpl skipMovePlayer
+ ldx #2:stx playerSpeed
+ jsr movePlayer
 .skipMovePlayer
- .dec alienSpeed:.bpl skipMoveAliens
- .lda alienHit:.sta alienSpeed
- .jsr moveAliens
+ dec alienSpeed:bpl skipMoveAliens
+ lda alienHit:sta alienSpeed
+ jsr moveAliens
 .skipMoveAliens
- .jsr checkCollisions
- .ldy #0
- .ldx addr(d)+1
+ jsr checkCollisions
+ ldy #0
+ ldx addr(d)+1
 .tick
- .dey
- .bne tick
- .dex
- .bne tick
- .jsr dfrtsprupdate
- .lda dead
- .bne gameOver
- .lda alienHit
- .bne gameLoop
+ dey
+ bne tick
+ dex
+ bne tick
+ jsr dfrtsprupdate
+ lda dead
+ bne gameOver
+ lda alienHit
+ bne gameLoop
 .gameOver
- .rts
+ rts
 ;
  level=ztmp24+0
  alienDir=ztmp24+3:alienNewDir=ztmp24+4
@@ -183,40 +183,40 @@ def_asm(o)
 .alienInitCol
  .db 14,17,20,23,26,29
 .initGame
- .jsr grtext
-; .jsr grsprinit:			; Reset sprite engine
- .lda #'0'
- .sta score:.sta score+1:.sta score+2
- .ldx #0
- .stx level:.stx dead
+ jsr grtext
+; jsr grsprinit:			; Reset sprite engine
+ lda #'0'
+ sta score:sta score+1:sta score+2
+ ldx #0
+ stx level:stx dead
 .initLevel
- .inc level:.inc level
- .ldx #24:.stx alienHit
- .ldx #20:.stx sprnewX
- .ldx #basePosition:.stx sprnewY
- .ldx #'@':.stx sprchr
- .ldx #'|':.stx sprchr+1
+ inc level:inc level
+ ldx #24:stx alienHit
+ ldx #20:stx sprnewX
+ ldx #basePosition:stx sprnewY
+ ldx #'@':stx sprchr
+ ldx #'|':stx sprchr+1
 ; Initialise alien rank and file
- .ldx level:.dex:.stx tmpLevel
- .ldx #23
+ ldx level:dex:stx tmpLevel
+ ldx #23
 .initAlienRow
- .ldy #6
- .inc tmpLevel:.inc tmpLevel
+ ldy #6
+ inc tmpLevel:inc tmpLevel
 .initAlien
- .dey:.bmi initAlienRow
- .lda alienInitCol,y
- .sta sprnewX+2,x
- .lda tmpLevel
- .sta sprnewY+2,x
- .lda #'v'
- .sta sprchr+2,x
- .dex:.bpl initAlien
+ dey:bmi initAlienRow
+ lda alienInitCol,y
+ sta sprnewX+2,x
+ lda tmpLevel
+ sta sprnewY+2,x
+ lda #'v'
+ sta sprchr+2,x
+ dex:bpl initAlien
 ;
- .jsr dfrtsprupdate
- .jsr gameLoop
- .lda dead
- .beq initLevel
- .rts
+ jsr dfrtsprupdate
+ jsr gameLoop
+ lda dead
+ beq initLevel
+ rts
 ;
 .codeEnd
 enddef

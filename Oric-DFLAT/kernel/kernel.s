@@ -71,7 +71,7 @@ kernel_init
 	jsr init_irq		; Initialise IRQ handling
 
 	jsr init_via0		; initialise cia 0 - tape inactive
-	jsr tp_init			; Initialise tape handling
+;	jsr tp_init			; Initialise tape handling
 
 	jsr init_snd		; initialise the sound chip
 
@@ -117,7 +117,7 @@ init_ram_skip
 	cpx #0xc0			; Do all pages until page until we get to page C0
 	bne init_ram_1
 
-	jmp init_2			; Carry on initialisation
+	beq init_2			; Carry on initialisation
 
 ; 6502 Non-maskable interrupt come here
 nmi

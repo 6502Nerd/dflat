@@ -300,7 +300,6 @@ df_tk_repeat
 df_tk_next
 df_tk_wend
 df_tk_run
-df_tk_dir
 df_tk_cls
 df_tk_new
 df_tk_mult
@@ -324,6 +323,7 @@ df_tk_sprupd
 df_tk_sprinit
 df_tk_text
 df_tk_hires
+df_tk_dir
 	clc
 	rts
 
@@ -341,15 +341,13 @@ df_tk_wait
 df_tk_cursor
 df_tk_del
 df_tk_chdir
-df_tk_load
-df_tk_save
-df_tk_tload
-df_tk_tsave
 df_tk_pixmode
 df_tk_ink
 df_tk_paper
-df_tk_himem
-
+;df_tk_himem
+df_tk_tload
+df_tk_tsave
+df_tk_delete
 df_tk_asm_org
 df_tk_asm_opt
 df_tk_asm_ds
@@ -365,6 +363,8 @@ df_tk_doke
 df_tk_point
 df_tk_sprchar
 df_tk_sprmulti
+;df_tk_load
+;df_tk_save
 df_tk_bload
 df_tk_lineto
 df_tk_2parms
@@ -382,7 +382,7 @@ df_tk_circle
 df_tk_sound
 df_tk_colour
 df_tk_spritepos
-df_tk_renum
+;df_tk_renum
 df_tk_sprpos
 df_tk_bsave
 df_tk_3parms

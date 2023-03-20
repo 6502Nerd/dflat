@@ -4,7 +4,9 @@ mod_sz_bios_s
 
 ; Bank specific code goes here
 	include "cia/cia.s"
-	include "tape/tape.s"
+	include "file/file.s"
+	include "file/tape.s"
+	include "file/sdcard.s"
 	include "keyboard/keyboard.s"
 	include "vdp/graph.s"
 	include "monitor/cmd.s"

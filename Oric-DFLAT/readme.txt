@@ -31,6 +31,10 @@ File structure
 - nppUDF.txt 	: User defined language file for syntax highlighting in notepad++
 - as65.exe,.man	: as65 assembler - allowed to be distributed with .man file
 
+.vscode\
+- dflat_programming_language
+                : copy this folder to your .vscode\extensions folder to get
+				: syntax highlighting for dflat in VSC
 bank\
 - bank.s		: defines the content of the ROM bank as an asm source file
 - bank0.lst		: listing file needed to generate patch files for the emulator

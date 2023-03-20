@@ -191,10 +191,12 @@ df_rtspace	ds	256
 
 ;***** NON-ZERO PAGE VARIABLES *****
 
-; Acticve IO device settings
+; Active IO device settings
 io_default	ds	1		; The default device number
 io_block	ds	io_struct
 
+; Jump tables for file devices
+f_storage_vec		ds	f_storage_table
 
 ; Dflat top of memory+1 - initialised at boot time but can be changed by user
 df_memtop	ds	2

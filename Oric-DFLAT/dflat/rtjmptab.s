@@ -63,11 +63,9 @@ df_rt_tokenjmp
 	dw	df_rt_sound
 	dw	df_rt_music
 	dw	df_rt_play
-	dw	df_rt_save
-	dw	df_rt_load
 	dw	df_rt_read
 	dw	df_rt_new
-	dw	df_rt_renum
+;	dw	df_rt_renum
 	dw	df_rt_wait
 	dw	df_rt_reset
 	dw	df_rt_hires
@@ -78,18 +76,21 @@ df_rt_tokenjmp
 	dw	df_rt_ink
 	dw	df_rt_paper
 	dw	df_rt_circle
-;	dw	df_rt_fill
-	dw	df_rt_himem
+;	dw	df_rt_himem
 	dw	df_rt_monitor
 	dw	df_rt_sprchar
 	dw	df_rt_sprpos
 	dw	df_rt_sprupd
 	dw	df_rt_sprinit
 	dw	df_rt_sprmulti
+;	dw	df_rt_save
+;	dw	df_rt_load
 	dw	df_rt_bsave
 	dw	df_rt_bload
 	dw	df_rt_tsave
 	dw	df_rt_tload
+	dw	df_rt_delete
+	dw	df_rt_dir
 
 	dw	df_rt_peek
 	dw	df_rt_deek

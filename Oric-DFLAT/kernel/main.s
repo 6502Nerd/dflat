@@ -23,6 +23,7 @@ main
 	jsr io_print_line
 
 infinity
+
 	jmp df_pg_dflat
 
 msg_hello_world

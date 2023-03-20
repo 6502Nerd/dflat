@@ -808,9 +808,13 @@ df_tk_skip_1_spc
 	jsr df_tk_parse_user_proc
 	jmp df_tk_done
 df_tk_try_command
-	; try  a keyword
+	; try a keyword
 	jsr df_tk_parse_command
-;	bcs	df_tk_try_assign
+	bcs	df_tk_try_asm
+	bcc df_tk_done
+df_tk_try_asm
+	; try an asm keyword
+	jsr df_tk_asm_parse_command
 	bcc df_tk_done
 df_tk_try_assign
 	; nothing but to try an assignment operation

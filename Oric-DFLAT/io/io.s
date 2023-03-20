@@ -237,23 +237,26 @@ io_null_op
 	
 ;* IO buffer sizes
 io_buf_sz
-	db 255					; Device 0 = Tape
+	db 255					; Device 0 = Tapeoe SDCard
 	db 127					; Device 1 = keyboard/screen
 
 ;* IO devices defined here
 io_devices
-;* Device zero is the tape system
-;* only offers get and put
+;* Device zero is the tape/sdcard system
+;* t: is for tape, s: is for sdcard in the filename
+;* the file routines parse the filename to fine t: or s:
+;* at the file protocol level both t: and s: appear the same
+;* hence device0 can handle both
 ;* This is a block based device
 io_device0					; Tape device, input = Tape, output = Tape
-	dw	tp_get_byte			; io_get_ch
-	dw	tp_put_byte			; io_put_ch
-	dw	tp_open_read		; io_open_r
-	dw	tp_open_write		; io_open_w
-	dw	tp_close			; io_close_f
+	dw	f_get_byte			; io_get_ch
+	dw	f_put_byte			; io_put_ch
+	dw	f_open_read			; io_open_r
+	dw	f_open_write		; io_open_w
+	dw	f_close				; io_close_f
 	dw	io_null_op			; io_del_f
-	dw	tp_open_bread		; io_ext1 - open for binary read
-	dw	tp_open_bwrite		; io_ext2 - open for binary write
+	dw	f_open_bread		; io_ext1 - open for binary read
+	dw	f_open_bwrite		; io_ext2 - open for binary write
 ;* Device one is keyboard / screen
 ;* only offers get and put
 ;* This is a char based device
@@ -266,17 +269,5 @@ io_device1					; Default device, input = screen editor, output = screen editor
 	dw	io_null_op			; io_del_f
 	dw	io_null_op			; io_ext1
 	dw	io_null_op			; io_ext2
-;* Serial device using printer port ACK (input) and ACK (output)
-;* This is a char based device
-;io_device2					; Serial device, input = Ser, output = Ser
-;	dw	ser_get_byte		; io_get_ch
-;	dw	ser_put_byte		; io_put_ch
-;	dw	ser_open			; io_open_r
-;	dw	ser_open			; io_open_w
-;	dw	ser_close			; io_close_f
-;	dw	io_null_op			; io_del_f
-;	dw	io_null_op			; io_ext1
-;	dw	io_null_op			; io_ext2
-
 mod_sz_io_e
 
