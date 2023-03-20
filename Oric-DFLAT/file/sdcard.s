@@ -55,18 +55,6 @@ mod_sz_sd_s
 
 SD_BIT_DELAY	=	2
 
-;* Delay based on X register
-sd_delay
-	pha
-	txa
-	ldx #SD_BIT_DELAY
-sd_delay_loop
-	dex
-	bne sd_delay_loop
-	tax
-	pla
-	rts
-
 ; Release the Arduino
 ; Toggles the clock line a few times with STB high
 ; This causes the Arduino to reset
@@ -102,10 +90,10 @@ sd_select
 	rts
 
 
-;* Wait for Arduino to be ready
+;* Wait for Arduino to be ready then short delay
 ;* Timeout results in an exception (BRK)
 sd_ready
-	ldx #10
+	ldx #80
 	ldy #0
 sd_notready
 	iny							; Decrement X,Y timeout
@@ -116,6 +104,16 @@ sd_ready_skipx
 	lda IO_0+PRA				; Get port A value
 	and #0b00100000				; Check bit 5
 	beq sd_notready
+;* Delay based on X register - called direct in other places
+sd_delay
+	pha
+	txa
+	ldx #SD_BIT_DELAY
+sd_delay_loop
+	dex
+	bne sd_delay_loop
+	tax
+	pla
 	rts
 sd_timeout
 	SWBRK DFERR_FNAME
@@ -143,7 +141,6 @@ sd_write_byte
 
 	; Make sure arduino is ready
 	jsr sd_ready	
-	jsr sd_delay
 
 	; Set DDRA to output from Oric
 	lda #0b11011111
@@ -195,7 +192,6 @@ sd_read_byte
 
 	; Make sure arduino is ready
 	jsr sd_ready	
-	jsr sd_delay
 
 	; Set DDRA to input to Oric
 	lda #0b11000001
