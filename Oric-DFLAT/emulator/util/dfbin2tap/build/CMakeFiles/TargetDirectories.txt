@@ -1,0 +1,3 @@
+C:/Users/Lenovo PC/Documents/GitHub/dflat/Oric-DFLAT/emulator/util/dfbin2tap/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/Oric-DFLAT/emulator/util/dfbin2tap/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/Oric-DFLAT/emulator/util/dfbin2tap/build/dfbin2tap/CMakeFiles/dfbin2tap.dir
