@@ -1,0 +1,10 @@
+^C:\USERS\LENOVO PC\DOCUMENTS\GITHUB\DFLAT\ORIC-DFLAT\EMULATOR\UTIL\DFBIN2TAP\BUILD\CMAKEFILES\3518123648802E0F7B6B9B090386B1F7\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/Lenovo PC/Documents/GitHub/dflat/Oric-DFLAT/emulator/util/dfbin2tap" "-BC:/Users/Lenovo PC/Documents/GitHub/dflat/Oric-DFLAT/emulator/util/dfbin2tap/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/Lenovo PC/Documents/GitHub/dflat/Oric-DFLAT/emulator/util/dfbin2tap/build/dfbin2tap.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

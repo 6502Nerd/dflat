@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Lenovo PC\Documents\GitHub\dflat\Oric-DFLAT\emulator\util\dfbin2tap\build\CMakeFiles\3518123648802e0f7b6b9b090386b1f7\generate.stamp.rule">
+      <Filter>CMake Rules</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="CMake Rules">
+      <UniqueIdentifier>{D1692ACE-8F5B-3CF6-9AF1-081798E65C88}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

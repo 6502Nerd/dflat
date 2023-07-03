@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <ProjectOutputs>
+    <ProjectOutput>
+      <FullPath>C:\Users\Lenovo PC\Documents\GitHub\dflat\Oric-DFLAT\emulator\util\dfbin2tap\build\x64\MinSizeRel\ZERO_CHECK</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\Lenovo PC\Documents\GitHub\dflat\Oric-DFLAT\emulator\util\dfbin2tap\build\dfbin2tap\MinSizeRel\dfbin2tap.exe</FullPath>
+    </ProjectOutput>
+    <ProjectOutput>
+      <FullPath>C:\Users\Lenovo PC\Documents\GitHub\dflat\Oric-DFLAT\emulator\util\dfbin2tap\build\x64\MinSizeRel\ALL_BUILD</FullPath>
+    </ProjectOutput>
+  </ProjectOutputs>
+  <ContentFiles />
+  <SatelliteDlls />
+  <NonRecipeFileRefs />
+</Project>

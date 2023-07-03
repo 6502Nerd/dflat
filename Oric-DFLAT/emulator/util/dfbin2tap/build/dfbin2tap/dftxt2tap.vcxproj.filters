@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\Users\Lenovo PC\Documents\GitHub\dflat\Oric-DFLAT\emulator\util\dfbin2tap\dfbin2tap\dfbin2tap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\Users\Lenovo PC\Documents\GitHub\dflat\Oric-DFLAT\emulator\util\dfbin2tap\dfbin2tap\dfbin2tap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\Users\Lenovo PC\Documents\GitHub\dflat\Oric-DFLAT\emulator\util\dfbin2tap\dfbin2tap\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{178BE8DE-259C-30BC-9EEF-258BDE1E687B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{A1EB6358-E5F2-3E0F-B825-EE185EF5510A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
