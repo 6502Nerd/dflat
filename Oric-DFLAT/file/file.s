@@ -278,9 +278,9 @@ f_put_block_bytes
 	inx
 	bne f_put_block_bytes	; Always 256 bytes
 	
-	jsr f_block_gap		; Wait a while, still outputting 0 bits
+	jmp f_block_gap		; Wait a while, still outputting 0 bits
 
-	rts
+;	rts
 
 ; tp_print_block
 f_print_block
@@ -296,8 +296,8 @@ f_print_block
 	jsr gr_put_byte
 	lda #hi(f_back4)		; Go back 4 characters to print next block
 	ldy #lo(f_back4)
-	jsr gr_print_msg
-	rts
+	jmp gr_print_msg
+;	rts
 
 
 ;* t_get_byte
