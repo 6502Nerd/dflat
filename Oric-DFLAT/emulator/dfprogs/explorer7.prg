@@ -449,77 +449,77 @@ data 1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1
 def_asm(option)
 	.opt option
 	.org code
-	.lda #0xf1
-	.sta addr1+1
-	.lda #0xf0
-	.sta addr2+1
-	.lda #0xAA
-	.sta addr1+2
-	.sta addr2+2
-	.ldy #5
-	.ldx #0
+	lda #0xf1
+	sta addr1+1
+	lda #0xf0
+	sta addr2+1
+	lda #0xAA
+	sta addr1+2
+	sta addr2+2
+	ldy #5
+	ldx #0
 .loop
 .addr1
-	.lda 1234,x
+	lda 1234,x
 .addr2
-	.sta 1234,x
-	.inx
-	.bne loop
-	.inc addr1+2
-	.inc addr2+2
-	.dey
-	.bne loop
+	sta 1234,x
+	inx
+	bne loop
+	inc addr1+2
+	inc addr2+2
+	dey
+	bne loop
 .color
-	.lda #6
-	.sta 43760
-	.sta 43840
-	.sta 43920
-	.sta 44000
-	.sta 44080
-	.sta 44160
-	.sta 44240
-	.sta 44320
-	.sta 44400
-	.sta 44480
-	.sta 44560
-	.sta 44640
-	.sta 44720
-	.sta 44800
-	.sta 44880
-	.lda #3
-	.sta 43800
-	.sta 43880
-	.sta 43960
-	.sta 44040
-	.sta 44120
-	.sta 44200
-	.sta 44280
-	.sta 44360
-	.sta 44440
-	.sta 44520
-	.sta 44600
-	.sta 44680
-	.sta 44760
-	.sta 44840
-	.rts
+	lda #6
+	sta 43760
+	sta 43840
+	sta 43920
+	sta 44000
+	sta 44080
+	sta 44160
+	sta 44240
+	sta 44320
+	sta 44400
+	sta 44480
+	sta 44560
+	sta 44640
+	sta 44720
+	sta 44800
+	sta 44880
+	lda #3
+	sta 43800
+	sta 43880
+	sta 43960
+	sta 44040
+	sta 44120
+	sta 44200
+	sta 44280
+	sta 44360
+	sta 44440
+	sta 44520
+	sta 44600
+	sta 44680
+	sta 44760
+	sta 44840
+	rts
 enddef
 ;; asm  print sprite
 def_asm2(option)
 	.opt option
 	.org prtspr
-	.ldx #0
-	.ldy #0
+	ldx #0
+	ldy #0
 .psloop
 .psaddr
-	.lda 1234,x 
+	lda 1234,x 
 .psscreen
-	.sta 1234,y	
-	.clc
-	.tya
-	.adc #40
-	.tay
-	.inx
-	.cpx #6
-	.bne psloop
-	.rts
+	sta 1234,y	
+	clc
+	tya
+	adc #40
+	tay
+	inx
+	cpx #6
+	bne psloop
+	rts
 enddef

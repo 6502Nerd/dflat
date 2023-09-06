@@ -52,7 +52,7 @@ def_init()
 	paper 0: ink 6: cls
 	i=0
 	repeat
-		read,v
+		read v
 		poke 0xb900+i,v
 		i=i+1
 	until v>250

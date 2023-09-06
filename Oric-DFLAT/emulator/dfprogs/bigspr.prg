@@ -1,93 +1,94 @@
+; WORK IN PROGRESS!
 def_start()
  _initSprites()
- repeat
-  input yy
-  a=call(drawSprite,0,10,yy)
-  pr.peek(rowStart)," ",peek(rowExtent)
- until yy==999
+; repeat
+;  input yy
+;  a=call(drawSprite,0,10,yy)
+;  pr.peek(rowStart)," ",peek(rowExtent)
+; until yy==999
 enddef
 ; def_something
 def_initSprites()
  dim plotCode[200]
  dim spriteData[100,20]
- dim pat$[20]
+ dim pat$[25]
  ptr=spriteData
+ row=0
  repeat
-  i=1:read pat$:pr.pat$
+  i=1:read pat$
   while i<=len(pat$)
-   poke ptr,asc(mid(pat$,i,1))-'0'+16
+   a=asc(mid(pat$,i,1))
+   if a<>32:a=a-'0'+16:endif
+   poke ptr,a
+   poke addr(pat$)+i-1,a
    ptr=ptr+1
    i=i+1
   wend
+  plot 10,27,pat$:println
+  row=row+1:if (row\8)==0:println:endif
  until pat$==""
- println "Pass 0":_asmPlot(0)
- println "Pass 1":_asmPlot(0)
- println "Pass 2":_asmPlot(3)
+; println "Pass 0":_asmPlot(0)
+; println "Pass 1":_asmPlot(0)
+; println "Pass 2":_asmPlot(3)
 enddef
 ;  
-data "   33333    "
-data " 333331133  "
-data "33333333333 "
-data "33333333    "
-data "333333      "
-data "33333333    "
-data " 333333333  "
-data "   33333    "
-data "                                "
+data "     333330      "
+data "   3333311330    "
+data "  333333313330   "
+data "  333333330      "
+data "  3333330        "
+data "  333333330      "
+data "   3333333330    "
+data "     333330      "
 ;
-data "   33333    "
-data " 333331133  "
-data "33333333333 "
-data "333333333   "
-data "333333      "
-data "33333333333 "
-data " 333333333  "
-data "   33333    "
-data "                                "
+data "     333330      "
+data "   3333311330    "
+data "  333333313330   "
+data "  3333333330     "
+data "  3333330        "
+data "  333333333330   "
+data "   3333333330    "
+data "     333330      "
 ;
-data "   33333    "
-data " 333331133  "
-data "33333333333 "
-data "33333333333 "
-data "333333      "
-data "33333333333 "
-data " 333333333  "
-data "   33333    "
-data "                                "
+data "     333330      "
+data "   3333311330    "
+data "  333333313330   "
+data "  333333333330   "
+data "  3333330        "
+data "  333333333330   "
+data "   3333333330    "
+data "     333330      "
 ;
-data "   33333    "
-data " 333331133  "
-data "33333333333 "
-data "33333333333 "
-data "33333333333 "
-data "33333333333 "
-data " 333333333  "
-data "   33333    "
-data "                                "
+data "     333330      "
+data "   3333311330    "
+data "  333333313330   "
+data "  333333333330   "
+data "  333333333330   "
+data "  333333333330   "
+data "   3333333330    "
+data "     333330      "
 ;
-data "   66666    "
-data " 666666666  "
-data "66670667066 "
-data "66670667066 "
-data "66666666666 "
-data "66666666666 "
-data "66 66 66 66 "
-data "6  6  6  6  "
-data "                                "
+data "     666660      "
+data "   6666666660    "
+data "  666706670660   "
+data "  666706670660   "
+data "  666666666660   "
+data "  666666666660   "
+data "  660660660660   "
+data "  60 60 60 60    "
 ;
-data "   66666    "
-data " 666666666  "
-data "66670667066 "
-data "66670667066 "
-data "66666666666 "
-data "66666666666 "
-data "66 66 66 66 "
-data " 6  6  6  6 "
-data "                                "
+data "     555550      "
+data "   5555555550    "
+data "  555705570550   "
+data "  555705570550   "
+data "  555555555550   "
+data "  555555555550   "
+data "  550550550550   "
+data "   50 50 50 50   "
 ;
 data ""
-;
-;
+
+this will not load!!
 def_asmPlot(o)
  .opt o:.org plotCode
  ztmp24=0xb0
@@ -118,66 +119,66 @@ def_asmPlot(o)
 .rowExtent:.db 0
 .colStart:.db 0
 .colExtent:.db 0
-.dex
+dex
 .drawSprite:;A=Sprite #, X,Y=Coords
- .dex:.stx xpos:.dey:.sty ypos:.sta sprNum
+ dex:stx xpos:dey:sty ypos:sta sprNum
  ; Check if all of sprite would be
  ; out of bounds, if so do nothing
- .cpy #26:.bcc adjustRow
- .cpy #(255-8):.bcc notVisible
+ cpy #26:bcc adjustRow
+ cpy #(255-8):bcc notVisible
 .adjustRow
- .tya:.clc:.adc #8
- .cmp #8:.bcc clipTop
- .cmp #26:.bcc checkCol
- .sty .scrRow:
+ tya:clc:adc #8
+ cmp #8:bcc clipTop
+ cmp #26:bcc checkCol
+ sty scrRow:
 .clipTop 
- .cpx #38:.bcc checkColExtent
- .cpx #(255-12):.bcc notVisible
+ cpx #38:bcc checkColExtent
+ cpx #(255-12):bcc notVisible
  ; Ok it's visible but does it need clipping
 .doClip
- .stx xpos:.sty ypos
- .stx scrCol:.sty scrRow
- .cpx 
- .stx colStart:.sty rowStart
+ stx xpos:sty ypos
+ stx scrCol:sty scrRow
+ cpx #38:bcc 
+ stx colStart:sty rowStart
  ; Assume no clipping
- .ldx #8:.stx rowExtent:.ldx #12:.stx colExtent
- .ldx #0
+ ldx #8:stx rowExtent:ldx #12:stx colExtent
+ ldx #0
  ; Calculate source address
- .stx bltSrc+1
+ stx bltSrc+1
  ; Calculate sprite# * 128 for offset
  ; Instead of rotating left 7 times
  ; rotate right, carry in to MSB of low byte
  ; then remainder is the high byte
- .clc
- .lsr:.ror bltSrc+1
- .sta bltSrc+2
+ clc
+ lsr:ror bltSrc+1
+ sta bltSrc+2
  ; Now add sprite data base to the offset C=0 here
  ; Goes in to self-mod code
- .lda bltSrc+1:.adc #spriteData&0xff:.sta bltSrc+1
- .lda bltSrc+2:.adc #spriteData/256:.sta bltSrc+2
+ lda bltSrc+1:adc #spriteData&0xff:sta bltSrc+1
+ lda bltSrc+2:adc #spriteData/256:sta bltSrc+2
  ; Clip between 1,1->38,26 inclusive
  ; Sprites are row 1..26 - 26 row window
  ; How many rows to display from 8 in total?
  ; Check bottom border
- .tya:.clc:.adc #7
- .cmp #27:.bcc topBorder
- ; C=1 here.
+ tya:clc:adc #7
+ cmp #27:bcc topBorder
+ ; C=1 here
  ; Ok sprite bottom > 26
  ; how many sprites rows to row 26?
  ; we need row extent
- .sbc #26:.sta rowExtent
- .lda #8:.sbc rowExtent:.sta rowExtent
- .bne rightBorder
+ sbc #26:sta rowExtent
+ lda #8:sbc rowExtent:sta rowExtent
+ bne rightBorder
  ; Check top border
 .topBorder:;c=0 here
  ;Subtract 7 (-6-C)
- .sbc #6:.bcs rightBorder
+ sbc #6:bcs rightBorder
  ; Ok clip top of sprite, C=0 here
- .adc #7:.sta rowExtent
- .lda #8:.sbc rowExtent:.sta rowStart
+ adc #7:sta rowExtent
+ lda #8:sbc rowExtent:sta rowStart
 .rightBorder
 .notVisible
- .rts
+ rts
 ;
 .bltRows:.db 0
 .bltCols:.db 0
@@ -189,51 +190,51 @@ def_asmPlot(o)
 .bltDstSkip:.db 0
 .blt
  ; If y<=0 then do nothing
- .ldy bltRows:.beq bltDone:.bmi bltDone
+ ldy bltRows:beq bltDone:bmi bltDone
  ; num rows-1
- .dey
+ dey
  ; If x<=0 then do nothing
- .ldx bltCols:.beq bltDone:.bmi bltDone
+ ldx bltCols:beq bltDone:bmi bltDone
  ; num cols-1
- .dex:.stx blt1Row+1
+ dex:stx blt1Row+1
  ; Initialise blit variables
- .lda bltSrc:.sta bltGetSrc+1
- .lda bltSrc+1:.sta bltGetSrc+2
- .lda bltANDMask:.sta bltDoAND+1
- .lda bltORMASK:.sta bltDoOR+1
- .lda bltDst:.sta bltWrtDst+1
- .lda bltDst+1:.sta bltWrtDst+2
- .lda bltSrcSkip:.sta bltSrcOffset+1
- .lda bltDstSkip:.sta bltDstOffset+1
+ lda bltSrc:sta bltGetSrc+1
+ lda bltSrc+1:sta bltGetSrc+2
+ lda bltANDMask:sta bltDoAND+1
+ lda bltORMASK:sta bltDoOR+1
+ lda bltDst:sta bltWrtDst+1
+ lda bltDst+1:sta bltWrtDst+2
+ lda bltSrcSkip:sta bltSrcOffset+1
+ lda bltDstSkip:sta bltDstOffset+1
 .blt1Row:;Self modifying code+1
- .ldx #0xff
+ ldx #0xff
 .blt1Col
 .bltGetSrc:;Self modifying code+1+2
- .lda 0xffff,x 
+ lda 0xffff,x 
 .bltDoAND:;Self modifying code+1
- .and #0xff
+ and #0xff
 .bltDoOR:;Self modifying code+1
- .ora #0xff
+ ora #0xff
 .bltWrtDst:;Self modifying code+1+2
- .sta 0xffff,x
- .dex
- .bpl blt1Col
- .clc
+ sta 0xffff,x
+ dex
+ bpl blt1Col
+ clc
 .bltSrcOffset:;Self modifying code+1
- .lda #0xff
- .adc bltGetSrc+1
- .sta bltGetSrc+1
- .lda #0
- .adc bltGetSrc+2
- .sta bltGetSrc+2
- .clc
+ lda #0xff
+ adc bltGetSrc+1
+ sta bltGetSrc+1
+ lda #0
+ adc bltGetSrc+2
+ sta bltGetSrc+2
+ clc
 .bltDstOffset:;Self modifying code+1
- .lda #0xff
- .adc bltWrtDst+1
- .sta bltWrtDst+1
- .lda #0
- .adc bltWrtDst+2
- .sta bltWrtDst+2
- .dey
- .bpl blt1Row
- .rts
+ lda #0xff
+ adc bltWrtDst+1
+ sta bltWrtDst+1
+ lda #0
+ adc bltWrtDst+2
+ sta bltWrtDst+2
+ dey
+ bpl blt1Row
+ rts

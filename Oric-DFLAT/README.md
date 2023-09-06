@@ -36,7 +36,7 @@ The base version here is targeted for the Oric-1 and Atmos computers from the ea
 
 Right now I am in refinement and documentation mode. Please see the wiki pages for details of the language.
 
-The source and binaries are in the Oric-DFLAT folder - the readme provides a quickstart guide to try dflat rather wihtout building it from scratch.
+The source and binaries are in the Oric-DFLAT folder - the readme.txt provides a quickstart guide to try dflat rather wihtout building it from scratch.
 
 I also have a hackaday page for this, although this repo will always have the latest code;
 https://hackaday.io/project/175585-oric-1-dflat-system
