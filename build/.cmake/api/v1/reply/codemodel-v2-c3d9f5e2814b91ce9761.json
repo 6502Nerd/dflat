@@ -1,0 +1,1020 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3,
+						5
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						4
+					]
+				},
+				{
+					"build" : "dftap2txt",
+					"childIndexes" : 
+					[
+						2
+					],
+					"jsonFile" : "directory-dftap2txt-Debug-854ec589cf5e1b34b66a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "dftap2txt",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "dftap2txt/dftap2txt",
+					"jsonFile" : "directory-dftap2txt.dftap2txt-Debug-c17ea912fe24354fc8ee.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "dftap2txt/dftap2txt",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "dftap2wav",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-dftap2wav-Debug-3f88dfd43f0b2042890c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "dftap2wav",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "dftap2wav/dftap2wav",
+					"jsonFile" : "directory-dftap2wav.dftap2wav-Debug-b97922956dc65c3dea55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "dftap2wav/dftap2wav",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "dftxt2tap",
+					"childIndexes" : 
+					[
+						6
+					],
+					"jsonFile" : "directory-dftxt2tap-Debug-c036e48d47b69ef1801c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "dftxt2tap/dftxt2tap",
+					"jsonFile" : "directory-dftxt2tap.dftxt2tap-Debug-a62537ca8de5383a853d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap/dftxt2tap",
+					"targetIndexes" : 
+					[
+						7
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "dflat-utils",
+					"targetIndexes" : 
+					[
+						0,
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "dftap2txt",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "dftap2wav",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5,
+						6
+					],
+					"name" : "dftxt2tap",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						7
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-Debug-b7a1c944ed5f48d89842.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@dda77b8c18c55148ca09",
+					"jsonFile" : "target-ALL_BUILD-Debug-1295c183eb7e4c061344.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ALL_BUILD::@4980753c159deca7165f",
+					"jsonFile" : "target-ALL_BUILD-Debug-058002a240a1d6cf6409.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "ALL_BUILD::@a522059d42245f4fae25",
+					"jsonFile" : "target-ALL_BUILD-Debug-bd06ed8cafdc11350c01.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-Debug-2162ecd0423b7fab9eb1.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "dftap2txt::@8246f2f8758d5d58250f",
+					"jsonFile" : "target-dftap2txt-Debug-c87e23d0abf374e7f4c6.json",
+					"name" : "dftap2txt",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "dftap2wav::@2393bd824f4f28ca69c0",
+					"jsonFile" : "target-dftap2wav-Debug-34746aafc665876c3c09.json",
+					"name" : "dftap2wav",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "dftxt2tap::@7bcbd2476a60cb636fef",
+					"jsonFile" : "target-dftxt2tap-Debug-e8b94a9c5a3a388a22d0.json",
+					"name" : "dftxt2tap",
+					"projectIndex" : 3
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3,
+						5
+					],
+					"jsonFile" : "directory-.-Release-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						4
+					]
+				},
+				{
+					"build" : "dftap2txt",
+					"childIndexes" : 
+					[
+						2
+					],
+					"jsonFile" : "directory-dftap2txt-Release-854ec589cf5e1b34b66a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "dftap2txt",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "dftap2txt/dftap2txt",
+					"jsonFile" : "directory-dftap2txt.dftap2txt-Release-c17ea912fe24354fc8ee.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "dftap2txt/dftap2txt",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "dftap2wav",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-dftap2wav-Release-3f88dfd43f0b2042890c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "dftap2wav",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "dftap2wav/dftap2wav",
+					"jsonFile" : "directory-dftap2wav.dftap2wav-Release-b97922956dc65c3dea55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "dftap2wav/dftap2wav",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "dftxt2tap",
+					"childIndexes" : 
+					[
+						6
+					],
+					"jsonFile" : "directory-dftxt2tap-Release-c036e48d47b69ef1801c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "dftxt2tap/dftxt2tap",
+					"jsonFile" : "directory-dftxt2tap.dftxt2tap-Release-a62537ca8de5383a853d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap/dftxt2tap",
+					"targetIndexes" : 
+					[
+						7
+					]
+				}
+			],
+			"name" : "Release",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "dflat-utils",
+					"targetIndexes" : 
+					[
+						0,
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "dftap2txt",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "dftap2wav",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5,
+						6
+					],
+					"name" : "dftxt2tap",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						7
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-Release-b7a1c944ed5f48d89842.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@dda77b8c18c55148ca09",
+					"jsonFile" : "target-ALL_BUILD-Release-1295c183eb7e4c061344.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ALL_BUILD::@4980753c159deca7165f",
+					"jsonFile" : "target-ALL_BUILD-Release-058002a240a1d6cf6409.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "ALL_BUILD::@a522059d42245f4fae25",
+					"jsonFile" : "target-ALL_BUILD-Release-bd06ed8cafdc11350c01.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-Release-2162ecd0423b7fab9eb1.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "dftap2txt::@8246f2f8758d5d58250f",
+					"jsonFile" : "target-dftap2txt-Release-c05881b2c0ad0b902231.json",
+					"name" : "dftap2txt",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "dftap2wav::@2393bd824f4f28ca69c0",
+					"jsonFile" : "target-dftap2wav-Release-187951b52847289e020f.json",
+					"name" : "dftap2wav",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "dftxt2tap::@7bcbd2476a60cb636fef",
+					"jsonFile" : "target-dftxt2tap-Release-a9b8bf49844641920354.json",
+					"name" : "dftxt2tap",
+					"projectIndex" : 3
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3,
+						5
+					],
+					"jsonFile" : "directory-.-MinSizeRel-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						4
+					]
+				},
+				{
+					"build" : "dftap2txt",
+					"childIndexes" : 
+					[
+						2
+					],
+					"jsonFile" : "directory-dftap2txt-MinSizeRel-854ec589cf5e1b34b66a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "dftap2txt",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "dftap2txt/dftap2txt",
+					"jsonFile" : "directory-dftap2txt.dftap2txt-MinSizeRel-c17ea912fe24354fc8ee.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "dftap2txt/dftap2txt",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "dftap2wav",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-dftap2wav-MinSizeRel-3f88dfd43f0b2042890c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "dftap2wav",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "dftap2wav/dftap2wav",
+					"jsonFile" : "directory-dftap2wav.dftap2wav-MinSizeRel-b97922956dc65c3dea55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "dftap2wav/dftap2wav",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "dftxt2tap",
+					"childIndexes" : 
+					[
+						6
+					],
+					"jsonFile" : "directory-dftxt2tap-MinSizeRel-c036e48d47b69ef1801c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "dftxt2tap/dftxt2tap",
+					"jsonFile" : "directory-dftxt2tap.dftxt2tap-MinSizeRel-a62537ca8de5383a853d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap/dftxt2tap",
+					"targetIndexes" : 
+					[
+						7
+					]
+				}
+			],
+			"name" : "MinSizeRel",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "dflat-utils",
+					"targetIndexes" : 
+					[
+						0,
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "dftap2txt",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "dftap2wav",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5,
+						6
+					],
+					"name" : "dftxt2tap",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						7
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-b7a1c944ed5f48d89842.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@dda77b8c18c55148ca09",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-1295c183eb7e4c061344.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ALL_BUILD::@4980753c159deca7165f",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-058002a240a1d6cf6409.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "ALL_BUILD::@a522059d42245f4fae25",
+					"jsonFile" : "target-ALL_BUILD-MinSizeRel-bd06ed8cafdc11350c01.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-MinSizeRel-2162ecd0423b7fab9eb1.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "dftap2txt::@8246f2f8758d5d58250f",
+					"jsonFile" : "target-dftap2txt-MinSizeRel-391085c3612f363fd379.json",
+					"name" : "dftap2txt",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "dftap2wav::@2393bd824f4f28ca69c0",
+					"jsonFile" : "target-dftap2wav-MinSizeRel-01220239d6c7c48c2f9b.json",
+					"name" : "dftap2wav",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "dftxt2tap::@7bcbd2476a60cb636fef",
+					"jsonFile" : "target-dftxt2tap-MinSizeRel-db717159df0d61594efb.json",
+					"name" : "dftxt2tap",
+					"projectIndex" : 3
+				}
+			]
+		},
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						3,
+						5
+					],
+					"jsonFile" : "directory-.-RelWithDebInfo-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						4
+					]
+				},
+				{
+					"build" : "dftap2txt",
+					"childIndexes" : 
+					[
+						2
+					],
+					"jsonFile" : "directory-dftap2txt-RelWithDebInfo-854ec589cf5e1b34b66a.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "dftap2txt",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "dftap2txt/dftap2txt",
+					"jsonFile" : "directory-dftap2txt.dftap2txt-RelWithDebInfo-c17ea912fe24354fc8ee.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "dftap2txt/dftap2txt",
+					"targetIndexes" : 
+					[
+						5
+					]
+				},
+				{
+					"build" : "dftap2wav",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-dftap2wav-RelWithDebInfo-3f88dfd43f0b2042890c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "dftap2wav",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "dftap2wav/dftap2wav",
+					"jsonFile" : "directory-dftap2wav.dftap2wav-RelWithDebInfo-b97922956dc65c3dea55.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "dftap2wav/dftap2wav",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "dftxt2tap",
+					"childIndexes" : 
+					[
+						6
+					],
+					"jsonFile" : "directory-dftxt2tap-RelWithDebInfo-c036e48d47b69ef1801c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "dftxt2tap/dftxt2tap",
+					"jsonFile" : "directory-dftxt2tap.dftxt2tap-RelWithDebInfo-a62537ca8de5383a853d.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 3,
+					"source" : "dftxt2tap/dftxt2tap",
+					"targetIndexes" : 
+					[
+						7
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "dflat-utils",
+					"targetIndexes" : 
+					[
+						0,
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1,
+						2
+					],
+					"name" : "dftap2txt",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1,
+						5
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "dftap2wav",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2,
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5,
+						6
+					],
+					"name" : "dftxt2tap",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3,
+						7
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ALL_BUILD::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-b7a1c944ed5f48d89842.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "ALL_BUILD::@dda77b8c18c55148ca09",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-1295c183eb7e4c061344.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "ALL_BUILD::@4980753c159deca7165f",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-058002a240a1d6cf6409.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "ALL_BUILD::@a522059d42245f4fae25",
+					"jsonFile" : "target-ALL_BUILD-RelWithDebInfo-bd06ed8cafdc11350c01.json",
+					"name" : "ALL_BUILD",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ZERO_CHECK::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ZERO_CHECK-RelWithDebInfo-2162ecd0423b7fab9eb1.json",
+					"name" : "ZERO_CHECK",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "dftap2txt::@8246f2f8758d5d58250f",
+					"jsonFile" : "target-dftap2txt-RelWithDebInfo-d54339960bbe91403546.json",
+					"name" : "dftap2txt",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "dftap2wav::@2393bd824f4f28ca69c0",
+					"jsonFile" : "target-dftap2wav-RelWithDebInfo-fae5a562e8343e628237.json",
+					"name" : "dftap2wav",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 6,
+					"id" : "dftxt2tap::@7bcbd2476a60cb636fef",
+					"jsonFile" : "target-dftxt2tap-RelWithDebInfo-22d02521f006faee047f.json",
+					"name" : "dftxt2tap",
+					"projectIndex" : 3
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/Lenovo PC/Documents/GitHub/dflat/build",
+		"source" : "C:/Users/Lenovo PC/Documents/GitHub/dflat/Oric-DFLAT/emulator/util"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 5
+	}
+}

@@ -23,7 +23,7 @@ AS65 Assembler for R6502 [1.42].                                     Page    1
            AM_ZPINDY : $0009              9   *
               AM_ZPX : $0005              5   *
               AM_ZPY : $0006              6   *
-            asm_init : $ffe6          65510
+            asm_init : $ffde          65502
                BANK0 : $0001              1
       bin_to_bcd_bit : $c368          50024
               buf_ef : $003c             60
@@ -204,9 +204,9 @@ AS65 Assembler for R6502 [1.42].                                     Page    1
          df_asmoprnd : $009e            158
            df_asmopt : $009b            155
             df_asmpc : $0099            153
-  df_asm_altaddrmode : $fd90          64912
-       df_asm_length : $fd7f          64895
-    df_asm_tokensyms : $fda1          64929
+  df_asm_altaddrmode : $fd88          64904
+       df_asm_length : $fd77          64887
+    df_asm_tokensyms : $fd99          64921
             df_brkpc : $0062             98
            df_brkval : $0064            100
          df_checkkey : $005b             91
@@ -306,17 +306,17 @@ df_rt_arry_parm2_term : $e39d          58269
            df_rt_asl : $e7f5          59381
         df_rt_aslbit : $e7fb          59387
        df_rt_asldone : $e805          59397
-    df_rt_asm_ABSREL : $fcd4          64724
-    df_rt_asm_AM_ABS : $fceb          64747
-   df_rt_asm_AM_ABSX : $fcf8          64760
-   df_rt_asm_AM_ABSY : $fce6          64742
-    df_rt_asm_AM_IMM : $fcfd          64765
-    df_rt_asm_AM_IMP : $fccf          64719
-df_rt_asm_AM_INDIRECT : $fd07          64775
-    df_rt_asm_AM_REL : $fcf5          64757
-  df_rt_asm_AM_ZPIND : $fd2d          64813
-df_rt_asm_AM_ZPINDORY : $fd1d          64797
-  df_rt_asm_addrmode : $fcb3          64691
+    df_rt_asm_ABSREL : $fccc          64716
+    df_rt_asm_AM_ABS : $fce3          64739
+   df_rt_asm_AM_ABSX : $fcf0          64752
+   df_rt_asm_AM_ABSY : $fcde          64734
+    df_rt_asm_AM_IMM : $fcf5          64757
+    df_rt_asm_AM_IMP : $fcc7          64711
+df_rt_asm_AM_INDIRECT : $fcff          64767
+    df_rt_asm_AM_REL : $fced          64749
+  df_rt_asm_AM_ZPIND : $fd25          64805
+df_rt_asm_AM_ZPINDORY : $fd15          64789
+  df_rt_asm_addrmode : $fcab          64683
   df_rt_asm_assemble : $fa7d          64125
 df_rt_asm_assemble_done : $fa8f          64143
  df_rt_asm_check_alt : $fb88          64392
@@ -342,16 +342,15 @@ df_rt_asm_decode_token_keyword : $f12c          61740
         df_rt_asm_ds : $fb5c          64348
         df_rt_asm_dw : $fae4          64228
     df_rt_asm_encode : $fbc0          64448
-df_rt_asm_encode_print : $fc27          64551
-df_rt_asm_encode_relfar : $fbf7          64503
-df_rt_asm_encode_relpos : $fbf3          64499
-df_rt_asm_encode_skiprel : $fbf9          64505
-df_rt_asm_encode_writebyte : $fc15          64533
-df_rt_asm_encode_writeword : $fc1d          64541
-df_rt_asm_find_addr_mode : $fd3b          64827
-df_rt_asm_find_addr_mode_err : $fd50          64848
-df_rt_asm_find_addr_mode_loop : $fd41          64833
-df_rt_asm_get_operand : $fd30          64816
+df_rt_asm_encode_print : $fc1f          64543
+df_rt_asm_encode_skiprel : $fc08          64520
+df_rt_asm_encode_writebyte : $fc0e          64526
+df_rt_asm_encode_writeword : $fc15          64533
+df_rt_asm_err_quantity : $fc0c          64524
+df_rt_asm_find_addr_mode : $fd33          64819
+df_rt_asm_find_addr_mode_err : $fd48          64840
+df_rt_asm_find_addr_mode_loop : $fd39          64825
+df_rt_asm_get_operand : $fd28          64808
      df_rt_asm_label : $fab4          64180
       df_rt_asm_mnem : $fb79          64377
   df_rt_asm_mnem_chk : $fb9c          64412
@@ -360,23 +359,24 @@ df_rt_asm_get_operand : $fd30          64816
   df_rt_asm_mnem_try : $fb7f          64383
        df_rt_asm_opt : $fad9          64217
        df_rt_asm_org : $fac7          64199
-   df_rt_asm_printCH : $fc8e          64654
-   df_rt_asm_printCR : $fc85          64645
- df_rt_asm_printline : $fc9b          64667
-  df_rt_asm_printOPC : $fc57          64599
-  df_rt_asm_printOPR : $fc6b          64619
-df_rt_asm_printOPR_1 : $fc80          64640
-   df_rt_asm_printPC : $fc47          64583
-  df_rt_asm_printSPC : $fc62          64610
-df_rt_asm_print_mmen : $fc37          64567
- df_rt_asm_print_rts : $fc46          64582
-df_rt_asm_skip_to_sym : $fd53          64851
-df_rt_asm_skip_to_sym_done : $fd52          64850
-df_rt_asm_skip_to_sym_end : $fd70          64880
-df_rt_asm_skip_to_sym_next : $fd61          64865
+   df_rt_asm_printCH : $fc86          64646
+   df_rt_asm_printCR : $fc7d          64637
+ df_rt_asm_printline : $fc93          64659
+  df_rt_asm_printOPC : $fc4f          64591
+  df_rt_asm_printOPR : $fc63          64611
+df_rt_asm_printOPR_1 : $fc78          64632
+   df_rt_asm_printPC : $fc3f          64575
+  df_rt_asm_printSPC : $fc5a          64602
+df_rt_asm_print_mmen : $fc2f          64559
+ df_rt_asm_print_rts : $fc3e          64574
+df_rt_asm_rel_postive : $fc02          64514
+df_rt_asm_skip_to_sym : $fd4b          64843
+df_rt_asm_skip_to_sym_done : $fd4a          64842
+df_rt_asm_skip_to_sym_end : $fd68          64872
+df_rt_asm_skip_to_sym_next : $fd59          64857
     df_rt_asm_string : $fb04          64260
  df_rt_asm_string_ch : $fb0b          64267
-  df_rt_asm_tokenjmp : $ffdc          65500
+  df_rt_asm_tokenjmp : $ffd4          65492
         df_rt_assign : $ee57          61015
     df_rt_assign_str : $ee64          61028
          df_rt_asubb : $e853          59475
@@ -873,7 +873,7 @@ df_tk_asm_parse_command_err : $f9a1          63905
   df_tk_asm_symfound : $fa01          64001
 df_tk_asm_symnextentry : $f9df          63967
 df_tk_asm_symnomatch : $f9dd          63965
-  df_tk_asm_tokenjmp : $ffd2          65490
+  df_tk_asm_tokenjmp : $ffca          65482
         df_tk_assign : $df18          57112
          df_tk_bload : $e013          57363
           df_tk_body : $db35          56117
@@ -1536,7 +1536,7 @@ gr_line_skip_xy_swap : $d33b          54075
          kernel_test : $c4d7          50391
                 main : $c077          49271
            mem_start : $071f           1823
-        mod_sz_asm_e : $ffef          65519
+        mod_sz_asm_e : $ffe7          65511
         mod_sz_asm_s : $f983          63875
        mod_sz_bios_e : $d603          54787
        mod_sz_bios_s : $c000          49152
@@ -1552,7 +1552,7 @@ gr_line_skip_xy_swap : $d33b          54075
          mod_sz_io_s : $c3f6          50166
      mod_sz_kernel_e : $c4f4          50420
      mod_sz_kernel_s : $c000          49152
-   mod_sz_language_e : $ffef          65519
+   mod_sz_language_e : $ffe7          65511
    mod_sz_language_s : $d603          54787
        mod_sz_proc_e : $f70d          63245
        mod_sz_proc_s : $f5aa          62890
@@ -1561,7 +1561,7 @@ gr_line_skip_xy_swap : $d33b          54075
 AS65 Assembler for R6502 [1.42].                                     Page   25
 -------------------------------- bank\bank0.s --------------------------------
 
-      mod_sz_rtasm_e : $fd7f          64895
+      mod_sz_rtasm_e : $fd77          64887
       mod_sz_rtasm_s : $fa7d          64125
      mod_sz_rtsubs_e : $f5aa          62890
      mod_sz_rtsubs_s : $e765          59237
@@ -1788,7 +1788,7 @@ twos_complement_skip_X : $c350          50000
           _addZPWord : <macro>
                 _bcc : <macro>
                 _bcs : <macro>
-           _code_end : $ffef          65519
+           _code_end : $ffe7          65511
          _code_start : $c000          49152
           _cpu_stack : $0100            256
           _cpyZPWord : <macro>
@@ -1846,7 +1846,7 @@ twos_complement_skip_X : $c350          50000
 
 1730 labels used
 
-16325 lines read, no errors in pass 1.
+16316 lines read, no errors in pass 1.
 AS65 Assembler for R6502 [1.42].                                     Page   30
 -------------------------------- bank\bank0.s --------------------------------
 
@@ -3103,7 +3103,7 @@ c081 :                       msg_hello_world
                              	include "kernel/build.s"
 c081 : 4f726963206466..       db "Oric dflat\r" 
 c08c : 42792040363530..       db "By @6502Nerd\r" 
-c099 : 4275696c64203a..       db "Build : 0.20 [IJK-SD]\r" 
+c099 : 4275696c64203a..       db "Build : 0.21 [IJK-SD]\r" 
 c0af : 28632920323032..       db "(c) 2023\r\r",0 
                              
                              
@@ -15739,7 +15739,7 @@ f12c :                       df_rt_asm_decode_token_keyword
 f12c : 297f             [ 2] 	and #0x7f			; Mask off MSB
 f12e : aa               [ 2] 	tax					;Put it in to X as the counter
                              	; Point to asm symbol table
-f12f : a9a1             [ 2] 	lda #lo(df_asm_tokensyms)
+f12f : a999             [ 2] 	lda #lo(df_asm_tokensyms)
 f131 : 85a3             [ 3] 	sta df_tmpptrb
 f133 : a9fd             [ 2] 	lda #hi(df_asm_tokensyms)
 f135 : 85a4             [ 3] 	sta df_tmpptrb+1
@@ -17911,7 +17911,7 @@ f9b5 : 4c81d9           [ 3] 	jmp df_tk_var
                              ;****************************************
 f9b8 :                       df_tk_asm_matchtok
                              	; Start at token symbols beginning
-f9b8 : a9a1             [ 2] 	lda #lo(df_asm_tokensyms)
+f9b8 : a999             [ 2] 	lda #lo(df_asm_tokensyms)
 f9ba : 8581             [ 3] 	sta df_symtab
 f9bc : a9fd             [ 2] 	lda #hi(df_asm_tokensyms)
 f9be : 8582             [ 3] 	sta df_symtab+1
@@ -18004,9 +18004,9 @@ fa0e : 60               [ 6] 	rts
 fa0f :                       df_tk_asm_exec_parser
 fa0f : 0a               [ 2] 	asl a
 fa10 : aa               [ 2] 	tax
-fa11 : bdd2ff           [ 4] 	lda df_tk_asm_tokenjmp,x
+fa11 : bdcaff           [ 4] 	lda df_tk_asm_tokenjmp,x
 fa14 : 85a1             [ 3] 	sta df_tmpptra
-fa16 : bdd3ff           [ 4] 	lda df_tk_asm_tokenjmp+1,x
+fa16 : bdcbff           [ 4] 	lda df_tk_asm_tokenjmp+1,x
 fa19 : 85a2             [ 3] 	sta df_tmpptra+1
 fa1b : 6ca100           [ 6] 	jmp (df_tmpptra)
                              
@@ -18160,7 +18160,7 @@ fa7d : a488             [ 3] 	ldy df_exeoff
 fa7f : b186             [ 5] 	lda (df_currlin),y
 fa81 : 1009             [ 3] 	bpl df_rt_asm_do_label
 fa83 : 2090fa           [ 6] 	jsr df_rt_asm_command
-fa86 : 2085fc           [ 6] 	jsr df_rt_asm_printCR
+fa86 : 207dfc           [ 6] 	jsr df_rt_asm_printCR
 fa89 : 4c8ffa           [ 3] 	jmp df_rt_asm_assemble_done
 AS65 Assembler for R6502 [1.42].                                     Page  281
 -------------------------------- bank\bank0.s --------------------------------
@@ -18178,7 +18178,7 @@ fa90 : 297f             [ 2] 	and #0x7f
 fa92 : 48               [ 3] 	pha
 fa93 : aa               [ 2] 	tax
                              	; Point to Xth symtable entry of addr modes and 
-fa94 : 2053fd           [ 6] 	jsr df_rt_asm_skip_to_sym
+fa94 : 204bfd           [ 6] 	jsr df_rt_asm_skip_to_sym
                              
                              	; Get first addressing mode (ignoring offset byt
 fa97 : a001             [ 2] 	ldy #1
@@ -18200,9 +18200,9 @@ faa4 : aa               [ 2] 	tax
                              	; jump over directive code
 faa5 : e688             [ 5] 	inc df_exeoff
                              	; jump to directive handler
-faa7 : bddcff           [ 4] 	lda df_rt_asm_tokenjmp,x
+faa7 : bdd4ff           [ 4] 	lda df_rt_asm_tokenjmp,x
 faaa : 85a1             [ 3] 	sta df_tmpptra
-faac : bdddff           [ 4] 	lda df_rt_asm_tokenjmp+1,x
+faac : bdd5ff           [ 4] 	lda df_rt_asm_tokenjmp+1,x
 faaf : 85a2             [ 3] 	sta df_tmpptra+1
 fab1 : 6ca100           [ 6] 	jmp (df_tmpptra)
                              
@@ -18225,7 +18225,7 @@ fac6 : 60               [ 6] 	rts
                              ;* Set the code origin
 fac7 :                       df_rt_asm_org
                              	; Get the address from expression
-fac7 : 2030fd           [ 6] 	jsr df_rt_asm_get_operand
+fac7 : 2028fd           [ 6] 	jsr df_rt_asm_get_operand
                              	; Put this in to PC
 AS65 Assembler for R6502 [1.42].                                     Page  282
 -------------------------------- bank\bank0.s --------------------------------
@@ -18236,7 +18236,7 @@ face : a59f             [ 3] 	lda df_asmoprnd+1
 fad0 : 859a             [ 3] 	sta df_asmpc+1
 fad2 : a903             [ 2] 	lda #3
 fad4 : 85a0             [ 3] 	sta df_asmlen
-fad6 : 4c47fc           [ 3] 	jmp df_rt_asm_printPC
+fad6 : 4c3ffc           [ 3] 	jmp df_rt_asm_printPC
                              
                              ; Set the assembly option
                              ; Bit 0 set = Print code to console
@@ -18248,7 +18248,7 @@ fad6 : 4c47fc           [ 3] 	jmp df_rt_asm_printPC
                              ; Final write pass then stores the code
 fad9 :                       df_rt_asm_opt
                              	; Get the value from expression
-fad9 : 2030fd           [ 6] 	jsr df_rt_asm_get_operand
+fad9 : 2028fd           [ 6] 	jsr df_rt_asm_get_operand
                              	; Put this in to OPT
 fadc : a59e             [ 3] 	lda df_asmoprnd
 fade : 859b             [ 3] 	sta df_asmopt
@@ -18265,8 +18265,8 @@ fae4 :                       df_rt_asm_dw
 fae4 : a903             [ 2] 	lda #3
 fae6 :                       df_rt_asm_db_start
 fae6 : 85a0             [ 3] 	sta df_asmlen
-fae8 : 2047fc           [ 6] 	jsr df_rt_asm_printPC
-faeb : 2062fc           [ 6] 	jsr df_rt_asm_printSPC
+fae8 : 203ffc           [ 6] 	jsr df_rt_asm_printPC
+faeb : 205afc           [ 6] 	jsr df_rt_asm_printSPC
 faee :                       df_rt_asm_data
 faee : 2015e2           [ 6] 	jsr df_rt_neval		; Evaluate expression
 faf1 : 2080f7           [ 6] 	jsr df_ost_peekType	; What is the type
@@ -18306,7 +18306,7 @@ fb2b : 60               [ 6] 	rts
                              ; Check for value too big for db
                              ; Advance PC by df_asmlen
 fb2c :                       df_rt_asm_data_write
-fb2c : 206bfc           [ 6] 	jsr df_rt_asm_printOPR
+fb2c : 2063fc           [ 6] 	jsr df_rt_asm_printOPR
 fb2f :                       df_rt_asm_data_write_skip1
 fb2f : a902             [ 2] 	lda #2
 fb31 : 259b             [ 3] 	and df_asmopt
@@ -18341,10 +18341,10 @@ fb5a :                       df_rt_asm_data_write_err
                              	
                              	
 fb5c :                       df_rt_asm_ds
-fb5c : 2047fc           [ 6] 	jsr df_rt_asm_printPC
-fb5f : 2062fc           [ 6] 	jsr df_rt_asm_printSPC
+fb5c : 203ffc           [ 6] 	jsr df_rt_asm_printPC
+fb5f : 205afc           [ 6] 	jsr df_rt_asm_printSPC
                              	; Get the address from expression
-fb62 : 2030fd           [ 6] 	jsr df_rt_asm_get_operand
+fb62 : 2028fd           [ 6] 	jsr df_rt_asm_get_operand
                              	; ADD this in to PC
 fb65 : 18               [ 2] 	clc
 fb66 : a59e             [ 3] 	lda df_asmoprnd
@@ -18356,7 +18356,7 @@ fb70 : 859a             [ 3] 	sta df_asmpc+1
                              	; len=1 for printing
 fb72 : a903             [ 2] 	lda #3
 fb74 : 85a0             [ 3] 	sta df_asmlen
-fb76 : 4c6bfc           [ 3] 	jmp df_rt_asm_printOPR
+fb76 : 4c63fc           [ 3] 	jmp df_rt_asm_printOPR
 AS65 Assembler for R6502 [1.42].                                     Page  284
 -------------------------------- bank\bank0.s --------------------------------
 
@@ -18368,19 +18368,19 @@ fb79 : 68               [ 4] 	pla				; Throw away previous temp variable
                              	; jump over mnemonic code
 fb7a : e688             [ 5] 	inc df_exeoff
                              	; work out the addressing mode and get operand
-fb7c : 20b3fc           [ 6] 	jsr df_rt_asm_addrmode
+fb7c : 20abfc           [ 6] 	jsr df_rt_asm_addrmode
                              
 fb7f :                       df_rt_asm_mnem_try
 fb7f : a59c             [ 3] 	lda df_asmadmd					; With the addressing mode
-fb81 : 203bfd           [ 6] 	jsr df_rt_asm_find_addr_mode	; Find it for this 
+fb81 : 2033fd           [ 6] 	jsr df_rt_asm_find_addr_mode	; Find it for this 
 fb84 : c900             [ 2] 	cmp #AM_NONE					; Exists?
 fb86 : d014             [ 3] 	bne	df_rt_asm_mnem_chk			; If does then check it
 fb88 :                       df_rt_asm_check_alt
 fb88 : a69c             [ 3] 	ldx df_asmadmd					; Use ad mode as an index
-fb8a : bd90fd           [ 4] 	lda df_asm_altaddrmode,x		; Else get alternate
+fb8a : bd88fd           [ 4] 	lda df_asm_altaddrmode,x		; Else get alternate
 fb8d : c900             [ 2] 	cmp #AM_NONE					; Is there an alternate?
 fb8f : f02d             [ 3] 	beq df_rt_asm_mnem_err			; If no then error
-fb91 : 203bfd           [ 6] 	jsr df_rt_asm_find_addr_mode	; Check does mode e
+fb91 : 2033fd           [ 6] 	jsr df_rt_asm_find_addr_mode	; Check does mode e
 fb94 : c900             [ 2] 	cmp #AM_NONE					; this instruction
 fb96 : f026             [ 3] 	beq df_rt_asm_mnem_err			; if no then error
 fb98 : c59c             [ 3] 	cmp df_asmadmd					; Same as the original?
@@ -18388,17 +18388,17 @@ fb9a : f00e             [ 3] 	beq df_rt_asm_mnem_done			; if so then done
 fb9c :                       df_rt_asm_mnem_chk
 fb9c : 859c             [ 3] 	sta df_asmadmd					; This is the final mode
 fb9e : aa               [ 2] 	tax								; Get the length
-fb9f : bd7ffd           [ 4] 	lda df_asm_length,x
+fb9f : bd77fd           [ 4] 	lda df_asm_length,x
 fba2 : a69f             [ 3] 	ldx df_asmoprnd+1				; Is operand hi non-zero?
 fba4 : f004             [ 3] 	beq df_rt_asm_mnem_done			; If zero then done
 fba6 : c903             [ 2] 	cmp #3							; Else must be len 3?
 fba8 : d0de             [ 3] 	bne df_rt_asm_check_alt			; Try an alternate
 fbaa :                       df_rt_asm_mnem_done
 fbaa : a69c             [ 3] 	ldx df_asmadmd					; Get the final mode index
-fbac : bd7ffd           [ 4] 	lda df_asm_length,x				; Get the length
+fbac : bd77fd           [ 4] 	lda df_asm_length,x				; Get the length
 fbaf : 85a0             [ 3] 	sta df_asmlen
 fbb1 : a59c             [ 3] 	lda df_asmadmd					; Get the final mode
-fbb3 : 203bfd           [ 6] 	jsr df_rt_asm_find_addr_mode	; Get the Y index o
+fbb3 : 2033fd           [ 6] 	jsr df_rt_asm_find_addr_mode	; Get the Y index o
                              	; Ok now get the opcode
 fbb6 : c8               [ 2] 	iny
 fbb7 : b181             [ 5] 	lda (df_symtab),y
@@ -18417,387 +18417,378 @@ fbbe :                       df_rt_asm_mnem_err
                              ; Option 2 = Write
                              ; Option 3 = Write, Print
 fbc0 :                       df_rt_asm_encode
-                             	; If relative then need to calculate offset
-fbc0 : a59c             [ 3] 	lda df_asmadmd
-fbc2 : c90f             [ 2] 	cmp #AM_REL
-fbc4 : d033             [ 3] 	bne df_rt_asm_encode_skiprel
-                             	; If high byte is 0 then do nothing
+                             	; Only write the code if bit 1=1
+fbc0 : a902             [ 2] 	lda #0x02
+fbc2 : 259b             [ 3] 	and df_asmopt
+fbc4 : f059             [ 4] 	beq df_rt_asm_encode_print
+fbc6 : a000             [ 2] 	ldy #0
 AS65 Assembler for R6502 [1.42].                                     Page  285
 -------------------------------- bank\bank0.s --------------------------------
 
-fbc6 : a59f             [ 3] 	lda df_asmoprnd+1
-fbc8 : f02f             [ 3] 	beq df_rt_asm_encode_skiprel
-                             	; else calculate distance from PC
+fbc8 : a59d             [ 3] 	lda df_asmopcde
+fbca : 9199             [ 5] 	sta (df_asmpc),y
+fbcc : a5a0             [ 3] 	lda df_asmlen
+fbce : c901             [ 2] 	cmp #1						; No operand
+fbd0 : f04d             [ 4] 	beq df_rt_asm_encode_print
+fbd2 : c903             [ 2] 	cmp #3						; Word operand
+fbd4 : f03f             [ 4] 	beq df_rt_asm_encode_writeword
+                             	; If here then byte operand
+                             	; Check relative then need to calculate offset
+fbd6 : a59c             [ 3] 	lda df_asmadmd
+fbd8 : c90f             [ 2] 	cmp #AM_REL
+fbda : d02c             [ 4] 	bne df_rt_asm_encode_skiprel
+                             	; calculate distance from PC
                              	; first take 2 off operand
-fbca : 38               [ 2] 	sec
-fbcb : a59e             [ 3] 	lda df_asmoprnd
-fbcd : e902             [ 2] 	sbc #2
-fbcf : 859e             [ 3] 	sta df_asmoprnd
-fbd1 : a59f             [ 3] 	lda df_asmoprnd+1
-fbd3 : e900             [ 2] 	sbc #0
-fbd5 : 859f             [ 3] 	sta df_asmoprnd+1
+fbdc : 38               [ 2] 	sec
+fbdd : a59e             [ 3] 	lda df_asmoprnd
+fbdf : e902             [ 2] 	sbc #2
+fbe1 : 859e             [ 3] 	sta df_asmoprnd
+fbe3 : a59f             [ 3] 	lda df_asmoprnd+1
+fbe5 : e900             [ 2] 	sbc #0
+fbe7 : 859f             [ 3] 	sta df_asmoprnd+1
                              	; now calculate current operand-PC
-fbd7 : 38               [ 2] 	sec
-fbd8 : a59e             [ 3] 	lda df_asmoprnd
-fbda : e599             [ 3] 	sbc df_asmpc
-fbdc : 859e             [ 3] 	sta df_asmoprnd
-fbde : a59f             [ 3] 	lda df_asmoprnd+1
-fbe0 : e59a             [ 3] 	sbc df_asmpc+1
-                             	; put 0 in high operand storage
-                             	; but A contains result of subtraction
-                             	; so check that for out of range
-fbe2 : a000             [ 2] 	ldy #0
-fbe4 : 849f             [ 3] 	sty df_asmoprnd+1
-                             	; detect too far; high byte is either 0 or 255
-                             	; else it's an error
-fbe6 : a8               [ 2] 	tay
-fbe7 : f00a             [ 3] 	beq df_rt_asm_encode_relpos
-fbe9 : c9ff             [ 2] 	cmp #0xff
-fbeb : d00a             [ 3] 	bne df_rt_asm_encode_relfar
-                             	; if high is ff then low must be same -ve
-fbed : a59e             [ 3] 	lda df_asmoprnd
-fbef : 3008             [ 3] 	bmi df_rt_asm_encode_skiprel
-                             	; else error
-fbf1 : 1004             [ 3] 	bpl df_rt_asm_encode_relfar
-fbf3 :                       df_rt_asm_encode_relpos
-                             	; if high is 00 then low must be same +ve
-fbf3 : a59e             [ 3] 	lda df_asmoprnd
-fbf5 : 1002             [ 3] 	bpl df_rt_asm_encode_skiprel
-                             	; else error
-fbf7 :                       df_rt_asm_encode_relfar
-                             	; set to non-zero value, dec because it is zero 
-fbf7 : c69f             [ 5] 	dec df_asmoprnd+1
-fbf9 :                       df_rt_asm_encode_skiprel
-                             	; Only write the code if bit 1=1
-fbf9 : a902             [ 2] 	lda #0x02
-fbfb : 259b             [ 3] 	and df_asmopt
-fbfd : f028             [ 4] 	beq df_rt_asm_encode_print
-fbff : a000             [ 2] 	ldy #0
-fc01 : a59d             [ 3] 	lda df_asmopcde
-fc03 : 9199             [ 5] 	sta (df_asmpc),y
-fc05 : a5a0             [ 3] 	lda df_asmlen
-fc07 : c901             [ 2] 	cmp #1						; No operand
-fc09 : f01c             [ 3] 	beq df_rt_asm_encode_print
-fc0b : c903             [ 2] 	cmp #3						; Word operand
-fc0d : f00e             [ 3] 	beq df_rt_asm_encode_writeword
+fbe9 : 38               [ 2] 	sec
+fbea : a59e             [ 3] 	lda df_asmoprnd
+fbec : e599             [ 3] 	sbc df_asmpc
+fbee : 859e             [ 3] 	sta df_asmoprnd
+fbf0 : a59f             [ 3] 	lda df_asmoprnd+1
+fbf2 : e59a             [ 3] 	sbc df_asmpc+1
+                             	; A contains high byte result of subtraction
+                             	; and must be 0 (operand <=127) or 255 (operand 
+fbf4 : 859f             [ 3] 	sta df_asmoprnd+1
+fbf6 : f00a             [ 4] 	beq df_rt_asm_rel_postive
+fbf8 : c9ff             [ 2] 	cmp #0xff				; If not 0xff then error
+fbfa : d010             [ 4] 	bne df_rt_asm_err_quantity
+                             	; Check negative branch >=128 (N=1)
+fbfc : a59e             [ 3] 	lda df_asmoprnd
+fbfe : 100c             [ 4] 	bpl df_rt_asm_err_quantity
+fc00 : 300c             [ 3] 	bmi df_rt_asm_encode_writebyte
+fc02 :                       df_rt_asm_rel_postive
+                             	; Check positive branch <=127
+fc02 : a59e             [ 3] 	lda df_asmoprnd
+fc04 : 3006             [ 3] 	bmi df_rt_asm_err_quantity
+fc06 : 1006             [ 3] 	bpl df_rt_asm_encode_writebyte
+fc08 :                       df_rt_asm_encode_skiprel
                              	; byte operand, high byte must be zero
-fc0f : a59f             [ 3] 	lda df_asmoprnd+1
-fc11 : f002             [ 3] 	beq df_rt_asm_encode_writebyte
+fc08 : a59f             [ 3] 	lda df_asmoprnd+1
+fc0a : f002             [ 3] 	beq df_rt_asm_encode_writebyte
+fc0c :                       df_rt_asm_err_quantity
                              	SWBRK DFERR_QUANTITY
                              
-fc15 :                       df_rt_asm_encode_writebyte
+fc0e :                       df_rt_asm_encode_writebyte
+fc0e : a59e             [ 3] 	lda df_asmoprnd
+fc10 : c8               [ 2] 	iny 
+fc11 : 9199             [ 5] 	sta (df_asmpc),y
+                             	; Due to the iny, relying on Z=0 here!
+fc13 : d00a             [ 3] 	bne df_rt_asm_encode_print
+fc15 :                       df_rt_asm_encode_writeword
 fc15 : c8               [ 2] 	iny 
+fc16 : a59e             [ 3] 	lda df_asmoprnd
+fc18 : 9199             [ 5] 	sta (df_asmpc),y
+fc1a : c8               [ 2] 	iny 
+fc1b : a59f             [ 3] 	lda df_asmoprnd+1
 AS65 Assembler for R6502 [1.42].                                     Page  286
 -------------------------------- bank\bank0.s --------------------------------
 
-fc16 : a59e             [ 3] 	lda df_asmoprnd
-fc18 : 9199             [ 5] 	sta (df_asmpc),y
-fc1a : 4c27fc           [ 3] 	jmp df_rt_asm_encode_print
-fc1d :                       df_rt_asm_encode_writeword
-fc1d : c8               [ 2] 	iny 
-fc1e : a59e             [ 3] 	lda df_asmoprnd
-fc20 : 9199             [ 5] 	sta (df_asmpc),y
-fc22 : c8               [ 2] 	iny 
-fc23 : a59f             [ 3] 	lda df_asmoprnd+1
-fc25 : 9199             [ 5] 	sta (df_asmpc),y	
-fc27 :                       df_rt_asm_encode_print
-fc27 : 2037fc           [ 6] 	jsr df_rt_asm_print_mmen
+fc1d : 9199             [ 5] 	sta (df_asmpc),y	
+fc1f :                       df_rt_asm_encode_print
+fc1f : 202ffc           [ 6] 	jsr df_rt_asm_print_mmen
                              	; advance pc
-fc2a : 18               [ 2] 	clc
-fc2b : a599             [ 3] 	lda df_asmpc
-fc2d : 65a0             [ 3] 	adc df_asmlen
-fc2f : 8599             [ 3] 	sta df_asmpc
+fc22 : 18               [ 2] 	clc
+fc23 : a599             [ 3] 	lda df_asmpc
+fc25 : 65a0             [ 3] 	adc df_asmlen
+fc27 : 8599             [ 3] 	sta df_asmpc
                              	_bcc 2
                              
-fc33 : e69a             [ 5] 	inc df_asmpc+1
-fc35 : 18               [ 2] 	clc
-fc36 : 60               [ 6] 	rts
+fc2b : e69a             [ 5] 	inc df_asmpc+1
+fc2d : 18               [ 2] 	clc
+fc2e : 60               [ 6] 	rts
                              
                              
                              ; Print the full 1,2,3 byte instruction
                              ; depends on df_asmopt
-fc37 :                       df_rt_asm_print_mmen
-fc37 : 2047fc           [ 6] 	jsr df_rt_asm_printPC
-fc3a : 2062fc           [ 6] 	jsr df_rt_asm_printSPC
-fc3d : 2057fc           [ 6] 	jsr df_rt_asm_printOPC
-fc40 : 2062fc           [ 6] 	jsr df_rt_asm_printSPC
-fc43 : 206bfc           [ 6] 	jsr df_rt_asm_printOPR
-fc46 :                       df_rt_asm_print_rts			; Hopefully subs can get he
-fc46 : 60               [ 6] 	rts
+fc2f :                       df_rt_asm_print_mmen
+fc2f : 203ffc           [ 6] 	jsr df_rt_asm_printPC
+fc32 : 205afc           [ 6] 	jsr df_rt_asm_printSPC
+fc35 : 204ffc           [ 6] 	jsr df_rt_asm_printOPC
+fc38 : 205afc           [ 6] 	jsr df_rt_asm_printSPC
+fc3b : 2063fc           [ 6] 	jsr df_rt_asm_printOPR
+fc3e :                       df_rt_asm_print_rts			; Hopefully subs can get he
+fc3e : 60               [ 6] 	rts
                              
-fc47 :                       df_rt_asm_printPC
+fc3f :                       df_rt_asm_printPC
                              	; Check the option bit 0 (Print)
-fc47 : a901             [ 2] 	lda #0x01
-fc49 : 259b             [ 3] 	and df_asmopt
-fc4b : f0f9             [ 3] 	beq df_rt_asm_print_rts
+fc3f : a901             [ 2] 	lda #0x01
+fc41 : 259b             [ 3] 	and df_asmopt
+fc43 : f0f9             [ 3] 	beq df_rt_asm_print_rts
                              	; Print current PC
-fc4d : a59a             [ 3] 	lda df_asmpc+1
-fc4f : 2070c1           [ 6] 	jsr utilPrintA
-fc52 : a599             [ 3] 	lda df_asmpc
-fc54 : 4c70c1           [ 3] 	jmp utilPrintA
+fc45 : a59a             [ 3] 	lda df_asmpc+1
+fc47 : 2070c1           [ 6] 	jsr utilPrintA
+fc4a : a599             [ 3] 	lda df_asmpc
+fc4c : 4c70c1           [ 3] 	jmp utilPrintA
                              
-fc57 :                       df_rt_asm_printOPC
+fc4f :                       df_rt_asm_printOPC
                              	; Check the option bit 0 (Print)
-fc57 : a901             [ 2] 	lda #0x01
-fc59 : 259b             [ 3] 	and df_asmopt
-fc5b : f0e9             [ 3] 	beq df_rt_asm_print_rts
-fc5d : a59d             [ 3] 	lda df_asmopcde
-fc5f : 4c70c1           [ 3] 	jmp utilPrintA
+fc4f : a901             [ 2] 	lda #0x01
+fc51 : 259b             [ 3] 	and df_asmopt
+fc53 : f0e9             [ 3] 	beq df_rt_asm_print_rts
+fc55 : a59d             [ 3] 	lda df_asmopcde
+fc57 : 4c70c1           [ 3] 	jmp utilPrintA
                              
-fc62 :                       df_rt_asm_printSPC
+fc5a :                       df_rt_asm_printSPC
                              	; Check the option bit 0 (Print)
-fc62 : a901             [ 2] 	lda #0x01
-fc64 : 259b             [ 3] 	and df_asmopt
-fc66 : f0de             [ 3] 	beq df_rt_asm_print_rts
-fc68 : 4c60c1           [ 3] 	jmp utilPrintSPC
+fc5a : a901             [ 2] 	lda #0x01
+fc5c : 259b             [ 3] 	and df_asmopt
+fc5e : f0de             [ 3] 	beq df_rt_asm_print_rts
+fc60 : 4c60c1           [ 3] 	jmp utilPrintSPC
                              	
-fc6b :                       df_rt_asm_printOPR
+fc63 :                       df_rt_asm_printOPR
+                             	; Check the option bit 0 (Print)
+fc63 : a901             [ 2] 	lda #0x01
+fc65 : 259b             [ 3] 	and df_asmopt
+fc67 : f0d5             [ 3] 	beq df_rt_asm_print_rts	
+fc69 : a5a0             [ 3] 	lda df_asmlen				; check how may operand bytes
+fc6b : c901             [ 2] 	cmp #1						; if only opcode, done
+fc6d : f0cf             [ 3] 	beq df_rt_asm_print_rts	
+fc6f : c902             [ 2] 	cmp #2
+fc71 : f005             [ 3] 	beq df_rt_asm_printOPR_1	; if only 2 do low byte
 AS65 Assembler for R6502 [1.42].                                     Page  287
 -------------------------------- bank\bank0.s --------------------------------
 
-                             	; Check the option bit 0 (Print)
-fc6b : a901             [ 2] 	lda #0x01
-fc6d : 259b             [ 3] 	and df_asmopt
-fc6f : f0d5             [ 3] 	beq df_rt_asm_print_rts	
-fc71 : a5a0             [ 3] 	lda df_asmlen				; check how may operand bytes
-fc73 : c901             [ 2] 	cmp #1						; if only opcode, done
-fc75 : f0cf             [ 3] 	beq df_rt_asm_print_rts	
-fc77 : c902             [ 2] 	cmp #2
-fc79 : f005             [ 3] 	beq df_rt_asm_printOPR_1	; if only 2 do low byte
-fc7b : a59f             [ 3] 	lda df_asmoprnd+1
-fc7d : 2070c1           [ 6] 	jsr utilPrintA
-fc80 :                       df_rt_asm_printOPR_1
-fc80 : a59e             [ 3] 	lda df_asmoprnd
-fc82 : 4c70c1           [ 3] 	jmp utilPrintA
+fc73 : a59f             [ 3] 	lda df_asmoprnd+1
+fc75 : 2070c1           [ 6] 	jsr utilPrintA
+fc78 :                       df_rt_asm_printOPR_1
+fc78 : a59e             [ 3] 	lda df_asmoprnd
+fc7a : 4c70c1           [ 3] 	jmp utilPrintA
                              
-fc85 :                       df_rt_asm_printCR
+fc7d :                       df_rt_asm_printCR
                              	; Check the option bit 0 (Print)
-fc85 : a901             [ 2] 	lda #0x01
-fc87 : 259b             [ 3] 	and df_asmopt
-fc89 : f0bb             [ 3] 	beq df_rt_asm_print_rts
-fc8b : 4c68c1           [ 3] 	jmp utilPrintCRLF
+fc7d : a901             [ 2] 	lda #0x01
+fc7f : 259b             [ 3] 	and df_asmopt
+fc81 : f0bb             [ 3] 	beq df_rt_asm_print_rts
+fc83 : 4c68c1           [ 3] 	jmp utilPrintCRLF
                              
-fc8e :                       df_rt_asm_printCH
-fc8e : 8538             [ 3] 	sta tmp_d
+fc86 :                       df_rt_asm_printCH
+fc86 : 8538             [ 3] 	sta tmp_d
                              	; Check the option bit 0 (Print)
-fc90 : a901             [ 2] 	lda #0x01
-fc92 : 259b             [ 3] 	and df_asmopt
-fc94 : f0b0             [ 3] 	beq df_rt_asm_print_rts
-fc96 : a538             [ 3] 	lda tmp_d
-fc98 : 4c2ac4           [ 3] 	jmp io_put_ch
+fc88 : a901             [ 2] 	lda #0x01
+fc8a : 259b             [ 3] 	and df_asmopt
+fc8c : f0b0             [ 3] 	beq df_rt_asm_print_rts
+fc8e : a538             [ 3] 	lda tmp_d
+fc90 : 4c2ac4           [ 3] 	jmp io_put_ch
                              
                              ; Print an entire line, but save df_exeoff
-fc9b :                       df_rt_asm_printline
+fc93 :                       df_rt_asm_printline
                              	; Check the option bit 0 (Print)
-fc9b : a901             [ 2] 	lda #0x01
-fc9d : 259b             [ 3] 	and df_asmopt
-fc9f : f0a5             [ 3] 	beq df_rt_asm_print_rts
-fca1 : a588             [ 3] 	lda df_exeoff
-fca3 : 48               [ 3] 	pha
+fc93 : a901             [ 2] 	lda #0x01
+fc95 : 259b             [ 3] 	and df_asmopt
+fc97 : f0a5             [ 3] 	beq df_rt_asm_print_rts
+fc99 : a588             [ 3] 	lda df_exeoff
+fc9b : 48               [ 3] 	pha
                              	; use df_tmpptra
                              	_cpyZPWord df_currlin, df_tmpptra
                              
-fcac : 2094ef           [ 6] 	jsr df_rt_list_line_only
-fcaf : 68               [ 4] 	pla
-fcb0 : 8588             [ 3] 	sta df_exeoff
-fcb2 : 60               [ 6] 	rts
+fca4 : 2094ef           [ 6] 	jsr df_rt_list_line_only
+fca7 : 68               [ 4] 	pla
+fca8 : 8588             [ 3] 	sta df_exeoff
+fcaa : 60               [ 6] 	rts
                              
                              
                              ; Calculate the addressing mode
                              ; Populate the operand as needed
                              ; A and df_asmadmd contain Addressing Mode
-fcb3 :                       df_rt_asm_addrmode	
+fcab :                       df_rt_asm_addrmode	
                              	; Store nothing in address mode
-fcb3 : a900             [ 2] 	lda #AM_NONE
-fcb5 : 859c             [ 3] 	sta df_asmadmd
+fcab : a900             [ 2] 	lda #AM_NONE
+fcad : 859c             [ 3] 	sta df_asmadmd
                              	; zero out the operand
-fcb7 : a900             [ 2] 	lda #0
-fcb9 : 859e             [ 3] 	sta df_asmoprnd
-fcbb : 859f             [ 3] 	sta df_asmoprnd+1
-fcbd : 206aee           [ 6] 	jsr df_rt_eos			; End of statement?
-fcc0 : b00d             [ 3] 	bcs df_rt_asm_AM_IMP
+fcaf : a900             [ 2] 	lda #0
+fcb1 : 859e             [ 3] 	sta df_asmoprnd
+fcb3 : 859f             [ 3] 	sta df_asmoprnd+1
+fcb5 : 206aee           [ 6] 	jsr df_rt_eos			; End of statement?
+fcb8 : b00d             [ 3] 	bcs df_rt_asm_AM_IMP
                              	; jump over whitespace
+fcba : 2049e6           [ 6] 	jsr df_rt_skip_ws
+                             	; Check what it is
+fcbd : c923             [ 2] 	cmp #'#'				; Immediate?
+fcbf : f034             [ 3] 	beq df_rt_asm_AM_IMM
+fcc1 : c928             [ 2] 	cmp #'('				; Indirect something?
+fcc3 : f03a             [ 3] 	beq df_rt_asm_AM_INDIRECT
+                             	; Must be ABS,ZP or REL
+fcc5 : d005             [ 3] 	bne df_rt_asm_ABSREL
+                             ; Process IMP/ACC
 AS65 Assembler for R6502 [1.42].                                     Page  288
 -------------------------------- bank\bank0.s --------------------------------
 
-fcc2 : 2049e6           [ 6] 	jsr df_rt_skip_ws
-                             	; Check what it is
-fcc5 : c923             [ 2] 	cmp #'#'				; Immediate?
-fcc7 : f034             [ 3] 	beq df_rt_asm_AM_IMM
-fcc9 : c928             [ 2] 	cmp #'('				; Indirect something?
-fccb : f03a             [ 4] 	beq df_rt_asm_AM_INDIRECT
-                             	; Must be ABS,ZP or REL
-fccd : d005             [ 3] 	bne df_rt_asm_ABSREL
-                             ; Process IMP/ACC
-fccf :                       df_rt_asm_AM_IMP
-fccf : a90d             [ 2] 	lda #AM_IMP
-fcd1 : 859c             [ 3] 	sta df_asmadmd
-fcd3 : 60               [ 6] 	rts
+fcc7 :                       df_rt_asm_AM_IMP
+fcc7 : a90d             [ 2] 	lda #AM_IMP
+fcc9 : 859c             [ 3] 	sta df_asmadmd
+fccb : 60               [ 6] 	rts
                              ; Process ABS or REL
-fcd4 :                       df_rt_asm_ABSREL	
+fccc :                       df_rt_asm_ABSREL	
                              	; Evaluate operand
-fcd4 : 2030fd           [ 6] 	jsr df_rt_asm_get_operand
+fccc : 2028fd           [ 6] 	jsr df_rt_asm_get_operand
                              
-fcd7 : 206aee           [ 6] 	jsr df_rt_eos			; End of statement?
-fcda : b00f             [ 3] 	bcs df_rt_asm_AM_ABS
-fcdc : c8               [ 2] 	iny						; Jump over ","
-fcdd : b186             [ 5] 	lda (df_currlin),y		; Load X or Y
-fcdf : c8               [ 2] 	iny						; Jump over index reg
-fce0 : 8588             [ 3] 	sta df_exeoff			; Save exe offset
-fce2 : c978             [ 2] 	cmp #'x'				; Indirect X?
-fce4 : f012             [ 3] 	beq df_rt_asm_AM_ABSX
+fccf : 206aee           [ 6] 	jsr df_rt_eos			; End of statement?
+fcd2 : b00f             [ 3] 	bcs df_rt_asm_AM_ABS
+fcd4 : c8               [ 2] 	iny						; Jump over ","
+fcd5 : b186             [ 5] 	lda (df_currlin),y		; Load X or Y
+fcd7 : c8               [ 2] 	iny						; Jump over index reg
+fcd8 : 8588             [ 3] 	sta df_exeoff			; Save exe offset
+fcda : c978             [ 2] 	cmp #'x'				; Indirect X?
+fcdc : f012             [ 3] 	beq df_rt_asm_AM_ABSX
                              ; Process ABSY
-fce6 :                       df_rt_asm_AM_ABSY
-fce6 : a906             [ 2] 	lda #AM_ZPY				; Go for smallest modes
-fce8 : 859c             [ 3] 	sta df_asmadmd
-fcea : 60               [ 6] 	rts
+fcde :                       df_rt_asm_AM_ABSY
+fcde : a906             [ 2] 	lda #AM_ZPY				; Go for smallest modes
+fce0 : 859c             [ 3] 	sta df_asmadmd
+fce2 : 60               [ 6] 	rts
                              ; Process what looks like pure ABS, could be REL
-fceb :                       df_rt_asm_AM_ABS
-fceb : a001             [ 2] 	ldy #1					; Check first addressing mode
-fced : b181             [ 5] 	lda (df_symtab),y
-fcef : c90f             [ 2] 	cmp #AM_REL
-fcf1 : f002             [ 3] 	beq df_rt_asm_AM_REL
-fcf3 : a904             [ 2] 	lda #AM_ZP				; Go for smallest modes
-fcf5 :                       df_rt_asm_AM_REL
-fcf5 : 859c             [ 3] 	sta df_asmadmd
-fcf7 : 60               [ 6] 	rts
+fce3 :                       df_rt_asm_AM_ABS
+fce3 : a001             [ 2] 	ldy #1					; Check first addressing mode
+fce5 : b181             [ 5] 	lda (df_symtab),y
+fce7 : c90f             [ 2] 	cmp #AM_REL
+fce9 : f002             [ 3] 	beq df_rt_asm_AM_REL
+fceb : a904             [ 2] 	lda #AM_ZP				; Go for smallest modes
+fced :                       df_rt_asm_AM_REL
+fced : 859c             [ 3] 	sta df_asmadmd
+fcef : 60               [ 6] 	rts
                              ; Process ABSX
-fcf8 :                       df_rt_asm_AM_ABSX
-fcf8 : a905             [ 2] 	lda #AM_ZPX				; Go for smallest modes
-fcfa : 859c             [ 3] 	sta df_asmadmd
-fcfc : 60               [ 6] 	rts
+fcf0 :                       df_rt_asm_AM_ABSX
+fcf0 : a905             [ 2] 	lda #AM_ZPX				; Go for smallest modes
+fcf2 : 859c             [ 3] 	sta df_asmadmd
+fcf4 : 60               [ 6] 	rts
                              ; Process Immediate
-fcfd :                       df_rt_asm_AM_IMM
+fcf5 :                       df_rt_asm_AM_IMM
                              	; skip over #
-fcfd : e688             [ 5] 	inc df_exeoff
+fcf5 : e688             [ 5] 	inc df_exeoff
                              	; Get operand
-fcff : 2030fd           [ 6] 	jsr df_rt_asm_get_operand
+fcf7 : 2028fd           [ 6] 	jsr df_rt_asm_get_operand
                              	; Mark as immediate
-fd02 : a90c             [ 2] 	lda #AM_IMM
-fd04 : 859c             [ 3] 	sta df_asmadmd
-fd06 : 60               [ 6] 	rts
+fcfa : a90c             [ 2] 	lda #AM_IMM
+fcfc : 859c             [ 3] 	sta df_asmadmd
+fcfe : 60               [ 6] 	rts
                              ; Process indirect
-fd07 :                       df_rt_asm_AM_INDIRECT
+fcff :                       df_rt_asm_AM_INDIRECT
                              	; skip over (
-fd07 : e688             [ 5] 	inc df_exeoff
+fcff : e688             [ 5] 	inc df_exeoff
                              	; Calculate the operand
-fd09 : 2030fd           [ 6] 	jsr df_rt_asm_get_operand
+fd01 : 2028fd           [ 6] 	jsr df_rt_asm_get_operand
+                             	; what is next char?
+fd04 : a488             [ 3] 	ldy df_exeoff
+fd06 : b186             [ 5] 	lda (df_currlin),y
+fd08 : c929             [ 2] 	cmp #')'			; Could be IND or INDY
+fd0a : f009             [ 3] 	beq df_rt_asm_AM_ZPINDORY
+                             	; else must be INDX
+                             	; skip 'x)'
+fd0c : c8               [ 2] 	iny
+fd0d : c8               [ 2] 	iny
 AS65 Assembler for R6502 [1.42].                                     Page  289
 -------------------------------- bank\bank0.s --------------------------------
 
-                             	; what is next char?
-fd0c : a488             [ 3] 	ldy df_exeoff
-fd0e : b186             [ 5] 	lda (df_currlin),y
-fd10 : c929             [ 2] 	cmp #')'			; Could be IND or INDY
-fd12 : f009             [ 3] 	beq df_rt_asm_AM_ZPINDORY
-                             	; else must be INDX
-                             	; skip 'x)'
-fd14 : c8               [ 2] 	iny
-fd15 : c8               [ 2] 	iny
-fd16 : 8488             [ 3] 	sty df_exeoff
-fd18 : a908             [ 2] 	lda #AM_ZPINDX
-fd1a : 859c             [ 3] 	sta df_asmadmd
-fd1c : 60               [ 6] 	rts
+fd0e : 8488             [ 3] 	sty df_exeoff
+fd10 : a908             [ 2] 	lda #AM_ZPINDX
+fd12 : 859c             [ 3] 	sta df_asmadmd
+fd14 : 60               [ 6] 	rts
                              ; Pure indirect mode found
-fd1d :                       df_rt_asm_AM_ZPINDORY
-fd1d : a907             [ 2] 	lda #AM_ZPIND			; Assume ZPIND
-fd1f : c8               [ 2] 	iny
-fd20 : 8488             [ 3] 	sty df_exeoff
+fd15 :                       df_rt_asm_AM_ZPINDORY
+fd15 : a907             [ 2] 	lda #AM_ZPIND			; Assume ZPIND
+fd17 : c8               [ 2] 	iny
+fd18 : 8488             [ 3] 	sty df_exeoff
                              	; if at end of line/statement then pure indirect
-fd22 : 206aee           [ 6] 	jsr df_rt_eos			; End of statement?
-fd25 : b006             [ 3] 	bcs df_rt_asm_AM_ZPIND
+fd1a : 206aee           [ 6] 	jsr df_rt_eos			; End of statement?
+fd1d : b006             [ 3] 	bcs df_rt_asm_AM_ZPIND
                              	; else must be INDY
-fd27 : a909             [ 2] 	lda #AM_ZPINDY
+fd1f : a909             [ 2] 	lda #AM_ZPINDY
                              	; skip ',Y'
-fd29 : c8               [ 2] 	iny
-fd2a : c8               [ 2] 	iny
-fd2b : 8488             [ 3] 	sty df_exeoff
-fd2d :                       df_rt_asm_AM_ZPIND
-fd2d : 859c             [ 3] 	sta df_asmadmd
-fd2f : 60               [ 6] 	rts
+fd21 : c8               [ 2] 	iny
+fd22 : c8               [ 2] 	iny
+fd23 : 8488             [ 3] 	sty df_exeoff
+fd25 :                       df_rt_asm_AM_ZPIND
+fd25 : 859c             [ 3] 	sta df_asmadmd
+fd27 : 60               [ 6] 	rts
                              
                              ; Get and save the operand
                              ; df_asmoprnd contains the result
-fd30 :                       df_rt_asm_get_operand
+fd28 :                       df_rt_asm_get_operand
                              	; evaluate
-fd30 : 2015e2           [ 6] 	jsr df_rt_neval
+fd28 : 2015e2           [ 6] 	jsr df_rt_neval
                              	; Get the parameter from stack
-fd33 : 2086f7           [ 6] 	jsr df_ost_popInt
+fd2b : 2086f7           [ 6] 	jsr df_ost_popInt
                              	; put in the operand
-fd36 : 869e             [ 3] 	stx df_asmoprnd
-fd38 : 859f             [ 3] 	sta df_asmoprnd+1
-fd3a : 60               [ 6] 	rts
+fd2e : 869e             [ 3] 	stx df_asmoprnd
+fd30 : 859f             [ 3] 	sta df_asmoprnd+1
+fd32 : 60               [ 6] 	rts
                              	
                              ; From current symtab entry, find addressing
                              ; mode in A.  AM_NONE=Not found, Y=index
-fd3b :                       df_rt_asm_find_addr_mode
+fd33 :                       df_rt_asm_find_addr_mode
                              	; save A in tmp
-fd3b : 8538             [ 3] 	sta tmp_d
+fd33 : 8538             [ 3] 	sta tmp_d
                              	; Start first entry (1) - 2 = 0xff
-fd3d : a0ff             [ 2] 	ldy #0xff
-fd3f : a200             [ 2] 	ldx #0
-fd41 :                       df_rt_asm_find_addr_mode_loop
+fd35 : a0ff             [ 2] 	ldy #0xff
+fd37 : a200             [ 2] 	ldx #0
+fd39 :                       df_rt_asm_find_addr_mode_loop
                              	; next entry
-fd41 : c8               [ 2] 	iny
-fd42 : c8               [ 2] 	iny
+fd39 : c8               [ 2] 	iny
+fd3a : c8               [ 2] 	iny
                              	; if current index > num entries then error
-fd43 : 98               [ 2] 	tya
-fd44 : 38               [ 2] 	sec
-fd45 : e181             [ 6] 	sbc (df_symtab,x)
-fd47 : b007             [ 3] 	bcs df_rt_asm_find_addr_mode_err
+fd3b : 98               [ 2] 	tya
+fd3c : 38               [ 2] 	sec
+fd3d : e181             [ 6] 	sbc (df_symtab,x)
+fd3f : b007             [ 3] 	bcs df_rt_asm_find_addr_mode_err
                              	; is symtab addressing mode what we want?
-fd49 : b181             [ 5] 	lda (df_symtab),y
+fd41 : b181             [ 5] 	lda (df_symtab),y
+fd43 : c538             [ 3] 	cmp tmp_d
+fd45 : d0f2             [ 3] 	bne df_rt_asm_find_addr_mode_loop
+                             	; done A=mode, y=index in to df_symtab
+fd47 : 60               [ 6] 	rts
+fd48 :                       df_rt_asm_find_addr_mode_err
+fd48 : a900             [ 2] 	lda #AM_NONE
+fd4a :                       df_rt_asm_skip_to_sym_done; Used by function belo
+fd4a : 60               [ 6] 	rts
+                             
 AS65 Assembler for R6502 [1.42].                                     Page  290
 -------------------------------- bank\bank0.s --------------------------------
 
-fd4b : c538             [ 3] 	cmp tmp_d
-fd4d : d0f2             [ 3] 	bne df_rt_asm_find_addr_mode_loop
-                             	; done A=mode, y=index in to df_symtab
-fd4f : 60               [ 6] 	rts
-fd50 :                       df_rt_asm_find_addr_mode_err
-fd50 : a900             [ 2] 	lda #AM_NONE
-fd52 :                       df_rt_asm_skip_to_sym_done; Used by function belo
-fd52 : 60               [ 6] 	rts
-                             
                              
                              ; Skip X amount of symbols in table
                              ; A contains how many addr mode and op code bytes
                              ; df_symtab points to offset byte
-fd53 :                       df_rt_asm_skip_to_sym
-fd53 : e8               [ 2] 	inx				; so done when X=0
+fd4b :                       df_rt_asm_skip_to_sym
+fd4b : e8               [ 2] 	inx				; so done when X=0
                              	; Start at token symbols beginning
-fd54 : a9a1             [ 2] 	lda #lo(df_asm_tokensyms)
-fd56 : 8581             [ 3] 	sta df_symtab
-fd58 : a9fd             [ 2] 	lda #hi(df_asm_tokensyms)
-fd5a : 8582             [ 3] 	sta df_symtab+1
-fd5c : a900             [ 2] 	lda #0
-fd5e : 8583             [ 3] 	sta df_symoff
-fd60 : a8               [ 2] 	tay
-fd61 :                       df_rt_asm_skip_to_sym_next
+fd4c : a999             [ 2] 	lda #lo(df_asm_tokensyms)
+fd4e : 8581             [ 3] 	sta df_symtab
+fd50 : a9fd             [ 2] 	lda #hi(df_asm_tokensyms)
+fd52 : 8582             [ 3] 	sta df_symtab+1
+fd54 : a900             [ 2] 	lda #0
+fd56 : 8583             [ 3] 	sta df_symoff
+fd58 : a8               [ 2] 	tay
+fd59 :                       df_rt_asm_skip_to_sym_next
                              	; Get symtable char
-fd61 : b181             [ 5] 	lda (df_symtab),y
+fd59 : b181             [ 5] 	lda (df_symtab),y
                              	; if < ' ' then jumped over symbol chars
-fd63 : c920             [ 2] 	cmp #' '
-fd65 : 9009             [ 3] 	bcc df_rt_asm_skip_to_sym_end
+fd5b : c920             [ 2] 	cmp #' '
+fd5d : 9009             [ 3] 	bcc df_rt_asm_skip_to_sym_end
                              	;else next smy tab char
                              	_incZPWord df_symtab
                              
-fd6d : 4c61fd           [ 3] 	jmp df_rt_asm_skip_to_sym_next
+fd65 : 4c59fd           [ 3] 	jmp df_rt_asm_skip_to_sym_next
                              	; Found end of symbol
-fd70 :                       df_rt_asm_skip_to_sym_end
+fd68 :                       df_rt_asm_skip_to_sym_end
                              	;if done then return
-fd70 : ca               [ 2] 	dex
-fd71 : f0df             [ 3] 	beq df_rt_asm_skip_to_sym_done
+fd68 : ca               [ 2] 	dex
+fd69 : f0df             [ 3] 	beq df_rt_asm_skip_to_sym_done
                              	;jump over addr and op code by A bytes
-fd73 : 38               [ 2] 	sec
-fd74 : 6581             [ 3] 	adc df_symtab
-fd76 : 8581             [ 3] 	sta df_symtab
+fd6b : 38               [ 2] 	sec
+fd6c : 6581             [ 3] 	adc df_symtab
+fd6e : 8581             [ 3] 	sta df_symtab
                              	_bcc 2
                              
-fd7a : e682             [ 5] 	inc df_symtab+1
-fd7c : 4c61fd           [ 3] 	jmp df_rt_asm_skip_to_sym_next
+fd72 : e682             [ 5] 	inc df_symtab+1
+fd74 : 4c59fd           [ 3] 	jmp df_rt_asm_skip_to_sym_next
                              
-fd7f :                       mod_sz_rtasm_e
+fd77 :                       mod_sz_rtasm_e
                              
                              
                              	include "dflat/asmsymtab.s"
@@ -18812,9 +18803,6 @@ fd7f :                       mod_sz_rtasm_e
                              ;*  ASMSYMTAB.S
                              ;*	Mainly this contains the symbol table for asse
                              ;*	mnemonics but also meta data like what address
-AS65 Assembler for R6502 [1.42].                                     Page  291
--------------------------------- bank\bank0.s --------------------------------
-
                              ;*	and the length of opcodes.
                              ;*
                              ;************************************************
@@ -18824,283 +18812,286 @@ fd7f :                       mod_sz_rtasm_e
                              
                              	;* Length of each addressing mode
                              	;* ORDER significant!
-fd7f :                       df_asm_length
-fd7f : 00030303020202..      	db	0,3,3,3,2,2,2,2,2,2,3,3,2,1,1,2,0
+AS65 Assembler for R6502 [1.42].                                     Page  291
+-------------------------------- bank\bank0.s --------------------------------
+
+fd77 :                       df_asm_length
+fd77 : 00030303020202..      	db	0,3,3,3,2,2,2,2,2,2,3,3,2,1,1,2,0
                              
                              	; Always try for lowest addressing mode, but
                              	; this table maps to alternative
-fd90 :                       df_asm_altaddrmode
-fd90 : 00                    	db AM_NONE		;AM_NONE	= 0
-fd91 : 00                    	db AM_NONE		;AM_ABS	 	= 1
-fd92 : 00                    	db AM_NONE		;AM_ABSX	= 2
-fd93 : 00                    	db AM_NONE		;AM_ABSY	= 3
-fd94 : 01                    	db AM_ABS		;AM_ZP		= 4
-fd95 : 02                    	db AM_ABSX		;AM_ZPX		= 5
-fd96 : 03                    	db AM_ABSY		;AM_ZPY		= 6
-fd97 : 0a                    	db AM_ABSIND	;AM_ZPIND	= 7
-fd98 : 0b                    	db AM_ABSINDX	;AM_ZPINDX	= 8
-fd99 : 09                    	db AM_ZPINDY	;AM_ZPINDY	= 9
-fd9a : 00                    	db AM_NONE		;AM_ABSIND	= 10
-fd9b : 00                    	db AM_NONE		;AM_ABSINDX	= 11
-fd9c : 00                    	db AM_NONE		;AM_IMM		= 12
-fd9d : 00                    	db AM_NONE		;AM_ACC		= 13
-fd9e : 00                    	db AM_NONE		;AM_IMP		= AM_ACC
-fd9f : 0f                    	db AM_REL		;AM_REL		= 15
-fda0 : 00                    	db AM_NONE		;AM_DIR		= 16
+fd88 :                       df_asm_altaddrmode
+fd88 : 00                    	db AM_NONE		;AM_NONE	= 0
+fd89 : 00                    	db AM_NONE		;AM_ABS	 	= 1
+fd8a : 00                    	db AM_NONE		;AM_ABSX	= 2
+fd8b : 00                    	db AM_NONE		;AM_ABSY	= 3
+fd8c : 01                    	db AM_ABS		;AM_ZP		= 4
+fd8d : 02                    	db AM_ABSX		;AM_ZPX		= 5
+fd8e : 03                    	db AM_ABSY		;AM_ZPY		= 6
+fd8f : 0a                    	db AM_ABSIND	;AM_ZPIND	= 7
+fd90 : 0b                    	db AM_ABSINDX	;AM_ZPINDX	= 8
+fd91 : 09                    	db AM_ZPINDY	;AM_ZPINDY	= 9
+fd92 : 00                    	db AM_NONE		;AM_ABSIND	= 10
+fd93 : 00                    	db AM_NONE		;AM_ABSINDX	= 11
+fd94 : 00                    	db AM_NONE		;AM_IMM		= 12
+fd95 : 00                    	db AM_NONE		;AM_ACC		= 13
+fd96 : 00                    	db AM_NONE		;AM_IMP		= AM_ACC
+fd97 : 0f                    	db AM_REL		;AM_REL		= 15
+fd98 : 00                    	db AM_NONE		;AM_DIR		= 16
                              
                              
                              	;*	Mnemonic/	How many addressing modes /
                              	;* 	Mode		Opcode for mode
-fda1 :                       df_asm_tokensyms
+fd99 :                       df_asm_tokensyms
                              	;* Start with directives
-fda1 : 2e6f726702            	db	".org",		1*2
-fda6 : 1000                  	db	AM_DIR,		0x00
-fda8 : 2e6f707402            	db	".opt",		1*2
-fdad : 1000                  	db	AM_DIR,		0x00
-fdaf : 2e646202              	db	".db",		1*2
-fdb3 : 1000                  	db	AM_DIR,		0x00
-fdb5 : 2e647702              	db	".dw",		1*2
-fdb9 : 1000                  	db	AM_DIR,		0x00
-fdbb : 2e647302              	db	".ds",		1*2
-fdbf : 1000                  	db	AM_DIR,		0x00	
+fd99 : 2e6f726702            	db	".org",		1*2
+fd9e : 1000                  	db	AM_DIR,		0x00
+fda0 : 2e6f707402            	db	".opt",		1*2
+fda5 : 1000                  	db	AM_DIR,		0x00
+fda7 : 2e646202              	db	".db",		1*2
+fdab : 1000                  	db	AM_DIR,		0x00
+fdad : 2e647702              	db	".dw",		1*2
+fdb1 : 1000                  	db	AM_DIR,		0x00
+fdb3 : 2e647302              	db	".ds",		1*2
+fdb7 : 1000                  	db	AM_DIR,		0x00	
                              
-fdc1 : 61646310              	db	"adc",		8*2
-fdc5 : 0c69                  	db	AM_IMM,		0x69
-fdc7 : 0465                  	db	AM_ZP,		0x65
-fdc9 : 0575                  	db	AM_ZPX,		0x75
-fdcb : 016d                  	db	AM_ABS,		0x6d
-fdcd : 027d                  	db	AM_ABSX,	0x7d
-fdcf : 0379                  	db	AM_ABSY,	0x79
-fdd1 : 0861                  	db	AM_ZPINDX,	0x61
-fdd3 : 0971                  	db	AM_ZPINDY,	0x71
+fdb9 : 61646310              	db	"adc",		8*2
+fdbd : 0c69                  	db	AM_IMM,		0x69
+fdbf : 0465                  	db	AM_ZP,		0x65
+fdc1 : 0575                  	db	AM_ZPX,		0x75
+fdc3 : 016d                  	db	AM_ABS,		0x6d
+fdc5 : 027d                  	db	AM_ABSX,	0x7d
+fdc7 : 0379                  	db	AM_ABSY,	0x79
+fdc9 : 0861                  	db	AM_ZPINDX,	0x61
+fdcb : 0971                  	db	AM_ZPINDY,	0x71
                              	
-fdd5 : 616e6410              	db	"and",		8*2
-fdd9 : 0c29                  	db	AM_IMM,		0x29
-fddb : 0425                  	db	AM_ZP,		0x25
+fdcd : 616e6410              	db	"and",		8*2
+fdd1 : 0c29                  	db	AM_IMM,		0x29
+fdd3 : 0425                  	db	AM_ZP,		0x25
+fdd5 : 0535                  	db	AM_ZPX,		0x35
+fdd7 : 012d                  	db	AM_ABS,		0x2d
+fdd9 : 023d                  	db	AM_ABSX,	0x3d
+fddb : 0339                  	db	AM_ABSY,	0x39
+fddd : 0821                  	db	AM_ZPINDX,	0x21
+fddf : 0931                  	db	AM_ZPINDY,	0x31
+                             
+fde1 : 636d7010              	db	"cmp",		8*2
+fde5 : 0cc9                  	db	AM_IMM,		0xc9
 AS65 Assembler for R6502 [1.42].                                     Page  292
 -------------------------------- bank\bank0.s --------------------------------
 
-fddd : 0535                  	db	AM_ZPX,		0x35
-fddf : 012d                  	db	AM_ABS,		0x2d
-fde1 : 023d                  	db	AM_ABSX,	0x3d
-fde3 : 0339                  	db	AM_ABSY,	0x39
-fde5 : 0821                  	db	AM_ZPINDX,	0x21
-fde7 : 0931                  	db	AM_ZPINDY,	0x31
+fde7 : 04c5                  	db	AM_ZP,		0xc5
+fde9 : 05d5                  	db	AM_ZPX,		0xd5
+fdeb : 01cd                  	db	AM_ABS,		0xcd
+fded : 02dd                  	db	AM_ABSX,	0xdd
+fdef : 03d9                  	db	AM_ABSY,	0xd9
+fdf1 : 08c1                  	db	AM_ZPINDX,	0xc1
+fdf3 : 09d1                  	db	AM_ZPINDY,	0xd1
                              
-fde9 : 636d7010              	db	"cmp",		8*2
-fded : 0cc9                  	db	AM_IMM,		0xc9
-fdef : 04c5                  	db	AM_ZP,		0xc5
-fdf1 : 05d5                  	db	AM_ZPX,		0xd5
-fdf3 : 01cd                  	db	AM_ABS,		0xcd
-fdf5 : 02dd                  	db	AM_ABSX,	0xdd
-fdf7 : 03d9                  	db	AM_ABSY,	0xd9
-fdf9 : 08c1                  	db	AM_ZPINDX,	0xc1
-fdfb : 09d1                  	db	AM_ZPINDY,	0xd1
+fdf5 : 656f7210              	db	"eor",		8*2
+fdf9 : 0c49                  	db	AM_IMM,		0x49
+fdfb : 0445                  	db	AM_ZP,		0x45
+fdfd : 0555                  	db	AM_ZPX,		0x55
+fdff : 014d                  	db	AM_ABS,		0x4d
+fe01 : 025d                  	db	AM_ABSX,	0x5d
+fe03 : 0359                  	db	AM_ABSY,	0x59
+fe05 : 0841                  	db	AM_ZPINDX,	0x41
+fe07 : 0951                  	db	AM_ZPINDY,	0x51
                              
-fdfd : 656f7210              	db	"eor",		8*2
-fe01 : 0c49                  	db	AM_IMM,		0x49
-fe03 : 0445                  	db	AM_ZP,		0x45
-fe05 : 0555                  	db	AM_ZPX,		0x55
-fe07 : 014d                  	db	AM_ABS,		0x4d
-fe09 : 025d                  	db	AM_ABSX,	0x5d
-fe0b : 0359                  	db	AM_ABSY,	0x59
-fe0d : 0841                  	db	AM_ZPINDX,	0x41
-fe0f : 0951                  	db	AM_ZPINDY,	0x51
+fe09 : 6c646110              	db	"lda",		8*2
+fe0d : 0ca9                  	db	AM_IMM,		0xa9
+fe0f : 04a5                  	db	AM_ZP,		0xa5
+fe11 : 05b5                  	db	AM_ZPX,		0xb5
+fe13 : 01ad                  	db	AM_ABS,		0xad
+fe15 : 02bd                  	db	AM_ABSX,	0xbd
+fe17 : 03b9                  	db	AM_ABSY,	0xb9
+fe19 : 08a1                  	db	AM_ZPINDX,	0xa1
+fe1b : 09b1                  	db	AM_ZPINDY,	0xb1
                              
-fe11 : 6c646110              	db	"lda",		8*2
-fe15 : 0ca9                  	db	AM_IMM,		0xa9
-fe17 : 04a5                  	db	AM_ZP,		0xa5
-fe19 : 05b5                  	db	AM_ZPX,		0xb5
-fe1b : 01ad                  	db	AM_ABS,		0xad
-fe1d : 02bd                  	db	AM_ABSX,	0xbd
-fe1f : 03b9                  	db	AM_ABSY,	0xb9
-fe21 : 08a1                  	db	AM_ZPINDX,	0xa1
-fe23 : 09b1                  	db	AM_ZPINDY,	0xb1
+fe1d : 6f726110              	db	"ora",		8*2
+fe21 : 0c09                  	db	AM_IMM,		0x09
+fe23 : 0405                  	db	AM_ZP,		0x05
+fe25 : 0515                  	db	AM_ZPX,		0x15
+fe27 : 010d                  	db	AM_ABS,		0x0d
+fe29 : 021d                  	db	AM_ABSX,	0x1d
+fe2b : 0319                  	db	AM_ABSY,	0x19
+fe2d : 0801                  	db	AM_ZPINDX,	0x01
+fe2f : 0911                  	db	AM_ZPINDY,	0x11
                              
-fe25 : 6f726110              	db	"ora",		8*2
-fe29 : 0c09                  	db	AM_IMM,		0x09
-fe2b : 0405                  	db	AM_ZP,		0x05
-fe2d : 0515                  	db	AM_ZPX,		0x15
-fe2f : 010d                  	db	AM_ABS,		0x0d
-fe31 : 021d                  	db	AM_ABSX,	0x1d
-fe33 : 0319                  	db	AM_ABSY,	0x19
-fe35 : 0801                  	db	AM_ZPINDX,	0x01
-fe37 : 0911                  	db	AM_ZPINDY,	0x11
+fe31 : 73626310              	db	"sbc",		8*2
+fe35 : 0ce9                  	db	AM_IMM,		0xe9
+fe37 : 04e5                  	db	AM_ZP,		0xe5
+fe39 : 05f5                  	db	AM_ZPX,		0xf5
+fe3b : 01ed                  	db	AM_ABS,		0xed
+fe3d : 02fd                  	db	AM_ABSX,	0xfd
+fe3f : 03f9                  	db	AM_ABSY,	0xf9
+fe41 : 08e1                  	db	AM_ZPINDX,	0xe1
+fe43 : 09f1                  	db	AM_ZPINDY,	0xf1
                              
-fe39 : 73626310              	db	"sbc",		8*2
-fe3d : 0ce9                  	db	AM_IMM,		0xe9
-fe3f : 04e5                  	db	AM_ZP,		0xe5
-fe41 : 05f5                  	db	AM_ZPX,		0xf5
-fe43 : 01ed                  	db	AM_ABS,		0xed
-fe45 : 02fd                  	db	AM_ABSX,	0xfd
-fe47 : 03f9                  	db	AM_ABSY,	0xf9
-fe49 : 08e1                  	db	AM_ZPINDX,	0xe1
-fe4b : 09f1                  	db	AM_ZPINDY,	0xf1
+fe45 : 73746110              	db	"sta",		8*2
+fe49 : 0485                  	db	AM_ZP,		0x85
+fe4b : 0595                  	db	AM_ZPX,		0x95
+fe4d : 018d                  	db	AM_ABS,		0x8d
+fe4f : 029d                  	db	AM_ABSX,	0x9d
+fe51 : 0399                  	db	AM_ABSY,	0x99
+fe53 : 0881                  	db	AM_ZPINDX,	0x81
+fe55 : 0991                  	db	AM_ZPINDY,	0x91
+fe57 : 0792                  	db	AM_ZPIND,	0x92
                              
-fe4d : 73746110              	db	"sta",		8*2
-fe51 : 0485                  	db	AM_ZP,		0x85
-fe53 : 0595                  	db	AM_ZPX,		0x95
-fe55 : 018d                  	db	AM_ABS,		0x8d
-fe57 : 029d                  	db	AM_ABSX,	0x9d
+fe59 : 61736c0a              	db	"asl",		5*2
+fe5d : 0d0a                  	db	AM_IMP,		0x0a
+fe5f : 0406                  	db	AM_ZP,		0x06
+fe61 : 0516                  	db	AM_ZPX,		0x16
 AS65 Assembler for R6502 [1.42].                                     Page  293
 -------------------------------- bank\bank0.s --------------------------------
 
-fe59 : 0399                  	db	AM_ABSY,	0x99
-fe5b : 0881                  	db	AM_ZPINDX,	0x81
-fe5d : 0991                  	db	AM_ZPINDY,	0x91
-fe5f : 0792                  	db	AM_ZPIND,	0x92
+fe63 : 010e                  	db	AM_ABS,		0x0e
+fe65 : 021e                  	db	AM_ABSX,	0x1e
+fe67 : 64656308              	db	"dec",		4*2
+fe6b : 04c6                  	db	AM_ZP,		0xc6
+fe6d : 05d6                  	db	AM_ZPX,		0xd6
+fe6f : 01ce                  	db	AM_ABS,		0xce
+fe71 : 02de                  	db	AM_ABSX,	0xde
+fe73 : 696e6308              	db	"inc",		4*2
+fe77 : 04e6                  	db	AM_ZP,		0xe6
+fe79 : 05f6                  	db	AM_ZPX,		0xf6
+fe7b : 01ee                  	db	AM_ABS,		0xee
+fe7d : 02fe                  	db	AM_ABSX,	0xfe
+fe7f : 6c73720a              	db	"lsr",		5*2
+fe83 : 0d4a                  	db	AM_IMP,		0x4a
+fe85 : 0446                  	db	AM_ZP,		0x46
+fe87 : 0556                  	db	AM_ZPX,		0x56
+fe89 : 014e                  	db	AM_ABS,		0x4e
+fe8b : 025e                  	db	AM_ABSX,	0x5e
+fe8d : 726f6c0a              	db	"rol",		5*2
+fe91 : 0d2a                  	db	AM_IMP,		0x2a
+fe93 : 0426                  	db	AM_ZP,		0x26
+fe95 : 0536                  	db	AM_ZPX,		0x36
+fe97 : 012e                  	db	AM_ABS,		0x2e
+fe99 : 023e                  	db	AM_ABSX,	0x3e
+fe9b : 726f720a              	db	"ror",		5*2
+fe9f : 0d6a                  	db	AM_IMP,		0x6a
+fea1 : 0466                  	db	AM_ZP,		0x66
+fea3 : 0576                  	db	AM_ZPX,		0x76
+fea5 : 016e                  	db	AM_ABS,		0x6e
+fea7 : 027e                  	db	AM_ABSX,	0x7e
                              
-fe61 : 61736c0a              	db	"asl",		5*2
-fe65 : 0d0a                  	db	AM_IMP,		0x0a
-fe67 : 0406                  	db	AM_ZP,		0x06
-fe69 : 0516                  	db	AM_ZPX,		0x16
-fe6b : 010e                  	db	AM_ABS,		0x0e
-fe6d : 021e                  	db	AM_ABSX,	0x1e
-fe6f : 64656308              	db	"dec",		4*2
-fe73 : 04c6                  	db	AM_ZP,		0xc6
-fe75 : 05d6                  	db	AM_ZPX,		0xd6
-fe77 : 01ce                  	db	AM_ABS,		0xce
-fe79 : 02de                  	db	AM_ABSX,	0xde
-fe7b : 696e6308              	db	"inc",		4*2
-fe7f : 04e6                  	db	AM_ZP,		0xe6
-fe81 : 05f6                  	db	AM_ZPX,		0xf6
-fe83 : 01ee                  	db	AM_ABS,		0xee
-fe85 : 02fe                  	db	AM_ABSX,	0xfe
-fe87 : 6c73720a              	db	"lsr",		5*2
-fe8b : 0d4a                  	db	AM_IMP,		0x4a
-fe8d : 0446                  	db	AM_ZP,		0x46
-fe8f : 0556                  	db	AM_ZPX,		0x56
-fe91 : 014e                  	db	AM_ABS,		0x4e
-fe93 : 025e                  	db	AM_ABSX,	0x5e
-fe95 : 726f6c0a              	db	"rol",		5*2
-fe99 : 0d2a                  	db	AM_IMP,		0x2a
-fe9b : 0426                  	db	AM_ZP,		0x26
-fe9d : 0536                  	db	AM_ZPX,		0x36
-fe9f : 012e                  	db	AM_ABS,		0x2e
-fea1 : 023e                  	db	AM_ABSX,	0x3e
-fea3 : 726f720a              	db	"ror",		5*2
-fea7 : 0d6a                  	db	AM_IMP,		0x6a
-fea9 : 0466                  	db	AM_ZP,		0x66
-feab : 0576                  	db	AM_ZPX,		0x76
-fead : 016e                  	db	AM_ABS,		0x6e
-feaf : 027e                  	db	AM_ABSX,	0x7e
-                             
-feb1 : 62697404              	db	"bit",		2*2
-feb5 : 0424                  	db	AM_ZP,		0x24
-feb7 : 012c                  	db	AM_ABS,		0x2c
+fea9 : 62697404              	db	"bit",		2*2
+fead : 0424                  	db	AM_ZP,		0x24
+feaf : 012c                  	db	AM_ABS,		0x2c
                              	
-feb9 : 62726b02              	db	"brk",		1*2
-febd : 0d00                  	db	AM_IMP,		0x00
+feb1 : 62726b02              	db	"brk",		1*2
+feb5 : 0d00                  	db	AM_IMP,		0x00
                              	
-febf : 636c6302              	db	"clc",		1*2
-fec3 : 0d18                  	db	AM_IMP,		0x18
-fec5 : 636c6402              	db	"cld",		1*2
-fec9 : 0dd8                  	db	AM_IMP,		0xd8
-fecb : 636c6902              	db	"cli",		1*2
-fecf : 0d58                  	db	AM_IMP,		0x58
-fed1 : 636c7602              	db	"clv",		1*2
-fed5 : 0db8                  	db	AM_IMP,		0xb8
-fed7 : 73656302              	db	"sec",		1*2
-fedb : 0d38                  	db	AM_IMP,		0x38
-fedd : 73656402              	db	"sed",		1*2
-fee1 : 0df8                  	db	AM_IMP,		0xf8
-fee3 : 73656902              	db	"sei",		1*2
-fee7 : 0d78                  	db	AM_IMP,		0x78
+feb7 : 636c6302              	db	"clc",		1*2
+febb : 0d18                  	db	AM_IMP,		0x18
+febd : 636c6402              	db	"cld",		1*2
+fec1 : 0dd8                  	db	AM_IMP,		0xd8
+fec3 : 636c6902              	db	"cli",		1*2
+fec7 : 0d58                  	db	AM_IMP,		0x58
+fec9 : 636c7602              	db	"clv",		1*2
+fecd : 0db8                  	db	AM_IMP,		0xb8
+fecf : 73656302              	db	"sec",		1*2
+fed3 : 0d38                  	db	AM_IMP,		0x38
+fed5 : 73656402              	db	"sed",		1*2
+fed9 : 0df8                  	db	AM_IMP,		0xf8
+fedb : 73656902              	db	"sei",		1*2
+fedf : 0d78                  	db	AM_IMP,		0x78
                              	
+fee1 : 63707806              	db	"cpx",		3*2
+fee5 : 0ce0                  	db	AM_IMM,		0xe0
+fee7 : 04e4                  	db	AM_ZP,		0xe4
+fee9 : 01ec                  	db	AM_ABS,		0xec
+feeb : 63707906              	db	"cpy",		3*2
+feef : 0cc0                  	db	AM_IMM,		0xc0
+fef1 : 04c4                  	db	AM_ZP,		0xc4
+fef3 : 01cc                  	db	AM_ABS,		0xcc
+fef5 : 64657802              	db	"dex",		1*2
 AS65 Assembler for R6502 [1.42].                                     Page  294
 -------------------------------- bank\bank0.s --------------------------------
 
-fee9 : 63707806              	db	"cpx",		3*2
-feed : 0ce0                  	db	AM_IMM,		0xe0
-feef : 04e4                  	db	AM_ZP,		0xe4
-fef1 : 01ec                  	db	AM_ABS,		0xec
-fef3 : 63707906              	db	"cpy",		3*2
-fef7 : 0cc0                  	db	AM_IMM,		0xc0
-fef9 : 04c4                  	db	AM_ZP,		0xc4
-fefb : 01cc                  	db	AM_ABS,		0xcc
-fefd : 64657802              	db	"dex",		1*2
-ff01 : 0dca                  	db	AM_IMP,		0xca
-ff03 : 64657902              	db	"dey",		1*2
-ff07 : 0d88                  	db	AM_IMP,		0x88
-ff09 : 696e7802              	db	"inx",		1*2
-ff0d : 0de8                  	db	AM_IMP,		0xe8
-ff0f : 696e7902              	db	"iny",		1*2
-ff13 : 0dc8                  	db	AM_IMP,		0xc8
-ff15 : 6c64780a              	db	"ldx",		5*2
-ff19 : 0ca2                  	db	AM_IMM,		0xa2
-ff1b : 04a6                  	db	AM_ZP,		0xa6
-ff1d : 06b6                  	db	AM_ZPY,		0xb6
-ff1f : 01ae                  	db	AM_ABS,		0xae
-ff21 : 03be                  	db	AM_ABSY,	0xbe
-ff23 : 6c64790a              	db	"ldy",		5*2
-ff27 : 0ca0                  	db	AM_IMM,		0xa0
-ff29 : 04a4                  	db	AM_ZP,		0xa4
-ff2b : 05b4                  	db	AM_ZPX,		0xb4
-ff2d : 01ac                  	db	AM_ABS,		0xac
-ff2f : 02bc                  	db	AM_ABSX,	0xbc
-ff31 : 73747806              	db	"stx",		3*2
-ff35 : 0486                  	db	AM_ZP,		0x86
-ff37 : 0696                  	db	AM_ZPY,		0x96
-ff39 : 018e                  	db	AM_ABS,		0x8e
-ff3b : 73747906              	db	"sty",		3*2
-ff3f : 0484                  	db	AM_ZP,		0x84
-ff41 : 0594                  	db	AM_ZPX,		0x94
-ff43 : 018c                  	db	AM_ABS,		0x8c
+fef9 : 0dca                  	db	AM_IMP,		0xca
+fefb : 64657902              	db	"dey",		1*2
+feff : 0d88                  	db	AM_IMP,		0x88
+ff01 : 696e7802              	db	"inx",		1*2
+ff05 : 0de8                  	db	AM_IMP,		0xe8
+ff07 : 696e7902              	db	"iny",		1*2
+ff0b : 0dc8                  	db	AM_IMP,		0xc8
+ff0d : 6c64780a              	db	"ldx",		5*2
+ff11 : 0ca2                  	db	AM_IMM,		0xa2
+ff13 : 04a6                  	db	AM_ZP,		0xa6
+ff15 : 06b6                  	db	AM_ZPY,		0xb6
+ff17 : 01ae                  	db	AM_ABS,		0xae
+ff19 : 03be                  	db	AM_ABSY,	0xbe
+ff1b : 6c64790a              	db	"ldy",		5*2
+ff1f : 0ca0                  	db	AM_IMM,		0xa0
+ff21 : 04a4                  	db	AM_ZP,		0xa4
+ff23 : 05b4                  	db	AM_ZPX,		0xb4
+ff25 : 01ac                  	db	AM_ABS,		0xac
+ff27 : 02bc                  	db	AM_ABSX,	0xbc
+ff29 : 73747806              	db	"stx",		3*2
+ff2d : 0486                  	db	AM_ZP,		0x86
+ff2f : 0696                  	db	AM_ZPY,		0x96
+ff31 : 018e                  	db	AM_ABS,		0x8e
+ff33 : 73747906              	db	"sty",		3*2
+ff37 : 0484                  	db	AM_ZP,		0x84
+ff39 : 0594                  	db	AM_ZPX,		0x94
+ff3b : 018c                  	db	AM_ABS,		0x8c
                              
-ff45 : 62636302              	db	"bcc",		1*2
-ff49 : 0f90                  	db	AM_REL,		0x90
-ff4b : 62637302              	db	"bcs",		1*2
-ff4f : 0fb0                  	db	AM_REL,		0xb0
-ff51 : 62657102              	db	"beq",		1*2
-ff55 : 0ff0                  	db	AM_REL,		0xf0
-ff57 : 626d6902              	db	"bmi",		1*2
-ff5b : 0f30                  	db	AM_REL,		0x30
-ff5d : 626e6502              	db	"bne",		1*2
-ff61 : 0fd0                  	db	AM_REL,		0xd0
-ff63 : 62706c02              	db	"bpl",		1*2
-ff67 : 0f10                  	db	AM_REL,		0x10
-ff69 : 62766302              	db	"bvc",		1*2
-ff6d : 0f50                  	db	AM_REL,		0x50
-ff6f : 62767302              	db	"bvs",		1*2
-ff73 : 0f70                  	db	AM_REL,		0x70
-ff75 : 6a6d7004              	db	"jmp",		2*2
-ff79 : 014c                  	db	AM_ABS,		0x4c
-ff7b : 0a6c                  	db	AM_ABSIND,	0x6c
-ff7d : 6a737202              	db	"jsr",		1*2
-ff81 : 0120                  	db	AM_ABS,		0x20
+ff3d : 62636302              	db	"bcc",		1*2
+ff41 : 0f90                  	db	AM_REL,		0x90
+ff43 : 62637302              	db	"bcs",		1*2
+ff47 : 0fb0                  	db	AM_REL,		0xb0
+ff49 : 62657102              	db	"beq",		1*2
+ff4d : 0ff0                  	db	AM_REL,		0xf0
+ff4f : 626d6902              	db	"bmi",		1*2
+ff53 : 0f30                  	db	AM_REL,		0x30
+ff55 : 626e6502              	db	"bne",		1*2
+ff59 : 0fd0                  	db	AM_REL,		0xd0
+ff5b : 62706c02              	db	"bpl",		1*2
+ff5f : 0f10                  	db	AM_REL,		0x10
+ff61 : 62766302              	db	"bvc",		1*2
+ff65 : 0f50                  	db	AM_REL,		0x50
+ff67 : 62767302              	db	"bvs",		1*2
+ff6b : 0f70                  	db	AM_REL,		0x70
+ff6d : 6a6d7004              	db	"jmp",		2*2
+ff71 : 014c                  	db	AM_ABS,		0x4c
+ff73 : 0a6c                  	db	AM_ABSIND,	0x6c
+ff75 : 6a737202              	db	"jsr",		1*2
+ff79 : 0120                  	db	AM_ABS,		0x20
                              	
-ff83 : 6e6f7002              	db	"nop",		1*2
-ff87 : 0dea                  	db	AM_IMP,		0xea
-ff89 : 70686102              	db	"pha",		1*2
+ff7b : 6e6f7002              	db	"nop",		1*2
+ff7f : 0dea                  	db	AM_IMP,		0xea
+ff81 : 70686102              	db	"pha",		1*2
+ff85 : 0d48                  	db	AM_IMP,		0x48
+ff87 : 70687002              	db	"php",		1*2
+ff8b : 0d08                  	db	AM_IMP,		0x08
+ff8d : 706c6102              	db	"pla",		1*2
+ff91 : 0d68                  	db	AM_IMP,		0x68
+ff93 : 706c7002              	db	"plp",		1*2
+ff97 : 0d28                  	db	AM_IMP,		0x28
+ff99 : 72746902              	db	"rti",		1*2
+ff9d : 0d40                  	db	AM_IMP,		0x40
 AS65 Assembler for R6502 [1.42].                                     Page  295
 -------------------------------- bank\bank0.s --------------------------------
 
-ff8d : 0d48                  	db	AM_IMP,		0x48
-ff8f : 70687002              	db	"php",		1*2
-ff93 : 0d08                  	db	AM_IMP,		0x08
-ff95 : 706c6102              	db	"pla",		1*2
-ff99 : 0d68                  	db	AM_IMP,		0x68
-ff9b : 706c7002              	db	"plp",		1*2
-ff9f : 0d28                  	db	AM_IMP,		0x28
-ffa1 : 72746902              	db	"rti",		1*2
-ffa5 : 0d40                  	db	AM_IMP,		0x40
-ffa7 : 72747302              	db	"rts",		1*2
-ffab : 0d60                  	db	AM_IMP,		0x60
-ffad : 74617802              	db	"tax",		1*2
-ffb1 : 0daa                  	db	AM_IMP,		0xaa
-ffb3 : 74617902              	db	"tay",		1*2
-ffb7 : 0da8                  	db	AM_IMP,		0xa8
-ffb9 : 74737802              	db	"tsx",		1*2
-ffbd : 0dba                  	db	AM_IMP,		0xba
-ffbf : 74786102              	db	"txa",		1*2
-ffc3 : 0d8a                  	db	AM_IMP,		0x8a
-ffc5 : 74787302              	db	"txs",		1*2
-ffc9 : 0d9a                  	db	AM_IMP,		0x9a
-ffcb : 74796102              	db	"tya",		1*2
-ffcf : 0d98                  	db	AM_IMP,		0x98	
+ff9f : 72747302              	db	"rts",		1*2
+ffa3 : 0d60                  	db	AM_IMP,		0x60
+ffa5 : 74617802              	db	"tax",		1*2
+ffa9 : 0daa                  	db	AM_IMP,		0xaa
+ffab : 74617902              	db	"tay",		1*2
+ffaf : 0da8                  	db	AM_IMP,		0xa8
+ffb1 : 74737802              	db	"tsx",		1*2
+ffb5 : 0dba                  	db	AM_IMP,		0xba
+ffb7 : 74786102              	db	"txa",		1*2
+ffbb : 0d8a                  	db	AM_IMP,		0x8a
+ffbd : 74787302              	db	"txs",		1*2
+ffc1 : 0d9a                  	db	AM_IMP,		0x9a
+ffc3 : 74796102              	db	"tya",		1*2
+ffc7 : 0d98                  	db	AM_IMP,		0x98	
                              	
                              	;* Terminates with a zero
-ffd1 : 00                    	db	0
+ffc9 : 00                    	db	0
                              
                              	include	"dflat/asmjmptab.s"
                              ;************************************************
@@ -19132,42 +19123,42 @@ ffd1 : 00                    	db	0
                              ; Tokeniser jump table
                              ; Only directives needed as all opcodes are handl
                              ; through a single routine
-ffd2 :                       df_tk_asm_tokenjmp
-ffd2 : 0de0                  	dw	df_tk_asm_org
-ffd4 : 0de0                  	dw	df_tk_asm_opt
-ffd6 : 6fdf                  	dw	df_tk_asm_db
-ffd8 : 6fdf                  	dw	df_tk_asm_dw
+ffca :                       df_tk_asm_tokenjmp
+ffca : 0de0                  	dw	df_tk_asm_org
+ffcc : 0de0                  	dw	df_tk_asm_opt
+ffce : 6fdf                  	dw	df_tk_asm_db
+ffd0 : 6fdf                  	dw	df_tk_asm_dw
+ffd2 : 0de0                  	dw	df_tk_asm_ds
+                             
+ffd4 :                       df_rt_asm_tokenjmp
+ffd4 : c7fa                  	dw	df_rt_asm_org
+ffd6 : d9fa                  	dw	df_rt_asm_opt
+ffd8 : e1fa                  	dw	df_rt_asm_db
+ffda : e4fa                  	dw	df_rt_asm_dw
+ffdc : 5cfb                  	dw	df_rt_asm_ds
+                             
 AS65 Assembler for R6502 [1.42].                                     Page  296
 -------------------------------- bank\bank0.s --------------------------------
 
-ffda : 0de0                  	dw	df_tk_asm_ds
-                             
-ffdc :                       df_rt_asm_tokenjmp
-ffdc : c7fa                  	dw	df_rt_asm_org
-ffde : d9fa                  	dw	df_rt_asm_opt
-ffe0 : e1fa                  	dw	df_rt_asm_db
-ffe2 : e4fa                  	dw	df_rt_asm_dw
-ffe4 : 5cfb                  	dw	df_rt_asm_ds
-                             
                              
                              ;****************************************
                              ;* as_init
                              ;* Initialise assembler settings
                              ;****************************************
-ffe6 :                       asm_init
+ffde :                       asm_init
                              	; Zero the PC
-ffe6 : a900             [ 2] 	lda #0
-ffe8 : 8599             [ 3] 	sta df_asmpc
-ffea : 859a             [ 3] 	sta df_asmpc+1
+ffde : a900             [ 2] 	lda #0
+ffe0 : 8599             [ 3] 	sta df_asmpc
+ffe2 : 859a             [ 3] 	sta df_asmpc+1
                              	; Zero the option
-ffec : 859b             [ 3] 	sta df_asmopt
-ffee : 60               [ 6] 	rts
+ffe4 : 859b             [ 3] 	sta df_asmopt
+ffe6 : 60               [ 6] 	rts
                              
-ffef :                       mod_sz_asm_e
+ffe7 :                       mod_sz_asm_e
                              
-ffef :                       mod_sz_language_e
+ffe7 :                       mod_sz_language_e
                              	; End of Code
-ffef :                       _code_end
+ffe7 :                       _code_end
                              
 No errors in pass 2.
 Wrote binary from address $c000 through $ffff.

@@ -1,0 +1,8 @@
+C:/Users/Lenovo PC/Documents/GitHub/dflat/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/build/CMakeFiles/ZERO_CHECK.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/build/dftap2txt/CMakeFiles/ALL_BUILD.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/build/dftap2txt/dftap2txt/CMakeFiles/dftap2txt.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/build/dftap2wav/CMakeFiles/ALL_BUILD.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/build/dftap2wav/dftap2wav/CMakeFiles/dftap2wav.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/build/dftxt2tap/CMakeFiles/ALL_BUILD.dir
+C:/Users/Lenovo PC/Documents/GitHub/dflat/build/dftxt2tap/dftxt2tap/CMakeFiles/dftxt2tap.dir

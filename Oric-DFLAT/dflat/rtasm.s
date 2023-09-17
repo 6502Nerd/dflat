@@ -264,14 +264,24 @@ df_rt_asm_mnem_err
 ; Option 2 = Write
 ; Option 3 = Write, Print
 df_rt_asm_encode
-	; If relative then need to calculate offset
+	; Only write the code if bit 1=1
+	lda #0x02
+	and df_asmopt
+	beq df_rt_asm_encode_print
+	ldy #0
+	lda df_asmopcde
+	sta (df_asmpc),y
+	lda df_asmlen
+	cmp #1						; No operand
+	beq df_rt_asm_encode_print
+	cmp #3						; Word operand
+	beq df_rt_asm_encode_writeword
+	; If here then byte operand
+	; Check relative then need to calculate offset
 	lda df_asmadmd
 	cmp #AM_REL
 	bne df_rt_asm_encode_skiprel
-	; If high byte is 0 then do nothing
-	lda df_asmoprnd+1
-	beq df_rt_asm_encode_skiprel
-	; else calculate distance from PC
+	; calculate distance from PC
 	; first take 2 off operand
 	sec
 	lda df_asmoprnd
@@ -287,52 +297,33 @@ df_rt_asm_encode
 	sta df_asmoprnd
 	lda df_asmoprnd+1
 	sbc df_asmpc+1
-	; put 0 in high operand storage
-	; but A contains result of subtraction
-	; so check that for out of range
-	ldy #0
-	sty df_asmoprnd+1
-	; detect too far; high byte is either 0 or 255
-	; else it's an error
-	tay
-	beq df_rt_asm_encode_relpos
-	cmp #0xff
-	bne df_rt_asm_encode_relfar
-	; if high is ff then low must be same -ve
+	; A contains high byte result of subtraction
+	; and must be 0 (operand <=127) or 255 (operand >=128)
+	sta df_asmoprnd+1
+	beq df_rt_asm_rel_postive
+	cmp #0xff				; If not 0xff then error
+	bne df_rt_asm_err_quantity
+	; Check negative branch >=128 (N=1)
 	lda df_asmoprnd
-	bmi df_rt_asm_encode_skiprel
-	; else error
-	bpl df_rt_asm_encode_relfar
-df_rt_asm_encode_relpos
-	; if high is 00 then low must be same +ve
+	bpl df_rt_asm_err_quantity
+	bmi df_rt_asm_encode_writebyte
+df_rt_asm_rel_postive
+	; Check positive branch <=127
 	lda df_asmoprnd
-	bpl df_rt_asm_encode_skiprel
-	; else error
-df_rt_asm_encode_relfar
-	; set to non-zero value, dec because it is zero currently
-	dec df_asmoprnd+1
+	bmi df_rt_asm_err_quantity
+	bpl df_rt_asm_encode_writebyte
 df_rt_asm_encode_skiprel
-	; Only write the code if bit 1=1
-	lda #0x02
-	and df_asmopt
-	beq df_rt_asm_encode_print
-	ldy #0
-	lda df_asmopcde
-	sta (df_asmpc),y
-	lda df_asmlen
-	cmp #1						; No operand
-	beq df_rt_asm_encode_print
-	cmp #3						; Word operand
-	beq df_rt_asm_encode_writeword
 	; byte operand, high byte must be zero
 	lda df_asmoprnd+1
 	beq df_rt_asm_encode_writebyte
+df_rt_asm_err_quantity
 	SWBRK DFERR_QUANTITY
 df_rt_asm_encode_writebyte
-	iny 
 	lda df_asmoprnd
+	iny 
 	sta (df_asmpc),y
-	jmp df_rt_asm_encode_print
+	; Due to the iny, relying on Z=0 here!
+	bne df_rt_asm_encode_print
 df_rt_asm_encode_writeword
 	iny 
 	lda df_asmoprnd
