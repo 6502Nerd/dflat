@@ -173,6 +173,7 @@ df_tk_read
 	rts
 
 df_tk_dim
+df_tk_redim
 	; tokenise a variable
 	jsr df_tk_variable
 	jsr df_tk_arrvar

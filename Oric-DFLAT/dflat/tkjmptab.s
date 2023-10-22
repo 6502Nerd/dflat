@@ -91,6 +91,7 @@ df_tk_tokenjmp
 	dw	df_tk_tload
 	dw	df_tk_delete
 	dw	df_tk_dir
+	dw	df_tk_redim
 	
 	dw	df_tk_peek
 	dw	df_tk_deek

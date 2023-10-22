@@ -453,9 +453,11 @@ gr_get
 gr_set_cur
 	clc
 gr_set_cur_init
+	lda vdp_curoff
 	inc vdp_curoff				; Disable cursor
-
 	bcs gr_set_cur_skip			; Skip restore if C=1
+	cmp #0						; Was cursor anyway disabled?
+	bne gr_set_cur_skip			; if so then skip restore
 	stx tmp_alo
 	sty tmp_ahi
 	; First restore what is under the cursor

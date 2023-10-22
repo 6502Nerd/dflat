@@ -201,7 +201,28 @@ df_var_move_byte_fin
 	clc
 	rts
 	
-	
+
+;****************************************
+;* Iterate through a valid variable name
+;* starts with alpha, then any number of
+;* alphanums.
+;****************************************
+df_var_countlen
+	; count alpha nums
+	iny
+	inx
+	lda df_linbuff,y
+	; first char has to be alpha, rest can be alpha-numeric
+	cpx #0
+	bne df_var_countlen_alphanum
+	jsr df_tk_isalpha
+	jmp df_var_countlen_loop
+df_var_countlen_alphanum
+	jsr df_tk_isalphanum
+df_var_countlen_loop
+	bcs df_var_countlen
+	rts
+
 ;****************************************
 ;* Analyse variable name
 ;* Return type in A
@@ -211,64 +232,51 @@ df_var_move_byte_fin
 ;* Y = Offset to next char after var name
 ;****************************************
 df_var_analyse
+	; start at the current buffer position
+	ldy df_linoff
+	
+	; actual number of alpha nums = -1 to start
+	ldx #-1
+
 	; Default type is INT
 	lda #DFVVT_INT
 	sta df_tmpptra
-	
-	; start at the current buffer position
-	ldy df_linoff
 	
 	; check for PROC prefix
 	lda df_linbuff,y
 	cmp #'_'
 	; if it is not proc then get the name
 	bne df_var_not_proc
+	; analyse for proc variable names
 	; else set type to PROC
 	lda #DFVVT_PROC
 	sta df_tmpptra
-	; skip over prefix
-	iny
+	jsr df_var_countlen
+	; Length must be >=1
+	cpx #1
+	bcc df_var_analyse_fatal_err
+	; Next char has to be '('
+	cmp #'('
+	beq df_var_finalise_len
+df_var_analyse_fatal_err
+	SWBRK DFERR_SYNTAX
+	; Analyse for non-proc variable names
 df_var_not_proc
-	; found the actual number of alpha nums
-	ldx #0xff
 	; go back on pos on index as loop always does iny
 	dey
-df_var_type_countlen
-	; count alpha nums
-	iny
-	inx
-	lda df_linbuff,y
-	; first char has to be alpha, rest can be alpha-numeric
-	cpx #0
-	bne df_var_type_countlen_alphanum
-	jsr df_tk_isalpha
-	bcs df_var_type_countlen
-	bcc df_var_type_countlen_done
-df_var_type_countlen_alphanum
-	jsr df_tk_isalphanum
-	bcs df_var_type_countlen
-df_var_type_countlen_done
+	jsr df_var_countlen
 	cpx #0
 	bne df_var_analyse_chk_post
 	; if zero alphanums error but not fatal
-df_var_analyse_err
-	; If already prefix of PROC then fatal error
-	lda df_tmpptra
-	cmp #DFVVT_PROC
-	beq df_var_analyse_fatal_err
 	sec
 	rts
-df_var_analyse_fatal_err
-	SWBRK DFERR_SYNTAX
+	; check for post qualifiers e.g. $
 df_var_analyse_chk_post
 	; first see if the char is $
 	; but cannot already have PROC prefix
 ;	cmp #'%'
 ;	bne df_var_analyse_chk_dollar
-;	ldx df_tmpptra
-;	cpx #DFVVT_PROC
-;	beq df_var_analyse_fatal_err
-	; Set to INT type although it is the default already
+; Set to INT type although it is the default already
 ;	lda #DFVVT_INT
 ;	sta df_tmpptra
 	; advance the buffer index
@@ -279,9 +287,6 @@ df_var_analyse_chk_dollar
 	; but cannot already have PROC prefix
 	cmp #'$'
 	bne df_var_analyse_chk_arry
-	ldx df_tmpptra
-	cpx #DFVVT_PROC
-	beq df_var_analyse_fatal_err
 	; Set to STRING type
 	lda #DFVVT_STR
 	sta df_tmpptra
@@ -291,14 +296,11 @@ df_var_analyse_chk_arry
 	; Check for array type vs PROC
 	lda df_linbuff,y
 	cmp #'['
-	bne df_var_not_arry
-	; array and proc type not compatible
+	bne df_var_finalise_len
 	lda df_tmpptra
-	cmp #DFVVT_PROC
-	beq df_var_analyse_fatal_err
-	ora #DFVVT_ARRY
+	ora #DFVVT_PTR
 	sta df_tmpptra
-df_var_not_arry
+df_var_finalise_len
 	; Ok got everything
 	; calculate length from y
 	; y is next char after var name

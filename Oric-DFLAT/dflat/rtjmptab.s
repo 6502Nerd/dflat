@@ -91,6 +91,7 @@ df_rt_tokenjmp
 	dw	df_rt_tload
 	dw	df_rt_delete
 	dw	df_rt_dir
+	dw	df_rt_redim
 
 	dw	df_rt_peek
 	dw	df_rt_deek

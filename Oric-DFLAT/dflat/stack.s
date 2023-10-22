@@ -146,7 +146,7 @@ df_ost_pushStr
 ;* X,A - int
 ;****************************************
 df_ost_pushPtr
-	ldy #0xff
+	ldy #DFST_PTR
 	bne df_ost_pushParmX		; ALWAYS!
 	
 ;****************************************
@@ -159,6 +159,9 @@ df_ost_popParmX
 	ldy df_parmtop
 	; pull type first
 	dey
+	pha
+	lda df_rtstck,y
+	pla
 	and df_rtstck,y
 	beq df_st_typemismatcherr
 	; pull low byte first
@@ -204,7 +207,7 @@ df_ost_popStr
 ;* X,A - int
 ;****************************************
 df_ost_popPtr
-	ldy #0xff
+	ldy #DFST_PTR
 	bne df_ost_popParmX			; ALWAYS!
 	
 	

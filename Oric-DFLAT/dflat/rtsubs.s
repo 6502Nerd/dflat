@@ -707,7 +707,14 @@ df_rt_local_done
 	jmp df_rst_pushByte
 
 
+df_rt_redim
+	sec
+	bcs df_rt_dim_main
 df_rt_dim
+	clc
+df_rt_dim_main
+	php
+df_rt_dim_loop
 	ldy df_exeoff
 	dey
 df_rt_dim_findesc
@@ -732,10 +739,15 @@ df_rt_dim_findesc
 	; move to open bracket
 	iny
 	sty df_exeoff
+	; If re-dim, don't check for existing dimensions
+	plp
+	php
+	bcs df_rt_skip_dim_chk
 	; check if already dim'd
 	ldy #DFVVT_DIM1
 	lda (df_tmpptra),y
 	bne df_rt_dim_err
+df_rt_skip_dim_chk
 	; Save slot address found earlier
 	lda df_tmpptra
 	pha
@@ -759,6 +771,9 @@ df_rt_dim_findesc
 	iny
 	pla
 	sta (df_tmpptra),y
+	plp
+	php
+	bcs df_rt_dim_set_type
 df_rt_dim_alloc
 	; ok we have up to 2 dimensions
 	; mult dim 1 and 2 if dim 2 <> 0
@@ -797,16 +812,15 @@ df_rt_dim2_mul2
 	dey
 	sta (df_tmpptra),y
 	; finally, update the type to indicate array
+df_rt_dim_set_type
 	ldx #0
 	lda (df_tmpptra,x)
-	ora #DFVVT_ARRY
+	ora #DFVVT_PTR
 	sta (df_tmpptra,x)
 	; don't increment byte again - go check for more vars
-	jmp df_rt_dim
-df_rt_dim_next_byte
-	inc df_exeoff
-	jmp df_rt_dim
+	jmp df_rt_dim_loop
 df_rt_dim_done
+	plp
 	rts
 df_rt_dim_err
 	SWBRK DFERR_DIM
@@ -836,8 +850,8 @@ df_rt_plot
 	; check the type on the stack
 	jsr df_ost_peekType
 	; if >=0x80 then a pointer / string
-	tax
-	bmi df_rt_plotstr
+	and #DFST_STR
+	bne df_rt_plotstr
 	; else it is int
 	jsr df_ost_popInt
 	; save  low byte of pop result in a temp
@@ -1036,21 +1050,22 @@ df_rt_print_ws
 	sty df_exeoff
 
 	; if starts with string literal then process seval
-	cmp #DFTK_STRLIT
-	beq df_rt_print_string
+;	cmp #DFTK_STRLIT
+;	beq df_rt_print_string
 	; else evaluate a numeric
 	jsr df_rt_neval
 	; check what is on the argument stack
 	jsr df_ost_peekType
-	bmi df_rt_print_gotstr
+	and #DFST_STR
+	bne df_rt_print_gotstr
 	jsr df_rt_print_num
 	jmp df_rt_print
 df_rt_print_gotstr
 	jsr df_rt_print_str
 	jmp df_rt_print
-df_rt_print_string
-	jsr df_rt_seval
-	jmp df_rt_print_gotstr
+;df_rt_print_string
+;	jsr df_rt_seval
+;	jmp df_rt_print_gotstr
 df_rt_print_done
 	sty df_exeoff
 	rts
@@ -1805,10 +1820,17 @@ df_rt_snd_common
 	jsr snd_set
 	; increment reg number to high byte
 	inx
-	; get high byte of period
+	; but if now at R7 then it's was noise period
+	; so then no high period or volume
+	cpx #7
+	bne df_rt_not_noise
+	; else do nothing more
+	rts
+df_rt_not_noise
+ 	; get high byte of period
 	lda df_tmpptrb+1
 	and #0x0f
-	; set period
+	; set hi period
 	jsr snd_set
 	; get volume register index (8 = channel 1)
 	clc
@@ -1829,16 +1851,7 @@ df_rt_sound_env_skip
 df_rt_sound
 	jsr df_rt_parm_3ints
 df_rt_dosound
-	; check which channel (0 = noise)
-	lda df_tmpptra
-	beq df_rt_sound_noise
 	jmp df_rt_snd_common
-df_rt_sound_noise
-	; ok update the noise channel, volume is irrelevant
-	ldx #6
-	lda df_tmpptrb
-	and #0x1f
-	jmp snd_set
 
 ; music chan,octave,note,volume
 df_rt_music
@@ -1880,12 +1893,6 @@ df_rt_play
 	; reg 7 is control register
 	ldx #7
 	jsr snd_set
-	; parm 3 = envelope mode
-	lda df_tmpptrc
-	and #0xf
-	; 13 is envelope shape register
-	ldx #13
-	jsr snd_set
 	; parm 4 = envelope period
 	; 11 is envelope period register
 	ldx #11
@@ -1895,6 +1902,12 @@ df_rt_play
 	; get high
 	inx
 	lda df_tmpptrd+1
+	jsr snd_set
+	; parm 3 = envelope mode
+	lda df_tmpptrc
+	and #0xf
+	; 13 is envelope shape register
+	ldx #13
 	jmp snd_set
 
 ;df_rt_fill
@@ -2346,9 +2359,9 @@ df_rt_rnd_set
 
 
 ;* Return memory footprint as follows:
-;* 0	Return free memory (start of vvt - end of heap)
+;* 0	Return free memory (start of vnt - end of heap)
 ;* 1	Return program size (end of prg - start of prg)
-;* 2	Return size of vars (end of vnt - start of vvt)
+;* 2	Return size of vars (end of vvt - start of vnt)
 df_rt_mem
 ;	inc df_exeoff
 	jsr df_rt_getnval
@@ -2359,7 +2372,7 @@ df_rt_mem
 	beq df_rt_mem_var
 	; default is free memory
 df_rt_mem_free
-	_cpyZPWord df_vvtstrt,df_tmpptra
+	_cpyZPWord df_vntstrt,df_tmpptra
 	_cpyZPWord df_starend,df_tmpptrb
 	jmp df_rt_mem_calc
 df_rt_mem_prg
@@ -2367,7 +2380,7 @@ df_rt_mem_prg
 	_cpyZPWord df_prgstrt,df_tmpptrb
 	jmp df_rt_mem_calc
 df_rt_mem_var
-	_cpyZPWord df_vvtstrt,df_tmpptra
+	_cpyZPWord df_vvtend,df_tmpptra
 	_cpyZPWord df_vntstrt,df_tmpptrb
 df_rt_mem_calc
 	; tmpa-tmpb result in X,A

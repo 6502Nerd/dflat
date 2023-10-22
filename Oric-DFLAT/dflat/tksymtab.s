@@ -91,6 +91,7 @@ df_tokensyms
 	db	"tloa",'d'+0x80				; tload "fname"
 	db 	"delet",'e'+0x80			; delete "fname"
 	db	"di",'r'+0x80				; dir
+	db	"redi",'m'+0x80				; redim varlist
 ; Functions
 	db	"peek",'('+0x80				; peek(x)
 	db	"deek",'('+0x80				; peek(x)

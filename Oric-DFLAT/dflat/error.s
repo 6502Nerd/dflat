@@ -28,7 +28,7 @@ df_tk_errortab
 	db	"Ok", 0
 	db	"Syntax", 0
 	db	"Type", 0
-	db	"Re-dim", 0
+	db	"Dim", 0
 	db	"No repeat", 0
 	db	"No defn", 0
 	db	"Parm", 0

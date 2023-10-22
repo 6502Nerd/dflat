@@ -77,26 +77,22 @@ df_rt_init_vvt_slot_undim
 	; Scalar variables are not initialised
 	ldy #0
 	lda (df_tmpptra),y
-	and #DFVVT_PROC|DFVVT_ARRY
+	and #DFVVT_PROC|DFVVT_PTR
 	beq df_rt_init_vvt_skip
+	ldx #4			; Number of bytes to clear for array
+	and #DFVVT_PROC	; But if proc, then 3 bytes
+	beq df_rt_init_vvt_skip_proc
+	dex
+df_rt_init_vvt_skip_proc
+	tya				; Set A to 0 (Y already zero)
 	; skip over the first byte which is variable type
 	iny
-	; zero out first 3 bytes for proc and arrays
-	lda #0
+	; zero out bytes for proc and arrays
+df_rt_init_vvt_z_loop
 	sta (df_tmpptra),y
 	iny
-	sta (df_tmpptra),y
-	iny
-	sta (df_tmpptra),y
-	iny
-	; before doing dim2 check if proc
-	; as we don't want to erase the parm count
-	lda (df_tmpptra,x)
-	and #DFVVT_PROC
-	bne df_rt_init_vvt_skip
-	; if not proc then zero dim2
-	lda #0
-	sta (df_tmpptra),y
+	dex
+	bne df_rt_init_vvt_z_loop
 df_rt_init_vvt_skip
 	; increment pointer to next slot
 	_adcZPByte df_tmpptra,#8
@@ -589,14 +585,12 @@ df_rt_eval_var
 	lda (df_tmpptra,x)
 df_rt_eval_lvskip
 	pha
-	; Test A
-	tax
+	; Test A for array or string
+	and #DFVVT_PTR|DFVVT_STR
 	; simple variable
-	bpl df_rt_eval_var_notarry
+	beq df_rt_eval_var_notarry
 	; even if an array if no dimensions then return base pointer
 	; if at end of statement or line then simple copy
-;	cpy df_eolidx
-;	beq df_rt_eval_var_simple
 	cpy df_nxtstidx
 	beq df_rt_eval_var_simple
 	; if next ch is not [ then simple copy
@@ -635,6 +629,7 @@ df_rt_eval_lvar
 	; push pointer to lo,hi
 	jmp df_ost_pushPtr
 
+	; Simple push of pointer, needs to be valid
 df_rt_eval_var_simple
 	; clean up stack
 	pla
@@ -645,6 +640,7 @@ df_rt_eval_var_simple
 	tax
 	ldy #DFVVT_HI
 	lda (df_tmpptra),y
+	beq df_rt_not_dimed
 	jmp df_ost_pushPtr
 
 df_rt_eval_var_do_arry
@@ -747,6 +743,7 @@ df_rt_eval_var_push
 	lda (df_tmpptra),y
 	bne df_rt_array_exists
 	; if vvt address hi is zero then array not dimensioned
+df_rt_not_dimed
 	SWBRK DFERR_DIM
 df_rt_array_exists
 	adc num_a+1

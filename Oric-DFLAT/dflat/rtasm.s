@@ -127,8 +127,8 @@ df_rt_asm_db_start
 df_rt_asm_data
 	jsr df_rt_neval		; Evaluate expression
 	jsr df_ost_peekType	; What is the type
-	tay
-	bmi df_rt_asm_string; If string
+	and #DFST_STR
+	bne df_rt_asm_string; If string
 	jsr df_ost_popInt	; else get number in A,X
 	stx df_asmoprnd		; store low value
 	sta df_asmoprnd+1	; store high value

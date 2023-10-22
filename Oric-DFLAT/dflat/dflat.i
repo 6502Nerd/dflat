@@ -86,7 +86,7 @@ DFVVT_BYT	=	0x02
 DFVVT_STR	=	0x04
 DFVVT_FLT	=	0x08
 DFVVT_PROC	=	0x40
-DFVVT_ARRY	=	0x80
+DFVVT_PTR	=	0x80
 
 ;* Flags indicating the meaning of a token
 ;* A token has the top bit set (0x80), then the
@@ -106,8 +106,9 @@ DFTK_RTMSK	= 	0xf8
 ;* All numerics are stored as INT, all STR
 ;* are pointers to the actual string, thus
 ;* all entries in the parmeter stack are 3 bytes
-DFST_INT	=	0x01
-DFST_STR	=	0x80
+DFST_INT	=	DFVVT_INT|DFVVT_BYT
+DFST_STR	=	DFVVT_STR
+DFST_PTR	=	0xff
 
 ;* Token values of specific commands, used during
 ;* command processing.

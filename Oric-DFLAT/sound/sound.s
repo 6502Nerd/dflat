@@ -68,7 +68,7 @@ init_snd_regs
 	rts						; return from sub
 
 	; Register array initialisation values
-	; Assuming 1.34Mhz input clock
+	; Assuming 1Mhz input clock
 snd_init_tab
 	db 0x40				; R0 = Channel A Tone Low
 	db 0x00				; R1 = Channel A Tone High

@@ -196,7 +196,6 @@ df_rt_def_got_varparm
 	; advance over non-local specifier
 	iny
 df_rt_def_got_var
-	eor #0x80			; If was set by '&' qualifier then will be unset
 	sta scratch,x		; Save parm type (by value or ref)
 	; get address and save in scratch
 	iny
@@ -230,9 +229,9 @@ df_rt_def_load_var
 	sta df_tmpptra+1
 	
 	lda scratch,x
-	; if MSB is clear then this is not a local variable
+	; if MSB is set then this is not a local variable
 	; so just go an initialise with stacking
-	bpl df_rt_def_initialise_parm
+	bmi df_rt_def_initialise_parm
 	; else call the local handling code to 
 	; push the var address on to the runtime stack
 	ldx df_tmpptra
@@ -244,22 +243,15 @@ df_rt_def_initialise_parm
 	; load type
 	ldy #DFVVT_TYPE
 	lda (df_tmpptra),y
-	; if array or string type then pop pointer from operator stack
-	and #DFVVT_STR|DFVVT_ARRY
-	beq df_rt_def_load_var_int
-	jsr df_ost_popPtr
-	jmp df_rt_def_load_var_int_skip
-df_rt_def_load_var_int
-	; must be int pop it from operator stack
-	jsr df_ost_popInt
-df_rt_def_load_var_int_skip
+	tay					; Put the type into Y
+	jsr df_ost_popParmX	; Try to get this off the stack
 	; update the variable
 	ldy #DFVVT_HI
 	sta (df_tmpptra),y
 	dey
 	txa
 	sta (df_tmpptra),y
-	
+
 	jmp df_rt_def_load_var
 df_rt_def_load_var_done
 	; save the number of local parameters found so they can
