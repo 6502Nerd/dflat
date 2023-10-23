@@ -18,9 +18,10 @@ dflat is a BASIC-like language for 8-bit micros and retro computers running on 6
 * Core language can be ported easily - just needs character put and get routines for input/output
 
 Here is hello world in dflat:
-* 10 def_hello()
-* 20   println "Hello world!"
-* 30 enddef
+* `10 def_hello()`
+* `20   println "Hello world!"`
+* `30 enddef`
+* `_hello()` [immediately invokes the procedure called _hello]
 
 The base version here is targeted for the Oric-1 and Atmos computers from the early 80s and due to being integer only and tokenisation, is much faster than Oric BASIC.
 
