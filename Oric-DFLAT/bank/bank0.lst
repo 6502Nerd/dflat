@@ -3110,7 +3110,7 @@ c081 :                       msg_hello_world
                              	include "kernel/build.s"
 c081 : 4f726963206466..       db "Oric dflat\r" 
 c08c : 42792040363530..       db "By @6502Nerd\r" 
-c099 : 4275696c64203a..       db "Build : 0.30 [IJK-SD]\r" 
+c099 : 4275696c64203a..       db "Build : 0.31 [IJK-SD]\r" 
 c0af : 28632920323032..       db "(c) 2023\r\r",0 
                              
                              
