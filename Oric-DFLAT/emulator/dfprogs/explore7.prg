@@ -523,3 +523,4 @@ def_asm2(option)
 	bne psloop
 	rts
 enddef
+_start()

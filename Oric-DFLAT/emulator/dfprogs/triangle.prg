@@ -20,4 +20,4 @@ def_triangle(l,x,y,s)
  _triangle(l-1,x+s2,y,s2)
  _triangle(l-1,x,y+s2,s2)
 enddef
-
+println "Try _start(5,10,10,180)"

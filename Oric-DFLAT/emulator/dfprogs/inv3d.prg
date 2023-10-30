@@ -1228,3 +1228,4 @@ def_asm(o)
  rts
 .endAsm
 enddef
+_start()

@@ -221,3 +221,4 @@ def_asm(o)
 ;
 .codeEnd
 enddef
+println "_start(d) with required delay"

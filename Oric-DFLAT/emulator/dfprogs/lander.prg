@@ -282,4 +282,4 @@ data 0b110110
 data 0b011100
 data 0b000000
 data -1
-
+_start()

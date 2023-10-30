@@ -159,9 +159,6 @@ df_ost_popParmX
 	ldy df_parmtop
 	; pull type first
 	dey
-	pha
-	lda df_rtstck,y
-	pla
 	and df_rtstck,y
 	beq df_st_typemismatcherr
 	; pull low byte first

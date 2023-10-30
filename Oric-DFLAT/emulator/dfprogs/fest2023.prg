@@ -4,11 +4,21 @@ def_start()
  paper 0:text:cursor 1
  for a=40*8,40*20-1,1:poke 48000+a,16:next
  i=-60
+ _dplot("People are in a hurry!!",2,1,10,2,3)
+ _dplot("They're rushing to get to..",6,1,10,1,2)
+ _dplot("The Retrocomputer Festival",20,1,14,0,0)
+ _dplot("Cambridge 4th & 5th November!",24,1,14,0,0)
  repeat
   reset t
   a=call(bigSpr, 6, i-40,10)
   a=call(bigSpr, i&6>>1, i-20,10)
   a=call(bigSpr, 5, i, 10)
+  if(i>-8)&(i<80)
+   plot 1,20,2:plot 1,21,6
+   plot 1,24,3:plot 1,25,5
+  else
+   plot 1,20,0:plot 1,21,0
+   plot 1,24,0:plot 1,25,0
   endif
   i=i+1:if i>120:i=-60:endif
   repeat:until elapsed(t)>1
@@ -278,4 +288,5 @@ def_asmPlot(o)
  rts
 .asmEnd
 enddef
+;println "Program loaded - type _start() to start!"
 _start()

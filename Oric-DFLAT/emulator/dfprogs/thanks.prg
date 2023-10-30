@@ -42,18 +42,18 @@ def_message()
 enddef
 ;
 data "                 "
-data "  *   *   *   *  "
-data " * * * * * * **  "
-data "   * * * * *  *  "
+data " **   *   *   *  "
+data "   * * * * * **  "
 data "  *  * * * *  *  "
-data " *   * * * *  *  "
-data " ***  *   *  *** "
+data "   * * * * *  *  "
+data "   * * * * *  *  "
+data " **   *   *  *** "
 data "                 "
 data "                                    "
 data "Dear Twitter.. Never thought that I "
-data "would ever reach 2000+ follows, but"
+data "would ever reach 3000+ follows, but"
 data " thanks to each and every one for yo"
 data "ur support in making this the best n"
 data "erdy place to be! From @6502Nerd :-)"
 data "                                    "
-
+_start(2)

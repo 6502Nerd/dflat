@@ -157,4 +157,4 @@ def_asmMain(o)
  bpl loop
 ; back to dflat
  rts
-
+println "_test(max,d) : max sprites & d delay"

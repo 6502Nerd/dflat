@@ -2016,22 +2016,31 @@ df_rt_loadline
 	jsr df_pg_inputline
 	; if C clear then tokenise line
 	bcc df_rt_ldtokenise
-	; else done
-	; clear dflat runtime else will try to execute
-	; the last tokenised line!
-	ldx #0
-	stx df_tokbuff			; Offset to next line
-	stx df_tokbuff+1		; Clear line low
-	stx df_tokbuff+2		; Clear line high
-	stx df_nxtstidx			; Clear next statement
-	stx df_eolidx			; Clear end of line too
-	inx						; Set immediate mode
-	stx df_immed
-	jmp df_rt_file_cleanup	; Ok now can close and done
+	; remember num_a as this is the pointer to previous line
+	; push high then low
+	lda num_a+1
+	pha
+	lda num_a
+	pha
+	jsr df_rt_file_cleanup	; Ok now close file
+	; clear variables ready to run the last statement
+	jsr df_initrun
+	; run restore from num_a
+	pla
+	tax
+	pla
+	; always skip length and line number
+	ldy #3
+	sty df_exeoff
+	; init currlin
+	jsr df_rt_init_stat_ptr
+	; start execution
+	jsr df_rt_exec_stat
+	; Go and get another line of input
+	jmp df_pg_prompt
 df_rt_ldtokenise
 	jsr df_pg_tokenise		; Tokenise loaded string
 	jmp df_rt_loadline		; Continue with next until blank
-
 
 ; Utility to open in binary mode save
 df_rt_openforbinsave
