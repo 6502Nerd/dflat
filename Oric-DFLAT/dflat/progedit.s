@@ -264,8 +264,7 @@ df_pg_tokenise
 	jsr df_lexer_line
 	; check if line number == 0
 	lda df_tokbuff+DFTK_LINNUM
-	bne df_pg_line_number
-	lda df_tokbuff+DFTK_LINNUM+1
+	ora df_tokbuff+DFTK_LINNUM+1
 	bne df_pg_line_number
 	; check if line empty
 	lda df_tokbuff

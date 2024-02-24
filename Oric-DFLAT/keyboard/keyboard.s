@@ -181,7 +181,7 @@ kb_any_key_none
 	rts
 kb_any_key_pressed
 kb_read_got
-	sec						; C=1 means pressed
+	sec						; C=1 means pressed, Y=Row number
 	rts
 
 ;****************************************
@@ -193,7 +193,7 @@ kb_read_got
 kb_read_raw
 	jsr kb_any_key			; Quick check is anything down?
 	bcc kb_read_nothing		; Don't bother if not
-kb_read_raw_force
+;kb_read_raw_force
 	ldx #SND_REG_IOA		; Select Port A of AY
 	stx SND_ADBUS			; Put reg # on Port A (sound bus)
 	ldx #SND_SELSETADDR		; Get ready to select the reg
@@ -203,7 +203,7 @@ kb_read_raw_force
 	ldx #0					; Start at column 0
 	stx zp_tmp1
 kb_check_matrix_col
-	ldy #0+KB_PRB			; Start at row 0 (maintain PRB upper nibble)
+;	ldy #0+KB_PRB			; Start at row 0 (maintain PRB upper nibble)
 kb_check_matrix_row
 	sty IO_0+PRB			; Select row from Y
 	; Get the col value for AY port A
@@ -225,9 +225,9 @@ kb_check_matrix_row
 
 	bne kb_read_raw_got
 	; No key for this row/col, next
-	iny
-	cpy #8+KB_PRB			; Done 8 rows?
-	bne kb_check_matrix_row
+;	iny
+;	cpy #8+KB_PRB			; Done 8 rows?
+;	bne kb_check_matrix_row
 	; ok check next row
 	ldx zp_tmp1
 kb_check_skip4

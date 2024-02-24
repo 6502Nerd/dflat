@@ -2023,6 +2023,14 @@ df_rt_loadline
 	lda num_a
 	pha
 	jsr df_rt_file_cleanup	; Ok now close file
+	; check if line number == 0
+	lda df_tokbuff+DFTK_LINNUM
+	ora df_tokbuff+DFTK_LINNUM+1
+	bne df_rt_tload_autostart
+	pla
+	pla
+	rts
+df_rt_tload_autostart
 	; clear variables ready to run the last statement
 	jsr df_initrun
 	; run restore from num_a

@@ -3,11 +3,12 @@ def_start()
  _initSprites()
  paper 0:text:cursor 1
  for a=40*8,40*20-1,1:poke 48000+a,16:next
- i=-60
+ i=-64
  _dplot("People are in a hurry!!",2,1,10,2,3)
  _dplot("They're rushing to get to..",6,1,10,1,2)
  _dplot("The Retrocomputer Festival",20,1,14,0,0)
  _dplot("Cambridge 4th & 5th November!",24,1,14,0,0)
+ vol=7
  repeat
   reset t
   a=call(bigSpr, 6, i-40,10)
@@ -20,7 +21,8 @@ def_start()
    plot 1,20,0:plot 1,21,0
    plot 1,24,0:plot 1,25,0
   endif
-  i=i+1:if i>120:i=-60:endif
+  i=i+1:if i>128:i=-64:endif
+  sound 1,100+(i&16)*2,vol
   repeat:until elapsed(t)>1
  until 0
 enddef

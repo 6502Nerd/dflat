@@ -1,0 +1,1 @@
+def_start()ink 7:paper 0:hiresa=1dim a$[20]repeat a$="s:"+dec(a)+".bin" bload 0xa000,a$ wait 200 a=a+1:if a>14:a=1:endifuntil 0enddef;
