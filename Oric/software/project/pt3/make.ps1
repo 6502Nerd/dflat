@@ -6,7 +6,7 @@ $start = (Get-Date)
 
 # Build pt3 player
 Write-Output "Building PT3 Player"
-./as65 "-inctl" "-oppt3.bin" ppt3.asm
+./as65 "-inctl" "-oppt3.bin" ppt3.s
 if ($LASTEXITCODE -gt 0) { throw }
 
 # Copy files
