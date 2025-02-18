@@ -171,8 +171,8 @@ lc_push_fnchar					; Push in reverse order
 ; If a directory can only be read mode tp_flag set to 0
 lc_init
 	jsr lc_push_fname
-	lda #0
-	sta MIA_X					; Zero
+;	lda #0
+	sty MIA_X					; Y is zero from lc_push_fname !!!
 	lda tp_flag					; 1=Read, 2=Write
 	cmp #2						; If write
 	bne lc_init_skip_create
@@ -216,6 +216,16 @@ lc_init_dir_term				; Finally add '/' and zero terminator
 	lda #0
 	sta MIA_RW0
 lc_init_done
+	lda tp_flag					; If opened for write then send 4 bytes of SYN
+	cmp #2
+	bne lc_init_rts
+	lda #0x16					; SYN byte
+	ldy #4
+lc_init_syn
+	jsr lc_write_byte
+	dey
+	bne lc_init_syn
+lc_init_rts
 	rts
 lc_init_error
 	SWBRK DFERR_FNAME
