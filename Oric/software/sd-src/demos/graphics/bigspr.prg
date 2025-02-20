@@ -9,7 +9,6 @@ def_start()
   a=call(bigSpr, 6, i-40,10)
   a=call(bigSpr, i&6>>1, i-20,10)
   a=call(bigSpr, 5, i, 10)
-  endif
   i=i+1:if i>120:i=-60:endif
   repeat:until elapsed(t)>1
  until 0
@@ -278,4 +277,4 @@ def_asmPlot(o)
  rts
 .asmEnd
 enddef
-_start()
+println "type _start() to start"
