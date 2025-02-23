@@ -2,11 +2,13 @@
 ; 2025
 def_start()
  dim code[100]
- println "Ensure PT3 player is loaded in 0x8000"
+ println "Loading ppt3.bin to 0x8000"
+ bload 0x8000,"ppt3.bin"
  println "Ensure PT3 tune is loaded somewhere"
  _asm(0):_asm(0):_asm(2)
- println "Call start(0x8000,songLo,songHi,0)"
- println "Call mute, stop"
+ println "t=call(start,songLo,songHi,0)"
+ println "t=call(mute, 0,0,0)"
+ println "t=call(stop, 0,0,0)"
  enddef
  ;
  ;
