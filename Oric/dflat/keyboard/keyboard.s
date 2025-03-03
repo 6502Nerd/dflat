@@ -74,6 +74,8 @@ init_keyboard
 ;* Y corrupted
 ;****************************************
 kb_stick
+	php
+	sei
 	; if IJK connected then read joystick
 	lda kb_stat
 	and #KB_IJK
@@ -103,10 +105,9 @@ kb_stick_pos
 	dey
 	bpl kb_stick_pos		; Do all 5 positions
 	pla						; Result in A
+	plp
 	rts
 kb_stick_ijk
-	php
-	sei
 
 	; Save port A
 	lda IO_0+DDRA

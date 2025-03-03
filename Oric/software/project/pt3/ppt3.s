@@ -74,36 +74,65 @@ TC1 = val3
 TC2 = val3+1
 TB3 = val4
 TC3 = val4+1
+
+OricUserIRQ = 0x06
+
 ; =====================================
 ; module PT3 address
 ;MDLADDR = $2000
 ; =====================================
         code
-; For dflat, allow build of code for other locations
- if RELOCADDR
-        org RELOCADDR
+; For dflat, allow build of code using hires screen RAM
+ if USEHIRES
+        org $9800
  else
-        org $8000
+        org $7800
  endif
 
-; START = $8000
-; START+00 : INIT
-; START+10 : PLAY
-; START+13 : MUTE
-
+; START+00 : INIT (starts playing through IRQ)
+; START+03 : MUTE
+; START+06 : UNMUTE
+        jmp START
+        jmp DOMUTE
+        jmp DOUNMUTE
 START
-; For dflat, assume that A,X provides address of song module
+; For dflat, assume that A,X provides address of song module, Y is the looping preference (0=loop, 1=no loop)
 ;        lda #lo(MDLADDR)                                               
 ;        sta z80_L
 ;        lda #hi(MDLADDR)
 ;        sta z80_H
+        php
+        sei
         sta z80_L
         stx z80_H
-        clc
-	bcc INIT            ; always                                
-	jmp PLAY                                                    
-	jmp MUTE                                                    
-     
+        sty SETUP
+        jsr INIT
+        jsr DOUNMUTE
+        plp
+        rts
+DOUNMUTE
+        php
+        sei
+        lda #lo(PLAY)
+        sta OricUserIRQ
+        lda #hi(PLAY)
+        sta OricUserIRQ+1
+        plp
+        rts
+
+DOMUTE
+        php
+        sei
+        lda #lo(MUTERTS)
+        sta OricUserIRQ
+        lda #hi(MUTERTS)
+        sta OricUserIRQ+1
+        jsr MUTE
+        plp
+MUTERTS
+        rts
+
+
 CrPsPtr	fcw 0 ; current position in PT3 module
 
 ;Identifier
