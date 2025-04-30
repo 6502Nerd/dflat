@@ -86,7 +86,7 @@ OricUserIRQ = 0x06
  if USEHIRES
         org $9800
  else
-        org $7800
+        org $7900
  endif
 
 ; START+00 : INIT (starts playing through IRQ)

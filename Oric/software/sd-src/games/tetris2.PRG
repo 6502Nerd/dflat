@@ -162,9 +162,9 @@ enddef
 def_startGame()
   dead=0
   if musicFlag
-    a=call(0x7800,gameSound&255,gameSound>>8,0)
+    a=call(player,gameSound&255,gameSound>>8,0)
   else
-    a=call(0x7803,0,0,0)
+    a=call(player+3,0,0,0)
   endif
   repeat
     _newShape():_checkShape(mo,ss,sr,f)
@@ -217,6 +217,7 @@ enddef
 ;
 ;** Set messages colour **
 def_setAttr(flash,colour,rowStart,rowEnd)
+  local i
   for i=rowStart,rowEnd,1
     plot topX-2,i,flash:plot topX-1,i,colour
   next
@@ -240,16 +241,16 @@ def_start()
     _setAttr(8,2,21,23)
     plot topX,21,"PRESS FIRE"
     plot topX,22," TO START "
-    a=call(0x7800,attractSound&255,attractSound>>8,0)
+    a=call(player,attractSound&255,attractSound>>8,0)
     repeat
       if stick()&1:musicFlag=0:endif
       if stick()&2:musicFlag=1:endif
       if musicFlag
         plot topX,23,"MUSIC: ON "
-        a=call(0x7806,0,0,0)
+        a=call(player+6,0,0,0)
       else
         plot topX,23,"MUSIC: OFF"
-        a=call(0x7803,0,0,0)
+        a=call(player+3,0,0,0)
       endif
 	    _scrollMsg()
     until stick()&16
@@ -334,7 +335,7 @@ enddef
 ; Top score sound effect
 def_topScoreSound()
   local i
-  i=call(0x7800,winSound&255,winSound>>8,8)
+  i=call(player,winSound&255,winSound>>8,8)
 enddef
 ;
 ; Enter initials in to top score table
@@ -435,14 +436,6 @@ def_init()
       next
     endif
   until s==0
-  musicFlag=1
-  bload 0x7800,"ppt37800.bin"
-  winSound=0x9800
-  attractSound=winSound+0x300
-  gameSound=attractSound+0x500
-  bload winSound,"win1.pt3"
-  bload attractSound,"attract.pt3"
-  bload gameSound,"popcorn.pt3"
   ; Scroll message
   dim message$[255]
   message$=           "                                    "
@@ -454,6 +447,16 @@ def_init()
   message$=message$ + "                                    "
   msgLen=len(message$)-36
   msgIdx=1:msgDelay=4:reset msgTimer
+  ; Music
+  musicFlag=1
+  player=0x7900
+  bload player,"ppt37900.bin"
+  winSound=0x9800
+  attractSound=winSound+0x400
+  gameSound=attractSound+0x500
+  bload winSound,"win1.pt3"
+  bload attractSound,"attract.pt3"
+  bload gameSound,"popcorn.pt3"
 enddef
 ;shape data
 ;shape 1: long bar (red)
