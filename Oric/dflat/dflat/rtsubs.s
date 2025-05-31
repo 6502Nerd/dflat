@@ -955,10 +955,11 @@ df_rt_ink
 df_rt_paper
 	; evaluate the expression X = col
 	jsr df_rt_getnval
-	; Add 16 to get paper colour
+	; EOR with 16 to get paper colour
+	; EOR allows paper to be set to any attribute
+	; But acts normally if colour is 0-7
 	txa
-	clc
-	adc #16
+	eor #16
 	sta gr_scrngeom+gr_paper
 	rts
 
