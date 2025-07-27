@@ -137,13 +137,12 @@ df_rt_neval_optk
 	cmp #DFTK_ESCVAL		; <=32 means it's an escape token
 	bcc df_rt_neval_esc
 	; check for evaluation terminators
-	; specifically ',' and ']'
+	; specifically ',' ']' ')'
+	; go process if one of these
 	cmp #','
 	beq df_rt_neval_process
 	cmp #']'
 	beq df_rt_neval_process
-	; check for brackets
-	; if close bracket then process
 	cmp #')'
 	beq df_rt_neval_process
 	; Nothing of interest matched or it's open bracket
@@ -169,13 +168,13 @@ df_rt_neval_tk
 	; X contains the current operator index
 
 	tax
-	lda df_tk_tokentype,x
-	; A contains token type
-	pha
+	ldy df_tk_tokentype,x
+	; Y contains token type
+	tya
 	and #DFTK_OP
 	bne df_rt_neval_tk_opp
 	; check if fn
-	pla
+	tya
 	and #DFTK_FN
 	bne df_rt_neval_tk_fn
 
@@ -206,7 +205,7 @@ df_rt_neval_nextbyte
 	bne df_rt_neval_optk		; ALWAYS as exeoff != 0
 
 df_rt_neval_tk_opp
-	pla				; Get A off stack which is the type
+	tya				; Get A from Y is the type
 df_rt_neval_tk_op
 	; X=Op, A=Type
 	; if this op < current top of op stack
@@ -591,9 +590,10 @@ df_rt_eval_lvskip
 	beq df_rt_eval_var_notarry
 	; even if an array if no dimensions then return base pointer
 	; if at end of statement or line then simple copy
-	cpy df_nxtstidx
-	beq df_rt_eval_var_simple
+;	cpy df_nxtstidx
+;	beq df_rt_eval_var_simple
 	; if next ch is not [ then simple copy
+	; using knowledge that next char either will be '[' or a zero or ':' chanacter
 	iny
 	lda (df_currlin),y
 	dey
@@ -619,13 +619,19 @@ df_rt_eval_var_notarry
 df_rt_eval_lvar
 	; it's not an array, push the address of DFVVT_LO
 	; add DFVVT_LO offset to slot address in X,A
-	clc
-	lda #DFVVT_LO
-	adc df_tmpptra
-	tax
-	lda df_tmpptra+1
-	adc #0
+;	clc
+;	lda #DFVVT_LO
+;	adc df_tmpptra
+;	tax
+;	lda df_tmpptra+1
+;	adc #0
 
+	; Using knowledge that DFVVT_LO is always 1 and also that slots are 8 byte aligned
+	; so no slot will jump over a page boundary
+	; this is 4+2+4 = 10 cycles vs 2+2+4+2+4+2 = 16 cycles
+	ldx df_tmpptra
+	inx
+	lda df_tmpptra+1
 	; push pointer to lo,hi
 	jmp df_ost_pushPtr
 
@@ -1229,16 +1235,16 @@ df_rt_findproc_err
 ;* Find an escape value
 ;* Does not check for end of line or statement
 ;****************************************
-df_rt_findescval
-	ldy df_exeoff
-	dey
-df_rt_findescval_loop
-	iny
-	lda (df_currlin),y
-	cmp #DFTK_ESCVAL
-	bcs df_rt_findescval_loop
-	sty df_exeoff
-	rts
+;df_rt_findescval
+;	ldy df_exeoff
+;	dey
+;df_rt_findescval_loop
+;	iny
+;	lda (df_currlin),y
+;	cmp #DFTK_ESCVAL
+;	bcs df_rt_findescval_loop
+;	sty df_exeoff
+;	rts
 
 ;****************************************
 ;* Skip white space
@@ -1263,9 +1269,14 @@ df_rt_skip_ws_loop
 ;* X,A is the lvar pointer
 ;****************************************
 df_rt_getlvar
-	jsr df_rt_findescval
-	; move past the escape value
+;	jsr df_rt_findescval
+	ldy df_exeoff
+df_rt_findescval_loop
+	lda (df_currlin),y
 	iny
+	cmp #DFTK_ESCVAL
+	bcs df_rt_findescval_loop
+;	iny
 
 	; get variable address
 	lda (df_currlin),y
