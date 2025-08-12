@@ -247,7 +247,7 @@ con_bin_digit
 	cmp #'1'+1
 	bcs con_bin_done
 	; sets C if '1' else resets C
-	adc #0xff-'0'
+	lsr a
 	; shift in digit
 	rol num_a
 	rol num_a+1
@@ -266,6 +266,8 @@ con_bin_done
 	lda #NUM_BIN
 	clc
 	rts
+str_d_overflow
+	plp
 con_bin_err
 str_d_error
 	sec
@@ -286,63 +288,62 @@ con_dec_to_a_int
 	; Detect if leading minus sign
 	lda (num_tmp),y
 	cmp #'-'
-	bne str_d_find_end
+	php						; remember P = Z if minus
+	bne str_d_init
 	; skip over minus if found
 	iny
-str_d_find_end
-	lda (num_tmp),y
-	cmp #'0'
-	bcc str_d_found_end
-	cmp #'9'+1
-	bcs str_d_found_end
-	iny
-	bne str_d_find_end	; Possble wraparound but should be ok
-str_d_found_end
-	cpy #7				; Biggest int is 6 chars
-	bcs str_d_error		; e.g. -32767
-	sty num_tmp+3
-	lda #0
-	sta num_tmp+2
+str_d_init
+	lda #0					; Zero out partial results
 	sta num_a
 	sta num_a+1
 str_d_process_digit
-	dey
-	bmi str_d_digits_done
-
 	lda (num_tmp),y
-
-	cmp #'-'			; Got to minus sign?
-	beq str_d_digits_done ; also done
-
 	sec
-	sbc #'0'
-	; Convert digit to number
-	; and then offset in to
-	; look up table of powers
-	clc
-	asl a
-	adc num_tmp+2
-	; X contains index to powers
-	tax
+	sbc #'0'				; Convert to digit
+	bcc str_d_digits_done	; If not a digit then done
+	cmp #10					; If digit > 9 then done
+	bcs str_d_digits_done
+	pha						; Save digit for later
+	; move current sum to num_tmp+2
+	; a contains num_a low byte
+	lda num_a+1
+	sta num_tmp+3
 	lda num_a
-	adc str_d_powers,x
+	sta num_tmp+2
+	; multiplty partial by 4 (2 shifts)
+	asl a
+	rol num_a+1
+	asl a
+	rol num_a+1
+	sta num_a
+	; add back num_tmp+2
+	clc
+	lda num_tmp+2
+	adc num_a
+	sta num_a
+	lda num_tmp+3
+	adc num_a+1
+	sta num_a+1
+	; we now have 5x - shift to get 10x
+	asl num_a
+	rol num_a+1
+	pla						; Get digit back
+	clc						; Add it to the sum
+	adc num_a
 	sta num_a
 	lda num_a+1
-	adc str_d_powers+1,x
+	adc #0
 	sta num_a+1
-	bcs str_d_error
-	; Move to next power of 10 index
-	lda num_tmp+2
-	adc #20
-	sta num_tmp+2
-	jmp str_d_process_digit
+;	bcs str_d_overflow	; If overflow then error
+	iny
+	bne str_d_process_digit	; Possble wraparound but should be ok
 str_d_digits_done
+	cpy #7				; Biggest int is 6 chars
+	bcs str_d_overflow	; e.g. -32767
 	; check if minus
-	lda (num_tmp),y
-	cmp #'-'
+	plp					; Get P back - if zero then no minus
 	bne str_d_skip_neg
-	ldx num_tmp+3		; Must have >= 2 chars
-	cpx #2				; else it's an error
+	cpy #2				; must have >=2 digits else it's an error
 	bcc str_d_error
 	ldx num_a
 	lda num_a+1
@@ -350,18 +351,12 @@ str_d_digits_done
 	stx num_a
 	sta num_a+1
 str_d_skip_neg
-	ldx num_tmp+3
+	tya
+	tax				; Move Y to X for digits processed
 	lda #NUM_DEC
 	clc
 	rts
 
-str_d_powers
-	dw	0, 1, 2, 3, 4, 5, 6, 7, 8, 9
-	dw	0, 10, 20, 30, 40, 50, 60, 70, 80, 90
-	dw	0, 100, 200, 300, 400, 500, 600, 700, 800, 900
-	dw	0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000
-	dw	0, 10000, 20000, 30000, 40000, 50000, 60000, 65535, 65535, 65535
-	
 
 ;****************************************
 ;* twos_complement
@@ -444,14 +439,12 @@ bin_to_bcd_bit
 ;****************************************
 int_to_str_ch
 	and #0xf
-	ora #0x30					; Convert to ascii
-	eor #0x30					; Check if zero digit
 	bne int_to_str_nz			; If not zero definitely store it
 	bcs int_to_str_nz			; Also if C=1
-	eor #0x30					; Restore A
+	ora #0x30					; Ensure in ASCII range
 	rts							; Return without storing anything
 int_to_str_nz
-	eor #0x30					; Restore A
+	ora #0x30					; Ensure in ASCII range
 	sta num_buf,y
 	iny
 	sec							; Set C as a non-zero encountered
